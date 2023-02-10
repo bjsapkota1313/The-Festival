@@ -21,10 +21,16 @@
           <a class="nav-link" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/article">Articles</a>
+          <a class="nav-link" href="#">History</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/home/about">About</a>
+          <a class="nav-link" href="#">Culture</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Food</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">The Festival</a>
         </li>
       </ul>     
     </div>
