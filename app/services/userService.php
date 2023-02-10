@@ -1,13 +1,8 @@
 <?php
-require __DIR__ . '/../repositories/userrepository.php';
+require __DIR__ . '/../repositories/userRepository.php';
 require_once __DIR__ . '/../models/user.php';
 
 class UserService {
-    public function getAllReaders() {
-        $repository = new UserRepository();
-        return $repository->getAllReaders();
-    }
-
     // public function setReviewId(int $reviewId): self
     public function checkLogin(string $userName, string $password)
     {

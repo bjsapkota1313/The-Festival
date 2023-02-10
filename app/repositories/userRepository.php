@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/../models/user.php';
+require_once __DIR__ . '/../Models/Roles.php';
 
 class UserRepository extends Repository
 {
@@ -23,6 +24,8 @@ class UserRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT * FROM User WHERE email = ?");
             $stmt->execute([$userName]);
+            $user=$this->createUserInstance($stmt->fetch());
+            echo $user->getFirstName();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
             $users = $stmt->fetchAll();
             if(count($users) == 1) {
@@ -32,9 +35,30 @@ class UserRepository extends Repository
                 }
             }
             return null;
-        } catch (PDOException $e) {
+        } catch (Exception | PDOException $e) {
             echo $e;
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function createUserInstance($dbRow) :User{
+        try{
+            $user = new User();
+            $user->setId($dbRow['id']);
+            $user->setEmail($dbRow['email']);
+            $user->setRegistrationDate(new DateTime($dbRow['registrationDate']));
+            $user->setRole(Roles::fromString($dbRow['role']));
+            $user->setDateOfBirth(new DateTime($dbRow['dateOfBirth']));
+            $user->setFirstName($dbRow['firstName']);
+            $user->setLastName($dbRow['lastName']);
+            return $user;
+        }
+        catch (Exception $e){
+            echo "Error while creating user instance: " . $e->getMessage();
+        }
+
     }
 
     public function getUserById(int $userId)

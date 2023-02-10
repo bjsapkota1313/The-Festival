@@ -1,0 +1,9 @@
+
+Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(æÀö€øÿÿÿÿ
+dphp:S103"KSplit this 122 characters long line (which is greater than 120 authorized).(‡øëŒÿÿÿÿÿ
+R	php:S1808"=Move this open curly brace to the beginning of the next line.(†žè›
+R	php:S1808"=Move this open curly brace to the beginning of the next line.(¨ÿ—¦
+a	php:S1808"GPut one space between this "catch" keyword and the opening parenthesis.(ãÓ˜“ÿÿÿÿÿ
+Y	php:S1784"DExplicitly mention the visibility of this constructor "__construct".(¨ÿ—¦
+;	php:S2003"&Replace "require" with "require_once".(×ïŠ¡
+a	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(×ïŠ¡

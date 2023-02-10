@@ -14,18 +14,12 @@ It contains a docker configuration with:
 
 ## Usage
 
-In a terminal, run:
+## Running the Application
+**Note:** docker-compose down -v to delete al the volume of the containers and set it again
+To run the application, use the command: 
 ```bash
+docker-compose down -v
 docker-compose up
-```
-
-NGINX will now serve files in the app/public folder. Visit localhost in your browser to check.
-PHPMyAdmin is accessible on localhost:8080
-
-If you want to stop the containers, press Ctrl+C. 
-Or run:
-```bash
-docker-compose down
 ```
 
 

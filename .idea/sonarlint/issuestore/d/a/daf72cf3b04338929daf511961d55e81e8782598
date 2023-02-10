@@ -1,0 +1,4 @@
+
+|php:S115"cRename this constant "Administrator" to match the regular expression ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$.(¹êËìüÿÿÿÿ
+wphp:S115"^Rename this constant "Employee" to match the regular expression ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$.(ğÙËíıÿÿÿÿ
+qphp:S115"^Rename this constant "Customer" to match the regular expression ^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$.(˜­š1

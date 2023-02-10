@@ -1,76 +1,143 @@
 <?php
-
-enum Role {
-    case Customer;
-    case Admin;
-    case Employee;
-}
-
-class User {
-    protected int $id;
-    protected int $role;
-    protected string $name;
-    protected string $email;
-    protected string $password;
-    protected DateTime $registrationDate;
-    protected string $picture = "";
+require_once __DIR__ . '/../Models/Roles.php';
+class User implements \JsonSerializable{
+    private int $id;
+    private Roles $role;
+    private string $firstName;
+    private string $lastName;
+    private string $email;
+    private DateTime $registrationDate;
+    private DateTime $dateOfBirth;
+    private string $picture ;
     public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
     }
+
     /**
-     * Get the value of id
-     *
      * @return int
      */
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
+
     /**
-     * Get the value of role
-     *
-     * @return enum Role
+     * @param int $id
      */
-    public function getRole(): int
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return Roles
+     */
+    public function getRole(): Roles
     {
         return $this->role;
-        // if($this->role == 1) return Role Customer;
-        // if($this->role == 2) return Admin;
-        // if($this->role == 3) return Employee;
-        // return Employee;
+    }
+
+    /**
+     * @param Roles $role
+     */
+    public function setRole(Roles $role): void
+    {
+        $this->role = $role;
     }
     /**
-     * Get the value of name
-     *
      * @return string
      */
-    public function getName(): string
+    public function getEmail(): string
     {
-        return $this->name;
-    }
-    /**
-     * Set the value of name
-     *
-     * @param string $name
-     *
-     * @return self
-     */
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-        return $this;
-    }
-    /**
-     * Get the value of hashed password
-     *
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-    public function getEmail(): string {
         return $this->email;
     }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+    /**
+     * @return DateTime
+     */
+    public function getRegistrationDate(): DateTime
+    {
+        return $this->registrationDate;
+    }
+
+    /**
+     * @param DateTime $registrationDate
+     */
+    public function setRegistrationDate(DateTime $registrationDate): void
+    {
+        $this->registrationDate = $registrationDate;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getDateOfBirth(): DateTime
+    {
+        return $this->dateOfBirth;
+    }
+
+    /**
+     * @param DateTime $dateOfBirth
+     */
+    public function setDateOfBirth(DateTime $dateOfBirth): void
+    {
+        $this->dateOfBirth = $dateOfBirth;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicture(): string
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param string $picture
+     */
+    public function setPicture(string $picture): void
+    {
+        $this->picture = $picture;
+    }
+
 }
