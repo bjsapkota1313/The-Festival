@@ -12,7 +12,7 @@ class User {
     protected string $name;
     protected string $email;
     protected string $password;
-    protected string $registrationDate;
+    protected DateTime $registrationDate;
     protected string $picture = "";
     public function jsonSerialize(): mixed
     {
