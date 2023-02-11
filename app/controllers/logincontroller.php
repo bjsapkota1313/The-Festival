@@ -1,4 +1,5 @@
 <?php
+
 require __DIR__ . '/controller.php';
 require __DIR__ . '/../services/userService.php';
 require_once __DIR__ . '/../models/user.php';
