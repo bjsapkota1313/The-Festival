@@ -13,14 +13,22 @@ class UserService {
         }
         return null;
     }
+  
+
     public function getUserById(int $userId) {
         $repository = new UserRepository();
         return $repository->getUserById($userId);
     }
 
-    public function updateUser($connection, $id, $firstName, $lastName, $email, $password)
+    public function getUserToDisplayUserprofile(int $userId) {
+        $repository = new UserRepository();
+        return $repository->getUserToDisplayUserProfile($userId);
+    }
+
+    
+    public function updateUser($connection, $id, $firstName, $lastName, $email, $picture)
     {
         $repository = new UserRepository();
-        return $repository->updateUser($connection, $id, $firstName, $lastName, $email, $password);
+        return $repository->updateUser($connection, $id, $firstName, $lastName, $email, $picture);
     }
 }

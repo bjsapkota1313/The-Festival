@@ -61,7 +61,6 @@ class UserRepository extends Repository
         }
 
     }
-
     public function getUserById(int $userId)
     {
         $stmt = $this->connection->prepare("SELECT * FROM User WHERE id = ?");
@@ -74,15 +73,30 @@ class UserRepository extends Repository
         return null;
     }
 
-    function updateUser($connection, $id, $firstName, $lastName, $email, $password)
+    public function getUserToDisplayUserProfile($userId)
     {
 
-        $query = $connection->prepare("UPDATE User SET firstName=:firstName, lastName=:lastname, email=:email, password=:password WHERE id=:id");
+        $stmt = $this->connection->prepare("SELECT  firstName, lastName, email, picture FROM User WHERE id=$userId");
+        //$stmt = $this->connection->prepare("SELECT * FROM User WHERE id = $userId");
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
+        $users = $stmt->fetchAll();
+        if (count($users) == 1) {
+        return $users[0];
+        }
+        return null;
+
+    }
+
+    function updateUser($connection, $id, $firstName, $lastName, $email, $picture)
+    {
+
+        $query = $connection->prepare("UPDATE User SET firstName=:firstName, lastName=:lastName, email=:email, picture=:picture WHERE id=:id");
         $query->bindParam(":id", $id);
         $query->bindParam(":firstName", $firstName);
         $query->bindParam(":lastName", $lastName);
         $query->bindParam(":email", $email);
-        $query->bindParam(":password", $password);
+        $query->bindParam(":picture", $picture);
         $query->execute();
     }
 

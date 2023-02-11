@@ -27,6 +27,9 @@
         width: 100px;
         text-align: left;
     }
+
+    img {width: 20%;}
+
       </style>';}
 
     ?>
