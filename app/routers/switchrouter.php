@@ -8,15 +8,15 @@ class SwitchRouter {
             case '': 
             case 'home': 
             case 'home/index': 
-                require __DIR__ . '/controllers/homecontroller.php';
+                require __DIR__ . '/../controllers/homecontroller.php';
                 $controller = new HomeController();
                 $controller->index();
                 break;
 
-            case '/manageAccount': 
-                require __DIR__ . '/controllers/manageAccountController.php';
+            case 'account': 
+                require __DIR__ . '/../controllers/manageAccountController.php';
                 $controller = new ManageAccountController();
-                $controller->about();
+                $controller->index();
                 break;
             default: 
             http_response_code(404);

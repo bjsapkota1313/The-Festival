@@ -12,9 +12,9 @@ class ManageAccountController
 
     public function index()
     {
-        $model = $this->userService->getAll();
+        //$model = $this->userService->getAllUsers();
+        require __DIR__ . '/../views/manageAccount/index.php';
 
-        require '../views/manageAccount/index.php';
     }
 }
 

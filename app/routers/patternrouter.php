@@ -20,7 +20,7 @@ class PatternRouter
         if (!isset($explodedUri[0]) || empty($explodedUri[0])) {
             $explodedUri[0] = 'home';
         }
-        $controllerName = $explodedUri[0] . "controller";
+        $controllerName = $explodedUri[0] . "Controller";
 
         if (!isset($explodedUri[1]) || empty($explodedUri[1])) {
             $explodedUri[1] = 'index';

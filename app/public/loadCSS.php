@@ -22,6 +22,11 @@
         padding-right: 20px;
         text-align: left;
       }
+      label {
+        display: inline-block;
+        width: 100px;
+        text-align: left;
+    }
       </style>';}
 
     ?>

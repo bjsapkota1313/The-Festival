@@ -1,7 +1,4 @@
 <?php
-if (!isset($_SESSION)) {
-    session_start();
-}
 
 echo '
 
@@ -20,15 +17,15 @@ echo '
     <script src="/javascript/app.js"></script>
     <link href="/css/styles.css" rel="stylesheet" type="text/css">';
 
-//load CSS faster in hosted website
-include 'loadCSS.php';
-loadCSS();
-
-echo 
-'</head>
+    //load CSS faster in hosted website
+    include 'loadCSS.php';
+    loadCSS();
+    
+    echo 
+    '</head>
 
 <body>
-
+<header>
   <nav class="navbar">
     <a class="navbar-brand" href="/">Visit Haarlem</a>
 
@@ -68,7 +65,8 @@ echo
 
     </ul>
 
-  </nav>';
+  </nav>
+  </header>';
 
 
   ?>
