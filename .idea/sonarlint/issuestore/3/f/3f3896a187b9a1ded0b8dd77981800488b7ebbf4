@@ -1,0 +1,14 @@
+
+W	php:S1808."=Move this open curly brace to the beginning of the next line.(‚ŠØíıÿÿÿÿ
+\	php:S1808:"GMove this "catch" to the same line as the previous closing curly brace.(¸æ «
+_	php:S1808:"JPut one space between the closing parenthesis and the opening curly brace.(¸æ «
+^	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(‚ëÿ„ÿÿÿÿÿ
+Y	php:S1808!"DPut one space between this "if" keyword and the opening parenthesis.(Ç×·
+_	php:S1808/"EPut one space between this "try" keyword and the opening curly brace.(¡»¢üùÿÿÿÿ
+^	php:S1808F"DPut one space between this "if" keyword and the opening parenthesis.(‚ëÿ„ÿÿÿÿÿ
+Y	php:S1784"?Explicitly mention the visibility of this method "getAllUsers".(³ÉÊ°şÿÿÿÿ
+x	php:S1488"^Immediately return this expression instead of assigning it to the temporary variable "$users".(ßÅôüÿÿÿÿ
+8php:S125"Remove this commented out code.(‡Ä¡˜üÿÿÿÿ
+k	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(ÂÜ¿ßıÿÿÿÿ
+k	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(Ä¶ùöøÿÿÿÿ
+e	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(Ø±_

@@ -4,13 +4,6 @@ require_once __DIR__ . '/../models/user.php';
 
 class UserService {
     // public function setReviewId(int $reviewId): self
-
-    public function getAllUsers()
-    {
-        $repository = new UserRepository();
-        return $repository->getAllUsers();
-    }
-
     public function checkLogin(string $userName, string $password)
     {
         $repository = new UserRepository();

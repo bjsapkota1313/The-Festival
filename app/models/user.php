@@ -139,5 +139,5 @@ class User implements \JsonSerializable{
     {
         $this->picture = $picture;
     }
-
 }
+

@@ -1,0 +1,8 @@
+
+CWeb:PageWithoutTitleCheck"Add a <title> tag to this page.(ñ§½W
+dphp:S103"KSplit this 130 characters long line (which is greater than 120 authorized).( êÈžúÿÿÿÿ
+dphp:S103"KSplit this 132 characters long line (which is greater than 120 authorized).(‚›¤Œüÿÿÿÿ
+_php:S103"KSplit this 159 characters long line (which is greater than 120 authorized).(ð’¥‘
+^	php:S1808 "DPut one space between this "if" keyword and the opening parenthesis.(îÊÿëùÿÿÿÿ
+Iphp:S121 "0Add curly braces around the nested statement(s).(îÊÿëùÿÿÿÿ
+f	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(ÿ­°²

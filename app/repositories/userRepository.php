@@ -8,7 +8,8 @@ class UserRepository extends Repository
     function getAllUsers()
     {
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM User");
+
+            $stmt = $this->connection->prepare("SELECT * FROM users");
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
             $users = $stmt->fetchAll();
@@ -24,18 +25,18 @@ class UserRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT * FROM User WHERE email = ?");
             $stmt->execute([$userName]);
-            $user=$this->createUserInstance($stmt->fetch());
+            $user = $this->createUserInstance($stmt->fetch());
             echo $user->getFirstName();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
             $users = $stmt->fetchAll();
-            if(count($users) == 1) {
+            if (count($users) == 1) {
                 $user = $users[0];
-                if(password_verify($password, $user->getPassword())) {
+                if (password_verify($password, $user->getPassword())) {
                     return $user;
                 }
             }
             return null;
-        } catch (Exception | PDOException $e) {
+        } catch (Exception|PDOException $e) {
             echo $e;
         }
     }
@@ -43,8 +44,9 @@ class UserRepository extends Repository
     /**
      * @throws Exception
      */
-    private function createUserInstance($dbRow) :User{
-        try{
+    private function createUserInstance($dbRow): User
+    {
+        try {
             $user = new User();
             $user->setId($dbRow['id']);
             $user->setEmail($dbRow['email']);
@@ -54,8 +56,7 @@ class UserRepository extends Repository
             $user->setFirstName($dbRow['firstName']);
             $user->setLastName($dbRow['lastName']);
             return $user;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             echo "Error while creating user instance: " . $e->getMessage();
         }
 
@@ -67,7 +68,7 @@ class UserRepository extends Repository
         $stmt->execute([$userId]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
         $users = $stmt->fetchAll();
-        if(count($users) == 1) {
+        if (count($users) == 1) {
             return $users[0];
         }
         return null;
@@ -84,4 +85,7 @@ class UserRepository extends Repository
         $query->bindParam(":password", $password);
         $query->execute();
     }
+
 }
+
+
