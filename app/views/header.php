@@ -18,32 +18,14 @@ echo '
     <meta name="description" content="">
     <meta name="author" content="">
     <script src="/javascript/app.js"></script>
-    <link href="css/style.css" rel="stylesheet" type="text/css">
-</head>
-<style>
-  body {
-    margin: 0 10% 0 10%;
-  }
+    <link href="/css/styles.css" rel="stylesheet" type="text/css">';
 
-  nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+//load CSS faster in hosted website
+include 'loadCSS.php';
+loadCSS();
 
-  }
-
-  ul {
-    list-style: none;
-  }
-
-  nav ul li {
-    display: inline;
-    padding-right: 20px;
-    text-align: left;
-  }
-</style>
-
-
+echo 
+'</head>
 
 <body>
 
