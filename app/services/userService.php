@@ -17,4 +17,35 @@ class UserService {
         $repository = new UserRepository();
         return $repository->getUserById($userId);
     }
+    public function getAllUsers()  {
+        $repository = new UserRepository();
+        return $repository->getAllUsers();
+    }
+    public function getUsersBySearchQuery($searchingTerm){
+        $repository = new UserRepository();
+        return $repository->getUsersBySearchQuery($searchingTerm);
+    }
+    public function getUserBySortingFirstNameByAscOrDescOrders($order)
+    {
+        $repository = new UserRepository();
+        return $repository->getUserBySortingFirstNameByAscOrDescOrders($order);
+    }
+    public function getUserBySortingFirstNameByAscendingOrder(){
+         return $this->getUserBySortingFirstNameByAscOrDescOrders("ASC");
+    }
+    public function getUserBySortingFirstNameByDescendingOrder(){
+       return  $this->getUserBySortingFirstNameByAscOrDescOrders("DESC");
+    }
+    public function getUsersByRoles($roles){
+        $repository = new UserRepository();
+        return $repository->getUsersByRoles($roles);
+    }
+    public function getUsersBySearchAndSpecificRoles($searchingTerm, $criteria){
+        $repository = new UserRepository();
+        return $repository->getUsersBySearchAndSpecificRoles($searchingTerm, $criteria);
+    }
+    public function deleteUserById($userId) :bool{
+        $repository = new UserRepository();
+        return $repository->deleteUserById($userId);
+    }
 }

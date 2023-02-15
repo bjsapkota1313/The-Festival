@@ -10,7 +10,6 @@ J	php:S1808"0Remove all space before the closing parenthesis.(¨ğ´ ıÿÿÿÿ
 Y	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(­Ç¾›
 Y	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(ÛÇñç
 Y	php:S1784	"DExplicitly mention the visibility of this constructor "__construct".(¨ÿ—¦
-J	php:S1172".Remove the unused function parameter "$query".(ùÓ‹8õÈƒêã0
 ;	php:S2003"&Replace "require" with "require_once".(ªë”Ú
 ;	php:S2003"&Replace "require" with "require_once".(¤½à
 2php:S125!"Remove this commented out code.(îÿÉ8

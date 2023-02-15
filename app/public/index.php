@@ -18,3 +18,5 @@ $uri = trim($_SERVER['REQUEST_URI'], '/');
 $router = new PatternRouter();
 // call method route on the router object.
 $router->route($uri);
+
+
