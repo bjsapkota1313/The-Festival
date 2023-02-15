@@ -40,13 +40,57 @@ class ManageUsersController
             echo $e->getMessage();
         }
     }
+    public function deleteUser(): void
+    {
+        try{
+            if($_SERVER['REQUEST_METHOD']==='POST'){
+                $this->sendHeaders();
+                $responseData="";
+                $users=null;
+                $body = file_get_contents('php://input');
+                $data = json_decode($body);
+                $checkDeleted=$this->userService->deleteUserById(htmlspecialchars($data->userID));
+                if($checkDeleted){
+                    if(empty($body->SortingCondition)){
+                        $users=$this->userService->getAllUsers();
+                        $responseData=array(
+                            "Success" => true,
+                            "users"=>json_encode($users)
+                        );
+                    }
+                    else{
+                        $sortingOption =htmlspecialchars($body->SortingCondition);
+                        if(in_array($sortingOption, Roles::getEnumValues())){
+                            $responseData=array(
+                                "Success" => true,
+                                "users"=>json_encode($users)
+                            );
+                        }
+                        else{
+                            throw new InvalidArgumentException("Cannot Parse the values");
+                        }
+                    }
+                }
+                else{
+                    $responseData=array(
+                        "Success" => true,
+                        "Message"=>"Sorry, Something went wrong while deleting user"
+                    );
+                }
+                echo json_encode($responseData);
+            }
+        }
+        catch(InvalidArgumentException | PDOException | Exception $e){
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
+        }
+    }
 
     public function sortUsers(): void
     {
         try {
             $this->sendHeaders();
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                $users = null;
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {$users = null;
                 if (empty($_GET['selectedOption'])) {
                     $users = $this->userService->getAllUsers();
                 } else {

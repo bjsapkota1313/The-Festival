@@ -10,7 +10,7 @@ function onInputChange(input) {
             if (!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText);
             }
-           return  response.json();
+            return response.json();
         })
         .then(users => {
             clearTableRow();
@@ -22,12 +22,12 @@ function onInputChange(input) {
                 noSearchResultFoundForSearch();
             }
         }).catch(error => {
-            console.log(error);
-        });
+        console.log(error);
+    });
 }
 
 function clearTableRow() {
- document.getElementById('tableDataDisplay').innerHTML = '';
+    document.getElementById('tableDataDisplay').innerHTML = '';
 }
 
 function getSortingConditionForSearch() {
@@ -117,7 +117,7 @@ function sortValueChanged(selectElement) {
             if (!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText);
             }
-            return  response.json();
+            return response.json();
         })
         .then(users => {
             clearTableRow()
@@ -129,9 +129,22 @@ function sortValueChanged(selectElement) {
                 noSearchResultFoundForSearch();
             }
         }).catch(error => {
-            console.log(error);
-        });
+        console.log(error);
+    });
 }
-function editUserButtonClicked(){
+
+function btnDeleteUserClicked(id) {
+    let sortingCondition = getSortingConditionForSearch();
+    let data = {'userID': id};
+    if (sortingCondition !== null) {
+        data = {'userID': id, 'SortingCondition': sortingCondition}
+    }
+    fetch('http://localhost/api/ManageUsers/deleteUser', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
 
 }

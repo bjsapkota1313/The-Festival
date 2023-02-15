@@ -98,12 +98,8 @@ require_once __DIR__ . '/Headers.htm';
                                 <input type="hidden" name="hiddenUserId" value="<?= $user->getId() ?>">
                                 <button name="btnEditUser" class="btn btn-primary"><i
                                             class="fa-solid fa-file-pen"></i></button>
+                                <button  class="btn btn-danger" onclick="btnDeleteUserClicked()"><i class="fa-solid fa-trash"></i></button>
                             </form>
-                            <form>
-                                <button  class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-
-
                         </td>
                     </tr>
                     <?php

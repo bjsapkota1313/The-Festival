@@ -54,5 +54,4 @@ class Roles implements jsonSerializable
         $constants = $reflectionClass->getConstants();
         return array_values($constants);
     }
-
 }
