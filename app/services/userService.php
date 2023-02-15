@@ -57,8 +57,6 @@ class UserService
         $repository = new UserRepository();
         return $repository->deleteUserById($userId);
     }
-    
-
     public function registerUser($newUser): void
     {
         $repository = new UserRepository();
