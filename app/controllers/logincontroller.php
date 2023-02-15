@@ -22,8 +22,14 @@ class LoginController extends Controller {
             header("location: /home");
             exit();
         }
+
         if(isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
-            $user = $this->userService->checkLogin($_POST["username"], $_POST["pwd"]);
+            $inputUserName = $_POST["username"];
+            $inputPassword = $_POST["pwd"];
+            // using html special chars function to clean up the input
+            $inputUserName = htmlspecialchars($inputUserName);
+            $inputPassword = htmlspecialchars($inputPassword);
+            $user = $this->userService->checkLogin($inputUserName, $inputPassword);
             if (isset($user) && $user != null ) {
                 $_SESSION["email"] = $user->getEmail();
                 $_SESSION["randomSeed"] = bin2hex(random_bytes(32));

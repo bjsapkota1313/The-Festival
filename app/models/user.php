@@ -6,6 +6,7 @@ class User implements \JsonSerializable{
     private string $firstName;
     private string $lastName;
     private string $email;
+    private string $hashedPassword;
     private DateTime $registrationDate;
     private DateTime $dateOfBirth;
     private string $picture ;
@@ -91,6 +92,21 @@ class User implements \JsonSerializable{
     public function setEmail(string $email): void
     {
         $this->email = $email;
+    }
+    /**
+     * @return string
+     */
+    public function getHashedPassword(): string
+    {
+        return $this->hashedPassword;
+    }
+
+    /**
+     * @param string $hashedPassword
+     */
+    public function setHashedPassword(string $hashedPassword): void
+    {
+        $this->hashedPassword = $hashedPassword;
     }
     /**
      * @return DateTime
