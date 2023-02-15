@@ -17,7 +17,7 @@ class ManageUsersController extends Controller
     {
         // checking if user is logged in and if adminstrator is not logged in
         if (isset($_SESSION["loggedUser"])) {
-            if ($_SESSION["loggedUser"]->getRole() == Roles::Administrator()) {
+            if (unserialize(serialize($_SESSION["loggedUser"]->getRole())) == Roles::Administrator()) {
                 $users = $this->userService->getAllUsers();
                 if (!is_null($users)) {
 //                 $this->displayPageView("OverviewMangeUsers",$users);

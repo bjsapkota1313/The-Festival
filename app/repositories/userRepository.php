@@ -296,5 +296,20 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+
+    function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
+    {
+
+        $query = $connection->prepare("UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture WHERE id=:id");
+        $query->bindParam(":id", $id);
+        $query->bindParam(":role", $role);
+        $query->bindParam(":firstName", $firstName);
+        $query->bindParam(":lastName", $lastName);
+        $query->bindParam(":dateOfBirth", $dateOfBirth);
+        $query->bindParam(":email", $email);
+        $query->bindParam(":picture", $picture);
+        $query->execute();
+    }
+
 }
 

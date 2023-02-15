@@ -142,4 +142,11 @@ class UserService
             echo $exception->getMessage();
         }
     }
+
+    public function updateUser($connection, $id, $role, $firstName, $lastName,  $dateOfBirth, $email, $picture)
+    {
+        $repository = new UserRepository();
+        return $repository->updateUser($connection, $id, $role, $firstName, $lastName,  $dateOfBirth, $email, $picture);
+    }
+
 }
