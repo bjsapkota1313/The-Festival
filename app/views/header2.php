@@ -12,6 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <script src="/javascript/app.js"></script>s
+    <script src="/javascript/app.js"></script>
     <link href="/views/css/style.css" rel="stylesheet" type="text/css">
 </head>
