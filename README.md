@@ -26,10 +26,15 @@ docker-compose up
 ## login page address
 http://localhost/login
 first add the tables to the database. You can use sql/User.sql and sql/Role.sql for adding the tables.
+
 The User.sql contains 3 users:
+
 Username        Pass    Role
+
 Sara@gmail.com  Sara    Admin
+
 Alice@gmail.com Alice   Customer
+
 Bob@gmail.com   Bob     Employee
 
 When user is logged in, a session is created. You can use checkLogin method to see if user is logged in or not and who is logged in.
