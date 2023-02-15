@@ -26,7 +26,7 @@ class LoginController extends Controller
 
     public function index($query)
     {
-        if (isset($_SESSION["username"])) {
+        if (isset($_SESSION["loggedUser"])) {
             header("location: /home");
             exit();
         }
@@ -38,15 +38,11 @@ class LoginController extends Controller
             $inputPassword = htmlspecialchars($inputPassword);
             $user = $this->userService->checkLogin($inputUserName, $inputPassword);
             if (isset($user) && $user != null ) {
-                $_SESSION["email"] = $user->getEmail();
-                $_SESSION["randomSeed"] = bin2hex(random_bytes(32));
+
                 if ($user instanceof User) {
-                    $_SESSION["userRole"] = $user->getRole();
-                    $_SESSION["id"] = $user->getId();
-                    // $this->displayView("Welcome Reader: " . $user->getFirstName());
+                   $_SESSION['loggedUser']=$user;
                 }
                 header("location: /home");
-                // echo "successfully logged in";
             } else {
                 $this->displayView("Wrong Credentials. Try again.");
             }

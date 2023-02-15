@@ -9,7 +9,7 @@ class UserRepository extends Repository
     function getAllUsers()
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User "); 
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User ");
             $stmt->execute();
             if ($stmt->rowCount() == 0) {
                 return null;
@@ -45,7 +45,6 @@ class UserRepository extends Repository
             }
             // echo "no user found";
             return null;
-            /*
         } catch (Exception | PDOException $e) {
             echo $e;
         }
@@ -73,7 +72,7 @@ class UserRepository extends Repository
     public function getUserById(int $userId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User WHERE id = :id");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE id = :id");
             $stmt->bindParam(':id', $userId);
             $stmt->execute();
             if ($stmt->rowCount() == 0) {
@@ -89,7 +88,7 @@ class UserRepository extends Repository
     public function getUsersBySearchQuery($searchingTerm)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User WHERE firstName LIKE ? OR lastName LIKE ? OR email LIKE ?");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE firstName LIKE ? OR lastName LIKE ? OR email LIKE ?");
             $stmt->execute(["%$searchingTerm%", "%$searchingTerm%", "%$searchingTerm%"]);
             if ($stmt->rowCount() == 0) {
                 return null;
@@ -108,7 +107,7 @@ class UserRepository extends Repository
     public function getUserBySortingFirstNameByAscOrDescOrders($order)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User ORDER BY firstName $order , lastName $order ");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User ORDER BY firstName $order , lastName $order ");
             $stmt->execute();
             $users = array();
             if ($stmt->rowCount() == 0) {
@@ -127,7 +126,7 @@ class UserRepository extends Repository
     public function getUsersByRoles($role)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User WHERE role = :role");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE role = :role");
             $stmt->bindValue(':role', Roles::getLabel($role));
             $stmt->execute();
             if ($stmt->rowCount() == 0) {
@@ -147,7 +146,7 @@ class UserRepository extends Repository
     public function getUsersBySearchAndSpecificRoles($searchingTerm, $criteria)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role FROM User WHERE (firstName LIKE :searchingTerm OR lastName LIKE :searchingTerm OR email LIKE :searchingTerm) AND role= :role");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE (firstName LIKE :searchingTerm OR lastName LIKE :searchingTerm OR email LIKE :searchingTerm) AND role= :role");
             $stmt->bindValue(':searchingTerm', "%$searchingTerm%");
             $stmt->bindValue(':role', Roles::getLabel($criteria));
             $stmt->execute();
@@ -177,11 +176,11 @@ class UserRepository extends Repository
         } catch (PDOException|Exception $e) {
             echo $e;
         }
-
+    }
     public function registerUser($newUser)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picture) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
+            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picturse) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
 
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
