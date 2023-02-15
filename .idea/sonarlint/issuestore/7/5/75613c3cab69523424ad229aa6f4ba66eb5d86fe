@@ -1,0 +1,16 @@
+
+Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(æ†æ¢ıÿÿÿÿ
+T	php:S1131	"@Remove the useless trailing whitespaces at the end of this line.(õ†—R
+U	php:S1131
+"@Remove the useless trailing whitespaces at the end of this line.(é¢·İ
+\	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(şë¤Ù8íÿ—ˆä0
+Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(İ–Ò˜ÿÿÿÿÿ
+R	php:S1808"=Move this open curly brace to the beginning of the next line.(Ä¬°‚
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(«â¦Èúÿÿÿÿ
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(«œ¶âûÿÿÿÿ
+b	php:S1808"HPut one space between this "switch" keyword and the opening parenthesis.(ş—¸úÿÿÿÿ
+Y	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(œù­“
+;	php:S2003"&Replace "require" with "require_once".(ëÛ¨ö
+B	php:S2003"&Replace "require" with "require_once".(ëÛ¨ö8îÿ—ˆä0
+a	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ëÛ¨ö
+h	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ëÛ¨ö8ïÿ—ˆä0

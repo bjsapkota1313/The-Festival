@@ -5,7 +5,7 @@ class Controller {
         $view = debug_bacfktrace()[1]['function'];
         require __DIR__ . "/../views/$directory/$view.php";
     }
-    function displayPageView($view, $model) {
+    function displayPageView($view){
         $directory = strtolower(substr(get_class($this), 0, -10));
         require __DIR__ . "/../views/$directory/$view.php";
     }

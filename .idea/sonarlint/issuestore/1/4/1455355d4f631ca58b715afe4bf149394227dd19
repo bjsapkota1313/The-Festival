@@ -1,6 +1,19 @@
 
 R	php:S1808"=Move this open curly brace to the beginning of the next line.(™ã‹ô
 W	php:S1808"=Move this open curly brace to the beginning of the next line.(ŸÄ˜Åüÿÿÿÿ
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(¦úú•şÿÿÿÿ
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(Ã„û¬úÿÿÿÿ
+R	php:S1808!"=Move this open curly brace to the beginning of the next line.(ÎÛô‹
+W	php:S1808$"=Move this open curly brace to the beginning of the next line.(ªÓŒùÿÿÿÿ
+Q	php:S1808'"=Move this open curly brace to the beginning of the next line.(‰è½%
+Q	php:S1808+"=Move this open curly brace to the beginning of the next line.(ò¡¥?
+Q	php:S1808/"=Move this open curly brace to the beginning of the next line.(­ÆŠ#
+i	php:S1808"OPut only one space between the closing parenthesis and the opening curly brace.(¦úú•şÿÿÿÿ
+d	php:S1808"JPut one space between the closing parenthesis and the opening curly brace.(Ã„û¬úÿÿÿÿ
+_	php:S1808!"JPut one space between the closing parenthesis and the opening curly brace.(ÎÛô‹
+d	php:S1808$"JPut one space between the closing parenthesis and the opening curly brace.(ªÓŒùÿÿÿÿ
+^	php:S1808'"JPut one space between the closing parenthesis and the opening curly brace.(‰è½%
+^	php:S1808+"JPut one space between the closing parenthesis and the opening curly brace.(ò¡¥?
 ^	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(¨ğ´ ıÿÿÿÿ
 @	php:S2003"&Replace "require" with "require_once".(å¢µüÿÿÿÿ
 f	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(å¢µüÿÿÿÿ

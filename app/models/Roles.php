@@ -48,5 +48,10 @@ class Roles implements jsonSerializable
     {
         return $this->value;
     }
-
+    public static function getEnumValues(): array
+    {
+        $reflectionClass = new ReflectionClass(__CLASS__);
+        $constants = $reflectionClass->getConstants();
+        return array_values($constants);
+    }
 }

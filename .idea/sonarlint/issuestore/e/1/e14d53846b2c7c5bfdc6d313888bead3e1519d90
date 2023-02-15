@@ -1,15 +1,15 @@
 
-a	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(Θªιªψÿÿÿÿ8ςΤεγ0
-Y	php:S1808"=Move this open curly brace to the beginning of the next line.(Λ®¶8ςΤεγ0
-^	php:S1808"=Move this open curly brace to the beginning of the next line.(Θªιªψÿÿÿÿ8σΤεγ0
-^	php:S1808"=Move this open curly brace to the beginning of the next line.(Ρ ·“ϊÿÿÿÿ8σΤεγ0
-`	php:S1784"?Explicitly mention the visibility of this method "displayView".(Θªιªψÿÿÿÿ8σΤεγ0
-d	php:S1784"CExplicitly mention the visibility of this method "displayPageView".(Ρ ·“ϊÿÿÿÿ8σΤεγ0
-O	php:S1172".Remove the unused function parameter "$model".(Θªιªψÿÿÿÿ8τΤεγ0
-O	php:S1172".Remove the unused function parameter "$model".(Ρ ·“ϊÿÿÿÿ8τΤεγ0
-G	php:S2003"&Replace "require" with "require_once".(ίΑ‰ώÿÿÿÿ8τΤεγ0
-G	php:S2003
-"&Replace "require" with "require_once".(ίΑ‰ώÿÿÿÿ8υΤεγ0
-m	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ίΑ‰ώÿÿÿÿ8υΤεγ0
-m	php:S4833
-"LReplace "require" with namespace import mechanism through the "use" keyword.(ίΑ‰ώÿÿÿÿ8υΤεγ0
+Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(Θªιªψÿÿÿÿ
+R	php:S1808"=Move this open curly brace to the beginning of the next line.(Λ®¶
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(Θªιªψÿÿÿÿ
+W	php:S1808"=Move this open curly brace to the beginning of the next line.(ωςΟϊÿÿÿÿ
+d	php:S1808"JPut one space between the closing parenthesis and the opening curly brace.(ωςΟϊÿÿÿÿ
+Y	php:S1784"?Explicitly mention the visibility of this method "displayView".(Θªιªψÿÿÿÿ
+]	php:S1784"CExplicitly mention the visibility of this method "displayPageView".(ωςΟϊÿÿÿÿ
+H	php:S1172".Remove the unused function parameter "$model".(Θªιªψÿÿÿÿ
+@	php:S2003"&Replace "require" with "require_once".(ίΑ‰ώÿÿÿÿ
+@	php:S2003
+"&Replace "require" with "require_once".(ίΑ‰ώÿÿÿÿ
+f	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ίΑ‰ώÿÿÿÿ
+f	php:S4833
+"LReplace "require" with namespace import mechanism through the "use" keyword.(ίΑ‰ώÿÿÿÿ
