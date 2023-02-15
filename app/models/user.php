@@ -9,7 +9,7 @@ class User implements \JsonSerializable{
     private string $hashedPassword;
     private DateTime $registrationDate;
     private DateTime $dateOfBirth;
-    private string $picture ;
+    private string $picture;
     public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
