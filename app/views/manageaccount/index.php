@@ -9,67 +9,63 @@ require_once '../services/userService.php';
 
 
 try {
-    $connection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+  $connection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+  echo "Connection failed: " . $e->getMessage();
 }
 
 ?>
 
 <?php
-include __DIR__ . '/../header.php';
+ include __DIR__ . '/../header.php';
 
-$GLOBALS["currentUserId"] = unserialize(serialize($_SESSION["loggedUser"]))->getId();
+ $GLOBALS["currentUserId"] = unserialize(serialize($_SESSION["loggedUser"]))->getId();
 
-$GLOBALS['userService'] = new UserService();
-$currentUser = $GLOBALS['userService']->getUserById($GLOBALS['currentUserId']);
+ $GLOBALS['userService'] = new UserService();
+ $currentUser = $GLOBALS['userService']->getUserById($GLOBALS['currentUserId']);
 
 
 
-function DisplayPage($currentUser)
-{
-    if ($currentUser->getRole() == Roles::Customer()) {
-        echo $currentUser->getId();
-        echo '<script >document.getElementById("userRole").style.display = "none";</script>';
+function DisplayPage($currentUser){
+  if ($currentUser->getRole() == Roles::Customer()){
+    echo $currentUser->getId();
+    echo '<script >document.getElementById("userRole").style.display = "none";</script>';
 
-        ?>
+  ?>
 
-    <?php
-    }
+<?php
+}
 }
 
-function getInputBirthDate()
-{
+ function getInputBirthDate(){
 
-    $dateInput = strtotime($_POST['dateOfBirth']);
-    if ($dateInput) {
-        $dateOfBirth = date('Y-m-d', $dateInput);
-        return $dateOfBirth;
-    }
+  $dateInput = strtotime($_POST['dateOfBirth']);
+  if ($dateInput) {
+  $dateOfBirth = date('Y-m-d', $dateInput);
+  return $dateOfBirth;
+ }
 
 }
 
-function updateProfile($connection, $currentUserId)
+ function updateProfile($connection, $currentUserId)
 {
 
-    if (isset($_POST["updateProfile"])) {
-        echo 'Update';
-        $firstName = $_POST["firstName"];
-        $lastName = $_POST["lastName"];
-        if (isset($_POST["userRole"])) {
-            $role = $_POST["userRole"];
-        } else {
-            $role = 'Customer';
-        }
-        $email = $_POST["email"];
-        $birthDate = getInputBirthDate();
+  if (isset($_POST["updateProfile"])) {
+    echo 'Update';
+    $firstName = $_POST["firstName"];
+    $lastName = $_POST["lastName"];
+    if (isset($_POST["userRole"])){
+    $role = $_POST["userRole"];}
+    else {$role='Customer';}
+    $email = $_POST["email"];
+    $birthDate = getInputBirthDate();
 
-        move_uploaded_file($_FILES["file"]["tmp_name"], "./img/" . $_FILES["file"]["name"]);
-        $path = "./img/" . $_FILES["file"]["name"];
-        $GLOBALS["userService"]->updateUser($connection, $currentUserId, $role, $firstName, $lastName, $birthDate, $email, $path);
-        echo '<h5>Your profile was updated</h5><br>';
-
-    }
+    move_uploaded_file($_FILES["file"]["tmp_name"],"./img/".$_FILES["file"]["name"]);
+    $path = "./img/" . $_FILES["file"]["name"];
+    $GLOBALS["userService"]->updateUser($connection, $currentUserId, $role, $firstName, $lastName, $birthDate, $email, $path);
+    echo '<h5>Your profile was updated</h5><br>';
+   
+  }
 
 }
 
@@ -80,11 +76,11 @@ echo '<div class="container d-flex justify-content-center align-items-center pt-
     <div class="col-lg-8 col-md-10">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h1 class="card-title text-center mb-4">' . $currentUser->getFirstName() . ' ' . $currentUser->getLastName() . '</h2><br>
+                <h1 class="card-title text-center mb-4">'.  $currentUser->getFirstName() . ' ' . $currentUser->getLastName(). '</h2><br>
                 <form method="POST" enctype="multipart/form-data">
                     <div class="row mb-3">
                             <div class="profile-img-container mb-3">
-                              <img src="' . $currentUser->getPicture() . '"alt="Profile Picture" class="img-fluid">
+                              <img src="' . $currentUser->getPicture(). '"alt="Profile Picture" class="img-fluid">
                               <div class="mb-3">
                               <br><br>
                               <label>Change your picture:</label>
@@ -96,7 +92,7 @@ echo '<div class="container d-flex justify-content-center align-items-center pt-
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                         <label for="first-name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" name="firstName" value="' . $currentUser->getFirstName() . '" required>
+                                        <input type="text" class="form-control" name="firstName" value="'. $currentUser->getFirstName() .'" required>
                                     </div>
                                 
                                 <div class="col-md-6">
@@ -108,11 +104,11 @@ echo '<div class="container d-flex justify-content-center align-items-center pt-
                             </div>';
 
 
-echo ' <div class="row mb-3" id="userRole">
+                            echo ' <div class="row mb-3" id="userRole">
                                 <div class="col-md-6">';
-DisplayPage($currentUser);
-echo
-    '<div class="mb-3">
+                                DisplayPage($currentUser);
+                            echo 
+                                    '<div class="mb-3">
                                     <select name="userRole" >
                                     <option value="none" selected disabled hidden>' . 'customer' . '</option>
                                     <option value="Customer">Customer</option>
@@ -134,7 +130,7 @@ echo
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="dob" class="form-label">Date of Birth</label>
-                                        <input type="date" name= "dateOfBirth" class="form-control" value="' . $currentUser->getDateOfBirth()->format('Y-m-d') . '"required>
+                                        <input type="date" name= "dateOfBirth" class="form-control" value="'. $currentUser->getDateOfBirth()->format('Y-m-d') .'"required>
                                     </div>
                                 </div>
                             </div>
