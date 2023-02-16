@@ -86,7 +86,6 @@ echo '<div class="container d-flex justify-content-center align-items-center pt-
                               <label>Change your picture:</label>
                                 <input type="file" name="file" id="file"><br><br>
                                 </div>
-
                         </div>
                         <div class="col-md-8">
                             <div class="row mb-3">
