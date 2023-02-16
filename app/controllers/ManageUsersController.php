@@ -17,14 +17,10 @@ class ManageUsersController extends Controller
     {
         // checking if user is logged in and if adminstrator is not logged in
         if (isset($_SESSION["loggedUser"])) {
-            if ($_SESSION["loggedUser"]->getRole() == Roles::Administrator()) {
+            if (unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
                 $users = $this->userService->getAllUsers();
-                if (!is_null($users)) {
-//                 $this->displayPageView("OverviewMangeUsers",$users);
-                    require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
-                } else {
-                    echo "No users are In the Website";
-                }
+               // $this->displayPageView("OverviewManageUsers",$users);
+                require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
             } else {
                 $this->displayPageView("NotAllowedPage");
             }
@@ -33,19 +29,45 @@ class ManageUsersController extends Controller
         }
 
     }
-
     public function editUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
             $userId = htmlspecialchars($_POST['hiddenUserId']);
             $editingUser = $this->userService->getUserById($userId);
             if (!is_null($editingUser)) {
-                require __DIR__ . '/../views/ManageUsers/EditIndividualUser.php';
+
+                require __DIR__ . '/../views/ManageUsers/EditUser.php';
             } else {
                 echo "User is not found";
             }
         } else {
             http_response_code(401); // Unauthorised Request
+        }
+        if ($_SERVER['REQUEST_METHOD'] === "POST") {
+            $this->editUserDetailsSubmit();
+        }
+
+    }
+    public function editUserDetailsSubmit()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnSaveChanges'])) {
+            $message= "";
+            if(isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['dateOfBirth']) && isset($_POST['role'])){
+                $firstName = htmlspecialchars($_POST['firstName']);
+                $lastName = htmlspecialchars($_POST['lastName']);
+                $email = htmlspecialchars($_POST['email']);
+                $dateOfBirth = htmlspecialchars($_POST['dateOfBirth']);
+                $role = htmlspecialchars($_POST['role']);
+                echo $role;
+                echo $dateOfBirth;
+                echo $email;
+                echo $lastName;
+                echo $firstName;
+
+
+            } else {
+                $message = "Please, Dont leave any field empty";
+            }
         }
     }
     private function testLoggedUser()

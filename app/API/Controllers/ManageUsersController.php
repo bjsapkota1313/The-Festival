@@ -23,7 +23,6 @@ class ManageUsersController
                         $sortSelectedOption = htmlspecialchars($_GET['sortSelectedOption']);
                         $users = $this->getUsersBySortingOptionSelected($sortSelectedOption);
                     }
-
                 } else {
                     $searchingTerm = htmlspecialchars($_GET['SearchTerm']);
                     if (!empty($_GET['sortSelectedOption'])) {
@@ -40,57 +39,45 @@ class ManageUsersController
             echo $e->getMessage();
         }
     }
+
     public function deleteUser(): void
     {
-        try{
-            if($_SERVER['REQUEST_METHOD']==='POST'){
+        try {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->sendHeaders();
-                $responseData="";
-                $users=null;
+                $responseData = "";
+                $users = null;
                 $body = file_get_contents('php://input');
                 $data = json_decode($body);
-                $checkDeleted=$this->userService->deleteUserById(htmlspecialchars($data->userID));
-                if($checkDeleted){
-                    if(empty($body->SortingCondition)){
-                        $users=$this->userService->getAllUsers();
-                        $responseData=array(
-                            "Success" => true,
-                            "users"=>json_encode($users)
-                        );
-                    }
-                    else{
-                        $sortingOption =htmlspecialchars($body->SortingCondition);
-                        if(in_array($sortingOption, Roles::getEnumValues())){
-                            $responseData=array(
-                                "Success" => true,
-                                "users"=>json_encode($users)
-                            );
-                        }
-                        else{
-                            throw new InvalidArgumentException("Cannot Parse the values");
-                        }
-                    }
-                }
-                else{
-                    $responseData=array(
+                $checkDeleted = $this->userService->deleteUserById(htmlspecialchars($data->userID));
+                if ($checkDeleted) {
+                    $sortingOption = htmlspecialchars($data->SortingCondition);
+                    $users = $this->getUsersBySortingOptionSelected($sortingOption); // sending data as it is in ui
+                    $responseData = array(
                         "Success" => true,
-                        "Message"=>"Sorry, Something went wrong while deleting user"
+                        "users" => json_encode($users)
                     );
                 }
-                echo json_encode($responseData);
+            } else {
+                $responseData = array(
+                    "Success" => false,
+                    "Message" => "Sorry, Something went wrong while deleting user"
+                );
             }
-        }
-        catch(InvalidArgumentException | PDOException | Exception $e){
+            echo json_encode($responseData);
+        } catch (InvalidArgumentException|PDOException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
     }
 
-    public function sortUsers(): void
+    public
+    function sortUsers(): void
     {
         try {
             $this->sendHeaders();
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {$users = null;
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $users = null;
                 if (empty($_GET['selectedOption'])) {
                     $users = $this->userService->getAllUsers();
                 } else {
@@ -103,7 +90,6 @@ class ManageUsersController
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
-
     }
 
     private function sendHeaders(): void
@@ -114,7 +100,8 @@ class ManageUsersController
         header('Content-Type: application/json');
     }
 
-    private function getUsersBySortingOptionSelected($selectedOption): ?array
+    private
+    function getUsersBySortingOptionSelected($selectedOption): ?array
     {
         $users = null;
         switch ($selectedOption) {

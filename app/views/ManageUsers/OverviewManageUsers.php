@@ -20,9 +20,9 @@ require_once __DIR__ . '/Headers.htm';
                 <select class="form-select" id="filter-select" onchange="sortValueChanged(this)">
                     <option selected value="All Users">All Users</option>
                     <option value="A-z">A-z</option>
-                    <option  value="Z-A">Z-A</option>
+                    <option value="Z-A">Z-A</option>
                     <?php foreach (Roles::getEnumValues() as $value) : ?>
-                    <option value="<?= $value ?>"><?= Roles::getLabel(new Roles($value)) ?></option>
+                        <option value="<?= $value ?>"><?= Roles::getLabel(new Roles($value)) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -51,62 +51,74 @@ require_once __DIR__ . '/Headers.htm';
         </div>
     </div>
 </div>
-
-
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 col-sm-12">
             <div class="d-flex flex-column flex-md-row justify-content-md-between">
                 <h4 class="pb-2">Users Overview</h4>
                 <button class="btn btn-primary">Add New User</button>
             </div>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Profile Pic</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Date of Birth</th>
-                    <th>Registration Date</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <Style>.round-image {
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-                </Style>
-                <tbody id="tableDataDisplay">
-                <?php
-                foreach ($users as $user) {
-                    ?>
+            <div class="table-responsive-sm">
+                <table class="table table-striped">
+                    <thead>
                     <tr>
-                        <td><img src="<?= $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
-                        <td><?= $user->getFirstName(); ?></td>
-                        <td><?= $user->getLastName(); ?></td>
-                        <td><?= $user->getEmail(); ?></td>
-                        <td><?= Roles::getLabel($user->getRole()); ?></td>
-                        <td><?= $user->getDateOfBirth()->format('d-m-Y'); ?></td>
-                        <td><?= $user->getRegistrationDate()->format('d-m-Y'); ?></td>
-                        <td>
-
-                            <form method="POST" action="/manageUsers/editUser">
-                                <input type="hidden" name="hiddenUserId" value="<?= $user->getId() ?>">
-                                <button name="btnEditUser" class="btn btn-primary"><i
-                                            class="fa-solid fa-file-pen"></i></button>
-                                <button  class="btn btn-danger" onclick="btnDeleteUserClicked()"><i class="fa-solid fa-trash"></i></button>
-                            </form>
-                        </td>
+                        <th>Profile Pic</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Date of Birth</th>
+                        <th>Registration Date</th>
+                        <th>Actions</th>
                     </tr>
+                    </thead>
+                    <Style>.round-image {
+                            width: 35px;
+                            height: 35px;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        }
+                    </Style>
+                    <tbody id="tableDataDisplay">
                     <?php
-                }
-                ?>
-                </tbody>
-            </table>
+                    if (!is_null($users)) {
+                    foreach ($users as $user) {
+                        ?>
+                        <tr>
+                            <td><img src="<?= $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
+                            <td><?= $user->getFirstName(); ?></td>
+                            <td><?= $user->getLastName(); ?></td>
+                            <td><?= $user->getEmail(); ?></td>
+                            <td><?= Roles::getLabel($user->getRole()); ?></td>
+                            <td><?= $user->getDateOfBirth()->format('d-m-Y'); ?></td>
+                            <td><?= $user->getRegistrationDate()->format('d-m-Y'); ?></td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <form method="POST" action="/manageUsers/editUser">
+                                        <input type="hidden" name="hiddenUserId" id="hiddenUserId"
+                                               value="<?= $user->getId() ?>">
+                                        <button name="btnEditUser" class="btn btn-primary"><i
+                                                    class="fa-solid fa-file-pen"></i>
+                                        </button>
+                                    </form>
+                                    <button class="btn btn-danger ms-2"
+                                            onclick="btnDeleteUserClicked(<?= $user->getId() ?>)"><i
+                                                class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    }
+                    else{
+                    ?>
+                        <script>noSearchResultFoundForSearch();</script>
+                        <?php
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
