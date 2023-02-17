@@ -181,7 +181,7 @@ class UserRepository extends Repository
     public function registerUser($newUser)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picturse) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
+            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picture) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
 
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
@@ -193,10 +193,7 @@ class UserRepository extends Repository
 
             $stmt->execute();
         } catch (PDOException $e) {
-            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-            http_response_code(500);
-            exit();
+            echo $e;
         }
     }
 
