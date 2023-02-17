@@ -10,11 +10,15 @@ use PHPMailer\PHPMailer\Exception;
 
 class UserService
 {
+    private $repository;
+
+    public function __construct(){
+        $this->repository = new UserRepository();
+    }
     // public function setReviewId(int $reviewId): self
     public function checkLogin(string $userName, string $password)
     {
-        $repository = new UserRepository();
-        $user = $repository->login($userName, $password);
+        $user = $this->repository->login($userName, $password);
         if (isset($user) && $user != null) {
             return $user;
         }
@@ -23,15 +27,16 @@ class UserService
 
     public function getUserById(int $userId)
     {
-        $repository = new UserRepository();
-        return $repository->getUserById($userId);
+        return $this->repository->getUserById($userId);
     }
 
     public function registerUser($newUser): void
     {
         $repository = new UserRepository();
         $plainPassword=$newUser['password'];
+        $image = $newUser['picture'];
         $newUser['password']=$this->hashPassword($plainPassword);
+        $newUser['picture']=$this->storeImage($image);
         $repository->registerUser($newUser);
     }
 
@@ -41,20 +46,14 @@ class UserService
         return $repository->checkUserExistenceByEmail($email);
     }
 
-    public function putRandomTokenForNewPassword($token, $expiration_time,$email): void
+    public function updatePassword($userId, $newPassword): void
     {
         $repository = new UserRepository();
-        $repository->putRandomTokenForNewPassword($token, $expiration_time,$email);
-    }
-
-    public function updatePassword($email, $newPassword): void
-    {
-        $repository = new UserRepository();
-        if($repository->updatePassword($email, $this->hashPassword($newPassword))){
+        if($repository->updatePassword($userId, $this->hashPassword($newPassword))){
             date_default_timezone_set('Europe/Amsterdam');
             $tokenExpiration = date('Y-m-d H:i:s');
 
-            $this->deleteDataForgotPassword($email,$tokenExpiration);
+            $this->deleteDataForgotPassword($userId,$tokenExpiration);
         }
     }
     public function deleteDataForgotPassword($email,$tokenExpiration): void
@@ -95,8 +94,9 @@ class UserService
             echo 'Mailer Error: ' . $mail->ErrorInfo;
         } else {
             echo 'Message has been sent';
-            $passwordResetLink =
-            $this->putRandomTokenForNewPassword($token,$expiration_time,$email);
+            $id = $this->checkUserExistenceByEmail($email);
+
+            $this->repository->putRandomTokenForNewPassword($token,$expiration_time,$id);
         }
     }
     public function isTokenValid($token){
@@ -107,6 +107,25 @@ class UserService
     {
         try {
              return password_hash($password ,PASSWORD_DEFAULT);
+        } catch (Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    public function storeImage($image)
+    {
+        try {
+            $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+            $newImageName = uniqid() . '.' . $ext;
+            $upload_dir = __DIR__ . '/../public/image/';
+            if(!move_uploaded_file($image['tmp_name'], $upload_dir . $newImageName)){
+                throw new uploadFileFailedException();
+            }
+            return $newImageName;
+
         } catch (Exception $exception) {
             echo $exception->getMessage();
         }

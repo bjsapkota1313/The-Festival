@@ -58,36 +58,36 @@ class LoginController extends Controller
     public function registerUser()
     {
         if (isset($_POST["registerBtn"])) {
+            $inputCaptcha = $_POST["registerCaptcha"];
+
             if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["email"]))) {
                 echo "<script>alert('duplicated email')</script>";
             } else if ($_POST['password'] != $_POST['passwordConfirm']) {
                 echo "<script>alert('password wrong')</script>";
-            } else {
-                $file = $_FILES['createUserImage'];
-                $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                $newImageName = uniqid() . '.' . $ext;
-                $upload_dir = __DIR__ . '/../public/image/';
-                $success = move_uploaded_file($file['tmp_name'], $upload_dir . $newImageName);
-                if ($success) {
+            }
+            else if($_SESSION['captcha'] != $inputCaptcha){
+                echo "<script>alert('Incorrect captcha code')</script>";
+            }
+            else {
                     $newUser = array(
                         "firstName" => htmlspecialchars($_POST["firstName"]),
                         "lastName" => htmlspecialchars($_POST["lastName"]),
                         "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
                         "email" => htmlspecialchars($_POST["email"]),
                         "password" => htmlspecialchars($_POST["password"]),
-//                        "password" => password_hash(htmlspecialchars($_POST['password']), PASSWORD_DEFAULT),
-//                        "password" => $this->userService->hashPassword($_POST['password']),
                         "registrationDate" => htmlspecialchars(date("Y-m-d H:i:s")),
-                        "picture" => htmlspecialchars('/image/' . $newImageName)
+                        "picture" => $_FILES['createUserImage']
                     );
                     $this->userService->registerUser($newUser);
 
-                } else {
-                    echo "<script>alert('Please Select Model Again')</script>";
-                }
+//                } else {
+//                    echo "<script>alert('Please Select Model Again')</script>";
+//                }
             }
         }
-        require __DIR__ . '/../views/home/about.php';
+        $captcha= rand(9999,1000);
+        $_SESSION['captcha'] = $captcha;
+        require __DIR__ . '/../views/login/register.php';
     }
     /**
      * @throws Exception
@@ -95,12 +95,11 @@ class LoginController extends Controller
     public function resetPasswordViaEmail()
     {
         if (isset($_POST["send-link"])) {
-            if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["forgotPasswordEmail"]))) {
-                $email = $_POST["forgotPasswordEmail"];
+            $email = htmlspecialchars($_POST["forgotPasswordEmail"]);
+            if ($this->userService->checkUserExistenceByEmail($email)) {
                 $this->userService->sendEmail($email);
             } else {
                 echo "<script>alert('We cannot find this email from our system')</script>";
-
             }
         }
         require __DIR__ . '/../views/login/sendEmailForgotPassword.php';
@@ -113,10 +112,9 @@ class LoginController extends Controller
             if ($this->userService->isTokenValid($token)) {
 
                 $newPassword = $_POST['updateNewPassword1'];
-//                $newPassword = $_POST["updateNewPassword1"];
-                $email = $this->userService->isTokenValid($token);
+                $userId = $this->userService->isTokenValid($token);
 
-                $this->userService->updatePassword($email, $newPassword);
+                $this->userService->updatePassword($userId, $newPassword);
             }
         }
         require __DIR__ . '/../views/login/updateForgotPassword.php';
