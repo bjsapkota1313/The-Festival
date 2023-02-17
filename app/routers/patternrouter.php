@@ -28,7 +28,7 @@ class PatternRouter
             str_ends_with($uri, ".js")
             || str_ends_with($uri, ".css")
         ) {
-            readfile(__DIR__ . "/" . $uri);
+           readfile(__DIR__ . "/" . $uri);
             die();
         }
         // Path algorithm
@@ -49,7 +49,7 @@ class PatternRouter
         $uri = $this->stripParameters($uri);
 
         // read controller/method names from URL
-        // eplode is similar to split in C#, so it creates an array of strings, so
+        // explode is similar to split in C#, so it creates an array of strings, so
         // home/about, turns to
         // ["home", "about"]
         $explodedUri = explode('/', $uri);

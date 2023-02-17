@@ -9,39 +9,20 @@ class UserRepository extends Repository
     function getAllUsers()
     {
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM User");
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User ");
             $stmt->execute();
-            $rawUsers = $stmt->fetchAll();
-            // create an empty array for the users object
-            $users = array();
-            if (count($rawUsers) > 0) {
-                // iterate over rows of the database and convert each to a user class object.
-                foreach ($rawUsers as $rawUser) {
-                    $user = $this->createUserInstance($rawUser);
-                    // to increase the security, we delete the hashed password.
-                    $user->setHashedPassword("");
-                    // add the newly created user to the users array.
-                    array_push($users, $user);
-                }
+            if ($stmt->rowCount() == 0) {
+                return null;
             }
-            // echo $users;
-            // print_r($users);
-            // var_dump($users);
+            $users = array();
+            $result = $stmt->fetchAll();
+            foreach ($result as $user) {
+                $users[] = $this->createUserInstance($user);
+            }
             return $users;
-        } catch (Exception|PDOException $e) {
+        } catch (PDOException|Exception $e) {
             echo $e;
         }
-        /*
-        try {
-            $stmt = $this->connection->prepare("SELECT * FROM users");
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
-            $users = $stmt->fetchAll();
-            return $users;
-        } catch (PDOException $e) {
-            echo $e;
-        }
-        */
     }
 
     public function login(string $userName, string $password)
@@ -64,25 +45,11 @@ class UserRepository extends Repository
             }
             // echo "no user found";
             return null;
-            /*
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
-            $users = $stmt->fetchAll();
-            if (count($users) == 1) {
-                $user = $users[0];
-                if (password_verify($password, $user->getPassword())) {
-                    return $user;
-                }
-            }
-            return null;
-            */
-        } catch (Exception|PDOException $e) {
+
+        } catch (Exception | PDOException $e) {
             echo $e;
         }
     }
-
-    /**
-     * @throws Exception
-     */
     private function createUserInstance($dbRow): User
     {
         try {
@@ -95,6 +62,7 @@ class UserRepository extends Repository
             $user->setDateOfBirth(new DateTime($dbRow['dateOfBirth']));
             $user->setFirstName($dbRow['firstName']);
             $user->setLastName($dbRow['lastName']);
+            $user->setPicture($dbRow['picture']);
             return $user;
         } catch (Exception $e) {
             echo "Error while creating user instance: " . $e->getMessage();
@@ -105,36 +73,115 @@ class UserRepository extends Repository
     public function getUserById(int $userId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT * FROM User WHERE id = ?");
-            $stmt->execute([$userId]);
-            $rawUser = $stmt->fetch();
-            // check if the userId exists in the database.
-            if ($rawUser != false) {
-                $user = $this->createUserInstance($rawUser);
-                // to increase the security, we delete the hashed password.
-                $user->setHashedPassword("");
-                return $user;
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE id = :id");
+            $stmt->bindParam(':id', $userId);
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return null;
             }
-            return null;
-        } catch (Exception|PDOException $e) {
+            $result = $stmt->fetch();
+            return $this->createUserInstance($result);
+        } catch (PDOException|Exception $e) {
             echo $e;
         }
-        /*
-        $stmt = $this->connection->prepare("SELECT * FROM User WHERE id = ?");
-        $stmt->execute([$userId]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'User');
-        $users = $stmt->fetchAll();
-        if (count($users) == 1) {
-            return $users[0];
-        }
-        return null;
-        */
     }
 
+    public function getUsersBySearchQuery($searchingTerm)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE firstName LIKE ? OR lastName LIKE ? OR email LIKE ?");
+            $stmt->execute(["%$searchingTerm%", "%$searchingTerm%", "%$searchingTerm%"]);
+            if ($stmt->rowCount() == 0) {
+                return null;
+            }
+            $users = array();
+            $result = $stmt->fetchAll();
+            foreach ($result as $user) {
+                $users[] = $this->createUserInstance($user);
+            }
+            return $users;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+
+    public function getUserBySortingFirstNameByAscOrDescOrders($order)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User ORDER BY firstName $order , lastName $order ");
+            $stmt->execute();
+            $users = array();
+            if ($stmt->rowCount() == 0) {
+                return null;
+            }
+            $result = $stmt->fetchAll();
+            foreach ($result as $user) {
+                $users[] = $this->createUserInstance($user);
+            }
+            return $users;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+
+    public function getUsersByRoles($role)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE role = :role");
+            $stmt->bindValue(':role', Roles::getLabel($role));
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return null;
+            }
+            $users = array();
+            $result = $stmt->fetchAll();
+            foreach ($result as $user) {
+                $users[] = $this->createUserInstance($user);
+            }
+            return $users;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+
+    public function getUsersBySearchAndSpecificRoles($searchingTerm, $criteria)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE (firstName LIKE :searchingTerm OR lastName LIKE :searchingTerm OR email LIKE :searchingTerm) AND role= :role");
+            $stmt->bindValue(':searchingTerm', "%$searchingTerm%");
+            $stmt->bindValue(':role', Roles::getLabel($criteria));
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return null;
+            }
+            $users = array();
+            $result = $stmt->fetchAll();
+            foreach ($result as $user) {
+                $users[] = $this->createUserInstance($user);
+            }
+            return $users;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+    public function deleteUserById($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM User WHERE id = :id");
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return true;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
     public function registerUser($newUser)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picture) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
+            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picturse) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
 
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
@@ -272,5 +319,20 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+
+    function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
+    {
+
+        $query = $connection->prepare("UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture WHERE id=:id");
+        $query->bindParam(":id", $id);
+        $query->bindParam(":role", $role);
+        $query->bindParam(":firstName", $firstName);
+        $query->bindParam(":lastName", $lastName);
+        $query->bindParam(":dateOfBirth", $dateOfBirth);
+        $query->bindParam(":email", $email);
+        $query->bindParam(":picture", $picture);
+        $query->execute();
+    }
+
 }
 
