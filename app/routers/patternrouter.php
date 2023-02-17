@@ -21,6 +21,14 @@ class PatternRouter
         }
     }
 
+    // this method gets the $uri and maps it to the correct controller and method.
+    // examples:
+    // $uri: home/about will call: controllers/homecontroller->about("");
+    // $uri: login will call: controllers/logincontroller->index("");
+    // $uri: login/index?hello will call: controllers/logincontroller->index("?hello")
+    // $uri: home/users?id=10 will call: controllers/homecontroller->users("?id=10");
+    // $uri: test/hello will call: controllers/testcontroller->hello("")
+    // $uri: api/test/hello will call: api/controllers/testcontroller->hello("")
     public function route($uri)
     {
         // exclude javascript and css fils.
