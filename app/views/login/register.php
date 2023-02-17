@@ -1,7 +1,6 @@
 <?php
-//
-//include __DIR__ . '/../header.php';
-//?>
+include __DIR__ . '/../header.php';
+?>
 <!doctype html>
 <html lang="en">
 <head>
