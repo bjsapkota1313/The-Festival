@@ -4,6 +4,7 @@ require_once __DIR__ . '/../models/user.php';
 require __DIR__ . '/../PHPMailer/Exception.php';
 require __DIR__ . '/../PHPMailer/SMTP.php';
 require __DIR__ . '/../PHPMailer/PHPMailer.php';
+require_once __DIR__.'/../models/Exceptions/uploadFileFailedException.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;

@@ -54,16 +54,16 @@ class LoginController extends Controller
     public function registerUser()
     {
         if (isset($_POST["registerBtn"])) {
-            $inputCaptcha = $_POST["registerCaptcha"];
+//            $inputCaptcha = $_POST["registerCaptcha"];
 
             if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["email"]))) {
                 echo "<script>alert('duplicated email')</script>";
             } else if ($_POST['password'] != $_POST['passwordConfirm']) {
                 echo "<script>alert('password wrong')</script>";
             }
-            else if($_SESSION['captcha'] != $inputCaptcha){
-                echo "<script>alert('Incorrect captcha code')</script>";
-            }
+//            else if($_SESSION['captcha'] != $inputCaptcha){
+//                echo "<script>alert('Incorrect captcha code')</script>";
+//            }
             else {
                     $newUser = array(
                         "firstName" => htmlspecialchars($_POST["firstName"]),
