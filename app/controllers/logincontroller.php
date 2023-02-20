@@ -83,7 +83,6 @@ class LoginController extends Controller
             else{
                     echo "<script>alert('you are a robot');</script>";
                 }
-
             }
         require __DIR__ . '/../views/login/register.php';
     }

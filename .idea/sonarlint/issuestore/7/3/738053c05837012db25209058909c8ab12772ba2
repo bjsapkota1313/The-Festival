@@ -1,19 +1,0 @@
-
-R	php:S1808"=Move this open curly brace to the beginning of the next line.(°¸¯Ë
-R	php:S1808	"=Move this open curly brace to the beginning of the next line.(¨ÿ—¦
-W	php:S1808"=Move this open curly brace to the beginning of the next line.(”Àß™ûÿÿÿÿ
-W	php:S1808"=Move this open curly brace to the beginning of the next line.(ı·Öûÿÿÿÿ
-[	php:S1808*"FMove this "else" to the same line as the previous closing curly brace.(á¢–¬
-[	php:S1808&"FMove this "else" to the same line as the previous closing curly brace.(á¢–¬
-J	php:S1808"0Remove all space before the closing parenthesis.(¨ğ´ ıÿÿÿÿ
-^	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(¼®™ñşÿÿÿÿ
-Y	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(­Ç¾›
-Y	php:S1808"DPut one space between this "if" keyword and the opening parenthesis.(ÛÇñç
-Y	php:S1784	"DExplicitly mention the visibility of this constructor "__construct".(¨ÿ—¦
-;	php:S2003"&Replace "require" with "require_once".(ªë”Ú
-;	php:S2003"&Replace "require" with "require_once".(¤½à
-2php:S125!"Remove this commented out code.(îÿÉ8
-8php:S125$"Remove this commented out code.(¡àÍúÿÿÿÿ
-a	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ªë”Ú
-a	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(¤½à
-k	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(Ä¶ùöøÿÿÿÿ

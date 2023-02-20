@@ -1,5 +1,0 @@
-
-dphp:S103"KSplit this 142 characters long line (which is greater than 120 authorized).(ïÎ«Çüÿÿÿÿ
-:	php:S2003"&Replace "require" with "require_once".(½¡Év
-`	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(½¡Év
-Pphp:S131L"7Add a "case default" clause to this "switch" statement.(‹•‹üÿÿÿÿ
