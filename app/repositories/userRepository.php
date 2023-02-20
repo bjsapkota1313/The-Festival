@@ -181,15 +181,15 @@ class UserRepository extends Repository
     public function registerUser($newUser)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picture) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
+            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, picture, role) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :picture, :role)");
 
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
             $stmt->bindValue(':dateOfBirth', $newUser["dateOfBirth"]);
             $stmt->bindValue(':email', $newUser["email"]);
             $stmt->bindValue(':password', $newUser['password']);
-            $stmt->bindValue(':registrationDate', date("Y-m-d H:i:s"));
             $stmt->bindValue(':picture', $newUser['picture']);
+            $stmt->bindValue(':role', Roles::getLabel($newUser['role']));
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e;
