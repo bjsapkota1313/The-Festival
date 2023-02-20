@@ -1,10 +1,11 @@
 <?php
-require __DIR__ . '/../repositories/userRepository.php';
+require_once __DIR__ . '/../repositories/userRepository.php';
 require_once __DIR__ . '/../models/user.php';
 require __DIR__ . '/../PHPMailer/Exception.php';
 require __DIR__ . '/../PHPMailer/SMTP.php';
 require __DIR__ . '/../PHPMailer/PHPMailer.php';
 require_once __DIR__.'/../models/Exceptions/uploadFileFailedException.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -60,8 +61,7 @@ class UserService
     public function deleteUserById($userId) :bool{
         $repository = new UserRepository();
         return $repository->deleteUserById($userId);
-        }
-
+    }
     public function registerUser($newUser): void
     {
         $repository = new UserRepository();

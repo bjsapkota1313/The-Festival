@@ -1,7 +1,7 @@
 
-R	php:S1808"=Move this open curly brace to the beginning of the next line.(œ¾Íé
-[	php:S1808"FMove this "else" to the same line as the previous closing curly brace.(á¢–¬
-a	php:S1808X"GPut one space between this "catch" keyword and the opening parenthesis.(öÅ¾”ûÿÿÿÿ
-;	php:S2003P"&Replace "require" with "require_once".(ã„£¤
-8php:S125W"Remove this commented out code.(ª —…ÿÿÿÿÿ
-a	php:S4833P"LReplace "require" with namespace import mechanism through the "use" keyword.(ã„£¤
+R	php:S1808"=Move this open curly brace to the beginning of the next line.(œ¾Íé
+[	php:S1808"FMove this "else" to the same line as the previous closing curly brace.(á¢–¬
+a	php:S1808W"GPut one space between this "catch" keyword and the opening parenthesis.(öÅ¾”ûÿÿÿÿ
+;	php:S2003O"&Replace "require" with "require_once".(ã„£¤
+8php:S125V"Remove this commented out code.(ª —…ÿÿÿÿÿ
+a	php:S4833O"LReplace "require" with namespace import mechanism through the "use" keyword.(ã„£¤
