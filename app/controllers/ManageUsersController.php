@@ -15,20 +15,12 @@ class ManageUsersController extends Controller
 
     public function index()
     {
-        // checking if user is logged in and if adminstrator is not logged in
-        if (isset($_SESSION["loggedUser"])) {
-            if (unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
-                $users = $this->userService->getAllUsers();
-               // $this->displayPageView("OverviewManageUsers",$users);
-                require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
-            } else {
-                $this->displayPageView("NotAllowedPage");
-            }
-        } else {
-            header("location: /login"); // user is not logged in but manage to come here
+        if ($this->checkLoggedInUserIsAdminstrator()) {
+            $users = $this->userService->getAllUsers();
+            require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
         }
-
     }
+
     public function editUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
@@ -43,16 +35,13 @@ class ManageUsersController extends Controller
         } else {
             http_response_code(401); // Unauthorised Request
         }
-        if ($_SERVER['REQUEST_METHOD'] === "POST") {
-            $this->editUserDetailsSubmit();
-        }
-
     }
-    public function editUserDetailsSubmit()
+
+    public function editUserDetailsSubmit() //need to be done
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnSaveChanges'])) {
-            $message= "";
-            if(isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['dateOfBirth']) && isset($_POST['role'])){
+            $message = "";
+            if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['dateOfBirth']) && isset($_POST['role'])) {
                 $firstName = htmlspecialchars($_POST['firstName']);
                 $lastName = htmlspecialchars($_POST['lastName']);
                 $email = htmlspecialchars($_POST['email']);
@@ -70,6 +59,72 @@ class ManageUsersController extends Controller
             }
         }
     }
+
+    private function checkLoggedInUserIsAdminstrator()
+    {
+        if (isset($_SESSION["loggedUser"])) {
+            if (unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+                return true;
+            } else {
+                $this->displayPageView("NotAllowedPage");
+                return false;
+            }
+        } else {
+            header("location: /login");
+            exit();
+        }
+    }
+
+    public function registerNewUser()
+    {
+        if ($this->checkLoggedInUserIsAdminstrator()) {
+            $message = $this->registerNewUserSubmit();
+            require __DIR__ . '/../views/ManageUsers/RegisterNewUser.php';
+        }
+    }
+
+    private function registerNewUserSubmit()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnRegister'])) {
+            $message = null; // initialize message variable
+            if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['dateOfBirth']) && isset($_POST['role']) && isset($_POST['password']) && isset($_POST['passwordConfirm'])) {
+                try {
+                    $dateOfBirth = htmlspecialchars($_POST['dateOfBirth']);
+                } catch (Exception $e) {
+                    $message = "Please enter a valid date";
+                    return;
+                }
+
+                $role = htmlspecialchars($_POST['role']);
+                $password = htmlspecialchars($_POST['password']);
+                $passwordConfirm = htmlspecialchars($_POST['passwordConfirm']);
+                if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST['email']))) {
+                    $message = "User with this email already exists";
+                } else {
+                    if ($password == $passwordConfirm) {
+                        $user = array(
+                            "firstName" => htmlspecialchars($_POST["firstName"]),
+                            "lastName" => htmlspecialchars($_POST["lastName"]),
+                            "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
+                            "email" => htmlspecialchars($_POST["email"]),
+                            "password" => htmlspecialchars($_POST["password"]),
+                            "role" => htmlspecialchars($_POST["role"]),
+                            "picture" => $_FILES['profilePicUpload']
+
+                        );
+
+                    } else {
+                        $message = "Password and Confirm Password does not match";
+                    }
+                }
+
+            } else {
+                $message = "Please, Dont leave any field empty";
+            }
+            return $message;
+        }
+    }
+
     private function testLoggedUser()
     {
         $Bijay = new User();

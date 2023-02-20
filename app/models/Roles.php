@@ -1,9 +1,10 @@
 <?php
 class Roles implements jsonSerializable
 {
-    const Administrator = 'Administrator';
-    const Employee = 'Employee';
     const Customer = 'Customer';
+    const Employee = 'Employee';
+    const Administrator = 'Administrator';
+
     private $value;
 
     /**

@@ -189,7 +189,6 @@ class UserRepository extends Repository
             $stmt->bindValue(':password', $newUser['password']);
             $stmt->bindValue(':registrationDate', date("Y-m-d H:i:s"));
             $stmt->bindValue(':picture', $newUser['picture']);
-
             $stmt->execute();
         } catch (PDOException $e) {
             $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
@@ -222,11 +221,12 @@ class UserRepository extends Repository
             $stmt->bindValue(':email', $email);
             return $this->checkUserExistence($stmt);
         } catch (PDOException $e) {
-            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-            http_response_code(500);
-            exit();
-        }
+//            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
+//            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
+//            http_response_code(500);
+//            exit();
+            echo $e;
+       }
     }
     public function isTokenValid($token)
     {

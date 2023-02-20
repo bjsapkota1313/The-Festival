@@ -11,7 +11,6 @@ require_once __DIR__ . '/Headers.htm';
         </div>
     </div>
 </div>
-
 <div class="container pb-4">
     <div class="row align-items-center justify-content-between">
         <div class="col-md-5 mb-3 mb-md-0">
@@ -56,7 +55,7 @@ require_once __DIR__ . '/Headers.htm';
         <div class="col-md-12 col-sm-12">
             <div class="d-flex flex-column flex-md-row justify-content-md-between">
                 <h4 class="pb-2">Users Overview</h4>
-                <button class="btn btn-primary">Add New User</button>
+                <a class="btn btn-primary w-100" href="/manageusers/registerNewUser">Register New User</a>
             </div>
             <div class="table-responsive-sm">
                 <table class="table table-striped">

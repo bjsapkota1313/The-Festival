@@ -1,15 +1,15 @@
 
-Z	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(Èªéªøÿÿÿÿ
+a	php:S1131"@Remove the useless trailing whitespaces at the end of this line.(Èªéªøÿÿÿÿ8˜ïĞİå0
 R	php:S1808"=Move this open curly brace to the beginning of the next line.(Ë®¶
-W	php:S1808"=Move this open curly brace to the beginning of the next line.(Èªéªøÿÿÿÿ
-W	php:S1808"=Move this open curly brace to the beginning of the next line.(ùòÏŒúÿÿÿÿ
-d	php:S1808"JPut one space between the closing parenthesis and the opening curly brace.(ùòÏŒúÿÿÿÿ
-Y	php:S1784"?Explicitly mention the visibility of this method "displayView".(Èªéªøÿÿÿÿ
-]	php:S1784"CExplicitly mention the visibility of this method "displayPageView".(ùòÏŒúÿÿÿÿ
-H	php:S1172".Remove the unused function parameter "$model".(Èªéªøÿÿÿÿ
-@	php:S2003"&Replace "require" with "require_once".(ßÁ‰şÿÿÿÿ
-@	php:S2003
-"&Replace "require" with "require_once".(ßÁ‰şÿÿÿÿ
-f	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ßÁ‰şÿÿÿÿ
-f	php:S4833
-"LReplace "require" with namespace import mechanism through the "use" keyword.(ßÁ‰şÿÿÿÿ
+^	php:S1808"=Move this open curly brace to the beginning of the next line.(Èªéªøÿÿÿÿ8˜ïĞİå0
+^	php:S1808"=Move this open curly brace to the beginning of the next line.(ùòÏŒúÿÿÿÿ8˜ïĞİå0
+k	php:S1808"JPut one space between the closing parenthesis and the opening curly brace.(ùòÏŒúÿÿÿÿ8˜ïĞİå0
+`	php:S1784"?Explicitly mention the visibility of this method "displayView".(Èªéªøÿÿÿÿ8˜ïĞİå0
+d	php:S1784"CExplicitly mention the visibility of this method "displayPageView".(ùòÏŒúÿÿÿÿ8˜ïĞİå0
+O	php:S1172".Remove the unused function parameter "$model".(Èªéªøÿÿÿÿ8˜ïĞİå0
+G	php:S2003"&Replace "require" with "require_once".(ßÁ‰şÿÿÿÿ8Áœ²Üå0
+G	php:S2003
+"&Replace "require" with "require_once".(ßÁ‰şÿÿÿÿ8˜ïĞİå0
+m	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(ßÁ‰şÿÿÿÿ8Áœ²Üå0
+m	php:S4833
+"LReplace "require" with namespace import mechanism through the "use" keyword.(ßÁ‰şÿÿÿÿ8™ïĞİå0
