@@ -33,11 +33,11 @@ class UserRepository extends Repository
             $stmt->execute([$userName]);
             $rawUser = $stmt->fetch();
             // check if the username exists in the database.
-            if($rawUser != false) {
-                $user=$this->createUserInstance($rawUser);
+            if ($rawUser != false) {
+                $user = $this->createUserInstance($rawUser);
                 // echo $user->getFirstName();
                 // echo $user->getEmail();
-                if(password_verify($password, $user->getHashedPassword())) {
+                if (password_verify($password, $user->getHashedPassword())) {
                     // to increase the security, we delete the hashed password.
                     $user->setHashedPassword("");
                     return $user;
@@ -45,6 +45,7 @@ class UserRepository extends Repository
             }
             // echo "no user found";
             return null;
+
         } catch (Exception | PDOException $e) {
             echo $e;
         }
@@ -180,7 +181,7 @@ class UserRepository extends Repository
     public function registerUser($newUser)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picturse) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
+            $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, registrationDate, picture) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :registrationDate, :picture)");
 
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
@@ -191,10 +192,7 @@ class UserRepository extends Repository
             $stmt->bindValue(':picture', $newUser['picture']);
             $stmt->execute();
         } catch (PDOException $e) {
-            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-            http_response_code(500);
-            exit();
+            echo $e;
         }
     }
 
@@ -214,12 +212,16 @@ class UserRepository extends Repository
         }
     }
 
-    public function checkUserExistenceByEmail($email): bool
+    public function checkUserExistenceByEmail($email)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT email From User WHERE email= :email");
+            $stmt = $this->connection->prepare("SELECT id From User WHERE email= :email");
             $stmt->bindValue(':email', $email);
-            return $this->checkUserExistence($stmt);
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result[0];
+            }
         } catch (PDOException $e) {
 //            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
 //            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
@@ -228,36 +230,52 @@ class UserRepository extends Repository
             echo $e;
        }
     }
+//    public function getUserIdByEmail($email)
+//    {
+//        try {
+//            $stmt = $this->connection->prepare("SELECT id From User WHERE email= :email");
+//            $stmt->bindValue(':email', $email);
+//            $stmt->execute();
+//        } catch (PDOException $e) {
+//            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
+//            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
+//            http_response_code(500);
+//            exit();
+//        }
+//    }
     public function isTokenValid($token)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT email From forgotPassword WHERE randomToken= :randomToken");
+//            $stmt = $this->connection->prepare("SELECT email From forgotPassword WHERE randomToken= :randomToken");
+            $stmt = $this->connection->prepare("SELECT User.id
+                                                        FROM User
+                                                        Inner JOIN forgotPassword
+                                                        ON User.id = forgotPassword.userId
+                                                        WHERE forgotPassword.randomToken = :randomToken");
+
             $stmt->bindValue(':randomToken', $token);
             $stmt->execute();
             // Fetch the result from the executed SQL statement
             $result = $stmt->fetch();
 
             // Return the email address from the result
-            return $result['email'];
+            return $result[0];
 
         } catch (PDOException $e) {
-            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-            http_response_code(500);
-            exit();
+            echo $e;
         }
     }
 
-    function putRandomTokenForNewPassword($token, $expiration_time,$email)
+    function putRandomTokenForNewPassword($token, $expiration_time, $userId)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into forgotPassword (tokenExpiration, randomToken, email) VALUES (:tokenExpiration, :randomToken, :email)");
+            $stmt = $this->connection->prepare("INSERT into forgotPassword (tokenExpiration, randomToken, userId) VALUES (:tokenExpiration, :randomToken, :userId)");
 
 //            $stmt = $this->connection->prepare("UPDATE User SET randomToken = :randomToken, tokenExpiration = :tokenExpiration WHERE email = :email");
 
             $stmt->bindValue(':randomToken', $token);
             $stmt->bindValue(':tokenExpiration', $expiration_time);
-            $stmt->bindValue(':email',$email);
+            $stmt->bindValue(':userId', $userId);
 
             $stmt->execute();
         } catch (PDOException $e) {
@@ -265,16 +283,16 @@ class UserRepository extends Repository
         }
     }
 
-    function updatePassword($email, $newPassword)
+    function updatePassword($userId, $newPassword)
     {
         try {
-            $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE email = :email");
+            $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE id = :id");
 
             $stmt->bindValue(':password', $newPassword);
-            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':id', $userId);
 
             $stmt->execute();
-            if($stmt->rowcount() == 0){
+            if ($stmt->rowcount() == 0) {
                 return false;
             }
             return true;
@@ -283,18 +301,35 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    function deleteDataForgotPassword($email,$tokenExpiration){
+
+    function deleteDataForgotPassword($userId, $tokenExpiration)
+    {
         try {
-            $stmt = $this->connection->prepare("DELETE FROM forgotPassword WHERE tokenExpiration < :tokenExpiration OR email = :email");
+            $stmt = $this->connection->prepare("DELETE FROM forgotPassword WHERE tokenExpiration < :tokenExpiration OR id = :id");
 
 //            $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE email = :email");
             $stmt->bindValue(':tokenExpiration', $tokenExpiration);
-            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':id', $userId);
 
             $stmt->execute();
         } catch (PDOException $e) {
             echo $e;
         }
     }
+
+    function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
+    {
+
+        $query = $connection->prepare("UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture WHERE id=:id");
+        $query->bindParam(":id", $id);
+        $query->bindParam(":role", $role);
+        $query->bindParam(":firstName", $firstName);
+        $query->bindParam(":lastName", $lastName);
+        $query->bindParam(":dateOfBirth", $dateOfBirth);
+        $query->bindParam(":email", $email);
+        $query->bindParam(":picture", $picture);
+        $query->execute();
+    }
+
 }
 

@@ -18,6 +18,7 @@ class ManageUsersController extends Controller
         if ($this->checkLoggedInUserIsAdminstrator()) {
             $users = $this->userService->getAllUsers();
             require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
+
         }
     }
 
