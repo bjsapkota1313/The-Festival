@@ -12,6 +12,7 @@ include __DIR__ . '/../header.php';
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/registerStyle.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <div class="container pt-5">
@@ -22,23 +23,24 @@ include __DIR__ . '/../header.php';
                     <div class="row justify-content-center">
                         <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                             <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4">Sign up</p>
-                            <form class="mx-1 mx-md-4" method="POST" enctype="multipart/form-data">
-                            <div class="text-center">
-                                <div class="d-flex justify-content-center">
-                                    <div class="position-relative">
-                                        <div class="avatar-upload">
-                                            <div class="avatar-edit">
-                                                <input type='file' name="createUserImage" id="imageUpload"
-                                                       accept=".png, .jpg, .jpeg" onchange="previewImage(this)"/>
-                                                <label for="imageUpload"><i class="fas fa-edit"></i></label>
-                                            </div>
-                                            <div class="avatar-preview">
-                                                <img id="imagePreview" src="/img/blankuser.png">
+                            <form id="registerUserForm" class="mx-1 mx-md-4" method="POST"
+                                  enctype="multipart/form-data">
+                                <div class="text-center">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="position-relative">
+                                            <div class="avatar-upload">
+                                                <div class="avatar-edit">
+                                                    <input type='file' name="createUserImage" id="imageUpload"
+                                                           accept=".png, .jpg, .jpeg" onchange="previewImage(this)"/>
+                                                    <label for="imageUpload"><i class="fas fa-edit"></i></label>
+                                                </div>
+                                                <div class="avatar-preview">
+                                                    <img id="imagePreview" src="/img/blankuser.png">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <div class="form-outline flex-fill mb-0">
                                         <label class="form-label" for="form3Example4c">First Name</label>
@@ -82,11 +84,14 @@ include __DIR__ . '/../header.php';
                                                class="form-control"/>
                                     </div>
                                 </div>
+                                <div class="g-recaptcha" data-sitekey="6LelT5MkAAAAAJ3QoLco_K3e7ClTd75N9A0pQu5I"></div>
+                                <br/>
                                 <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                     <button type="submit" name="registerBtn" class="btn btn-primary btn-lg">
                                         Register
                                     </button>
                                 </div>
+                                <!--                                <input type="hidden" id="token" name="token">-->
                             </form>
                         </div>
                     </div>
@@ -95,6 +100,13 @@ include __DIR__ . '/../header.php';
         </div>
     </div>
 </div>
+<script>
+    grecaptcha.ready(function () {
+        grecaptcha.execute('6Ld_TpIkAAAAAFBlzTcxaUr4CGW_AIhB3cKYuXhX', {action: 'submit'}).then(function (token) {
+            console.log(token);// Add your logic to submit to your backend server here.
+        });
+    });
+</script>
 <script>
     function previewImage(input) {
         if (input.files && input.files[0]) {

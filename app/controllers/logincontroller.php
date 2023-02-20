@@ -30,17 +30,17 @@ class LoginController extends Controller
             header("location: /home");
             exit();
         }
-        if(isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
+        if (isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
             $inputUserName = $_POST["username"];
             $inputPassword = $_POST["pwd"];
             // using html special chars function to clean up the input
             $inputUserName = htmlspecialchars($inputUserName);
             $inputPassword = htmlspecialchars($inputPassword);
             $user = $this->userService->checkLogin($inputUserName, $inputPassword);
-            if (isset($user) && $user != null ) {
+            if (isset($user) && $user != null) {
 
                 if ($user instanceof User) {
-                   $_SESSION['loggedUser']=$user;
+                    $_SESSION['loggedUser'] = $user;
                 }
                 header("location: /home");
             } else {
@@ -54,36 +54,39 @@ class LoginController extends Controller
     public function registerUser()
     {
         if (isset($_POST["registerBtn"])) {
-
-            if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["email"]))) {
-                echo "<script>alert('duplicated email')</script>";
-            } else if ($_POST['password'] != $_POST['passwordConfirm']) {
-                echo "<script>alert('password wrong')</script>";
+            $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
+            $response = $_POST['g-recaptcha-response'];
+            $remoteip = $_SERVER['REMOTE_ADDR'];
+            $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
+            $data = file_get_contents($url);
+            $row = json_decode($data, true);
+            if ($row['success'] == "true") {
+                if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["email"]))) {
+                    echo "<script>alert('duplicated email')</script>";
+                }
+                else if ($_POST['password'] != $_POST['passwordConfirm']) {
+                        echo "<script>alert('password wrong')</script>";
+                    } else {
+                        $newUser = array(
+                            "firstName" => htmlspecialchars($_POST["firstName"]),
+                            "lastName" => htmlspecialchars($_POST["lastName"]),
+                            "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
+                            "email" => htmlspecialchars($_POST["email"]),
+                            "password" => htmlspecialchars($_POST["password"]),
+                            "picture" => $_FILES['createUserImage'],
+                            "role" => Roles::customer()
+                        );
+                        $this->userService->registerUser($newUser);
+                        echo "<script>alert('you are not a robot');</script>";
+                    }
+                }
+            else{
+                    echo "<script>alert('you are a robot');</script>";
+                }
             }
-//            else if($_SESSION['captcha'] != $inputCaptcha){
-//                echo "<script>alert('Incorrect captcha code')</script>";
-//            }
-            else {
-                    $newUser = array(
-                        "firstName" => htmlspecialchars($_POST["firstName"]),
-                        "lastName" => htmlspecialchars($_POST["lastName"]),
-                        "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
-                        "email" => htmlspecialchars($_POST["email"]),
-                        "password" => htmlspecialchars($_POST["password"]),
-                        "registrationDate" => htmlspecialchars(date("Y-m-d H:i:s")),
-                        "picture" => $_FILES['createUserImage']
-                    );
-                    $this->userService->registerUser($newUser);
-
-//                } else {
-//                    echo "<script>alert('Please Select Model Again')</script>";
-//                }
-            }
-        }
-        $captcha= rand(9999,1000);
-        $_SESSION['captcha'] = $captcha;
         require __DIR__ . '/../views/login/register.php';
     }
+
     /**
      * @throws Exception
      */
