@@ -153,7 +153,7 @@ class UserService
         try {
             $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
             $newImageName = uniqid() . '.' . $ext;
-            $upload_dir = __DIR__ . '/../public/image/';
+            $upload_dir = __DIR__ . '/../public/img/';
             if(!move_uploaded_file($image['tmp_name'], $upload_dir . $newImageName)){
                 throw new uploadFileFailedException();
             }
