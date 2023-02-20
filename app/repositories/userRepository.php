@@ -189,7 +189,6 @@ class UserRepository extends Repository
             $stmt->bindValue(':email', $newUser["email"]);
             $stmt->bindValue(':password', $newUser['password']);
             $stmt->bindValue(':picture', $newUser['picture']);
-
             $stmt->bindValue(':role', Roles::getLabel($newUser['role']));
 
             $stmt->execute();
