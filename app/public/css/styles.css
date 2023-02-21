@@ -1,4 +1,4 @@
- body {
+  body {
         background-color: white;
       }
 
@@ -10,9 +10,6 @@
 
 
     img {width: 40%;}
-
-    h1, h2 {text-align: center;}
-
 
     #navbarMain { padding-left:5%;
     padding-right:10%;}
@@ -27,16 +24,16 @@
       margin:5%;
    }
 
-    .homePagePanelImg, .homePageVideoPlaceholder
+    .homePagePanelImg, .homePageVideoPlaceholder, .homePageMapPlaceholder
     {width:100%; }
   
     #homePageVideoPanel {background-color:  #f0f3f4;
       border: 1px solid white;
    }
 
-   #homePageVideo {
+   #homePageVideo, #homePageMap {
     border: 1px solid black;
     margin: 5%;}
 
    #homePageLinkToFestival {background-color:white;}
-
+   .homePageInfoImg {width:20%;}
