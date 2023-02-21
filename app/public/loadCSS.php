@@ -22,11 +22,27 @@
 
     li:hover {background-color:white;}
 
-      </style>';
+    #homePageImg{width:100%;}
+
+    #homePageImagesPanel {border: 1px solid white;
+      margin:5%;
+   }
+
+    .homePagePanelImg, .homePageVideoPlaceholder
+    {width:100%; }
+  
+    #homePageVideoPanel {background-color:  #f0f3f4;
+      border: 1px solid white;
+   }
+
+   #homePageVideo {
+    border: 1px solid black;
+    margin: 5%;}
+
+   #homePageLinkToFestival {background-color:white;}
+
+    </style>';
 }
 
 ?>
-
-
-
 
