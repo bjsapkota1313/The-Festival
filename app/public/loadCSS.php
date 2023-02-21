@@ -28,21 +28,21 @@
       margin:5%;
    }
 
-    .homePagePanelImg, .homePageVideoPlaceholder
+    .homePagePanelImg, .homePageVideoPlaceholder, .homePageMapPlaceholder
     {width:100%; }
   
     #homePageVideoPanel {background-color:  #f0f3f4;
       border: 1px solid white;
    }
 
-   #homePageVideo {
+   #homePageVideo, #homePageMap {
     border: 1px solid black;
     margin: 5%;}
 
    #homePageLinkToFestival {background-color:white;}
+   .homePageInfoImg {width:20%;}
 
     </style>';
 }
 
 ?>
-
