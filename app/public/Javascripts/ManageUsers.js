@@ -84,21 +84,45 @@ function makeTableBody(user) {
     tr.appendChild(td7);
 
     const td8 = document.createElement('td');
-    const editLink = document.createElement('a');
-    editLink.href = `editUser.php?id=${user.id}`;
-    editLink.classList.add('btn', 'btn-primary');
-    const editIcon = document.createElement('i');
-    editIcon.classList.add('fa-solid', 'fa-file-pen');
-    editLink.appendChild(editIcon);
-    td8.appendChild(editLink);
+    // Create the container element
+    const container = document.createElement('div');
+    container.classList.add('d-inline-flex');
 
-    const deleteLink = document.createElement('a');
-    deleteLink.href = `deleteUser.php?id=${user.id}`;
-    deleteLink.classList.add('btn', 'btn-danger');
-    const deleteIcon = document.createElement('i');
-    deleteIcon.classList.add('fa-solid', 'fa-trash');
-    deleteLink.appendChild(deleteIcon);
-    td8.appendChild(deleteLink);
+// Create the form element
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/manageUsers/editUser';
+
+// Create the hidden input element
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'hiddenUserId';
+    hiddenInput.id = 'hiddenUserId';
+    hiddenInput.value = user.id;
+
+// Create the edit button element
+    const editButton = document.createElement('button');
+    editButton.name = 'btnEditUser';
+    editButton.classList.add('btn', 'btn-primary');
+    editButton.innerHTML = '<i class="fa-solid fa-file-pen"></i>';
+
+// Add the hidden input and edit button to the form
+    form.appendChild(hiddenInput);
+    form.appendChild(editButton);
+
+// Create the delete button element
+    const deleteButton = document.createElement('button');
+    deleteButton.classList.add('btn', 'btn-danger', 'ms-2');
+    deleteButton.addEventListener('click', function () {
+        btnDeleteUserClicked(user.id);
+    });
+    deleteButton.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+// Add the form and delete button to the container
+    container.appendChild(form);
+    container.appendChild(deleteButton);
+    td8.appendChild(container);
+
 
     tr.appendChild(td8);
     tbody.appendChild(tr);
@@ -134,17 +158,40 @@ function sortValueChanged(selectElement) {
 }
 
 function btnDeleteUserClicked(id) {
-    let sortingCondition = getSortingConditionForSearch();
-    let data = {'userID': id};
-    if (sortingCondition !== null) {
-        data = {'userID': id, 'SortingCondition': sortingCondition}
+    const confirmation = confirm("Are you sure you want to delete this user?");
+    if (confirmation) {
+        let sortingCondition = document.getElementById('filter-select').value;
+        data = {'userID': id, 'SortingCondition': sortingCondition};
+        fetch('http://localhost/api/ManageUsers/deleteUser', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error(response.status + ' ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            if (data.Success) {
+                clearTableRow();
+                // Update user interface with updated user list
+                let users = JSON.parse(data.users);
+                if (users && Object.keys(users).length !== 0) {
+                    users.forEach(function (user) {
+                        makeTableBody(user);
+                    })
+                } else {
+                    noSearchResultFoundForSearch();
+                }
+            } else {
+                // Handle unsuccessful response
+                console.error(data.message);
+            }
+        })
     }
-    fetch('http://localhost/api/ManageUsers/deleteUser', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-
+}
+function onChangePasswordBox(){
+    document.getElementById('password-fields').classList.toggle('d-none');
 }

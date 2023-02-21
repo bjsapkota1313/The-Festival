@@ -1,20 +1,26 @@
 <?php
-require __DIR__ . '/../repositories/userRepository.php';
+require_once __DIR__ . '/../repositories/userRepository.php';
 require_once __DIR__ . '/../models/user.php';
 require __DIR__ . '/../PHPMailer/Exception.php';
 require __DIR__ . '/../PHPMailer/SMTP.php';
 require __DIR__ . '/../PHPMailer/PHPMailer.php';
+require_once __DIR__.'/../models/Exceptions/uploadFileFailedException.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 class UserService
 {
+    private $repository;
+
+    public function __construct(){
+        $this->repository = new UserRepository();
+    }
     // public function setReviewId(int $reviewId): self
     public function checkLogin(string $userName, string $password)
     {
-        $repository = new UserRepository();
-        $user = $repository->login($userName, $password);
+        $user = $this->repository->login($userName, $password);
         if (isset($user) && $user != null) {
             return $user;
         }
@@ -23,8 +29,7 @@ class UserService
 
     public function getUserById(int $userId)
     {
-        $repository = new UserRepository();
-        return $repository->getUserById($userId);
+        return $this->repository->getUserById($userId);
     }
     public function getAllUsers()  {
         $repository = new UserRepository();
@@ -56,13 +61,14 @@ class UserService
     public function deleteUserById($userId) :bool{
         $repository = new UserRepository();
         return $repository->deleteUserById($userId);
-        }
-
+    }
     public function registerUser($newUser): void
     {
         $repository = new UserRepository();
         $plainPassword=$newUser['password'];
+        $image = $newUser['picture'];
         $newUser['password']=$this->hashPassword($plainPassword);
+        $newUser['picture']=$this->storeImage($image);
         $repository->registerUser($newUser);
     }
 
@@ -72,20 +78,14 @@ class UserService
         return $repository->checkUserExistenceByEmail($email);
     }
 
-    public function putRandomTokenForNewPassword($token, $expiration_time,$email): void
+    public function updatePassword($userId, $newPassword): void
     {
         $repository = new UserRepository();
-        $repository->putRandomTokenForNewPassword($token, $expiration_time,$email);
-    }
-
-    public function updatePassword($email, $newPassword): void
-    {
-        $repository = new UserRepository();
-        if($repository->updatePassword($email, $this->hashPassword($newPassword))){
+        if($repository->updatePassword($userId, $this->hashPassword($newPassword))){
             date_default_timezone_set('Europe/Amsterdam');
             $tokenExpiration = date('Y-m-d H:i:s');
 
-            $this->deleteDataForgotPassword($email,$tokenExpiration);
+            $this->deleteDataForgotPassword($userId,$tokenExpiration);
         }
     }
     public function deleteDataForgotPassword($email,$tokenExpiration): void
@@ -126,8 +126,9 @@ class UserService
             echo 'Mailer Error: ' . $mail->ErrorInfo;
         } else {
             echo 'Message has been sent';
-            $passwordResetLink =
-            $this->putRandomTokenForNewPassword($token,$expiration_time,$email);
+            $id = $this->checkUserExistenceByEmail($email);
+
+            $this->repository->putRandomTokenForNewPassword($token,$expiration_time,$id);
         }
     }
     public function isTokenValid($token){
@@ -143,10 +144,31 @@ class UserService
         }
     }
 
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    public function storeImage($image)
+    {
+        try {
+            $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+            $newImageName = uniqid() . '.' . $ext;
+            $upload_dir = __DIR__ . '/../public/image/';
+            if(!move_uploaded_file($image['tmp_name'], $upload_dir . $newImageName)){
+                throw new uploadFileFailedException();
+            }
+            return $newImageName;
+
+        } catch (Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
+
     public function updateUser($connection, $id, $role, $firstName, $lastName,  $dateOfBirth, $email, $picture)
     {
         $repository = new UserRepository();
         return $repository->updateUser($connection, $id, $role, $firstName, $lastName,  $dateOfBirth, $email, $picture);
     }
+
 
 }
