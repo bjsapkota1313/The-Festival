@@ -14,7 +14,7 @@ class PatternRouter
 
     private function getQueries($uri) {
         if (str_contains($uri, '?')) {
-            return substr($uri, strpos($uri, '?'));
+            return substr($uri, strpos($uri, '?')+1);
         }
         else {
             return "";
@@ -33,10 +33,18 @@ class PatternRouter
     {
         // exclude javascript and css fils.
         if (
-            str_ends_with($uri, ".js")
+            str_contains($uri, "public")
+            || str_ends_with($uri, ".js")
             || str_ends_with($uri, ".css")
+            || str_ends_with($uri, ".ts")
         ) {
-           readfile(__DIR__ . "/" . $uri);
+            // echo $uri;
+            // app\public\Javascripts\tinymce\js\tinymce\tinymce.min.js
+            // echo __DIR__ . "/../public/" . $uri;
+            // readfile($uri);
+            // readfile("/" . $uri);
+            readfile(__DIR__ . "/../public/" . $uri);
+            // return();
             die();
         }
         // Path algorithm
