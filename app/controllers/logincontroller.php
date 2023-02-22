@@ -51,49 +51,22 @@ class LoginController extends Controller
         }
     }
 
-//    public function registerUser()
-//    {
-//        if (isset($_POST["registerBtn"])) {
-//            $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
-//            $response = $_POST['g-recaptcha-response'];
-//            $remoteip = $_SERVER['REMOTE_ADDR'];
-//            $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
-//            $data = file_get_contents($url);
-//            $row = json_decode($data, true);
-//            if ($row['success'] == "true") {
-//                if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST["email"]))) {
-//                    echo "<script>alert('duplicated email')</script>";
-//                } else if ($_POST['password'] != $_POST['passwordConfirm']) {
-//                    echo "<script>alert('password wrong')</script>";
-//                } else {
-//                    $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
-//                    $date = DateTime::createFromFormat('Y-m-d', $birthDate);
-//                    if ($date === false || array_sum($date->getLastErrors()) > 0) {
-//                        $errorMessage = "please input a valid date format (YYYY-MM-DD) for birthdate";
-//                    } else {
-//                        $newUser = array(
-//                            "firstName" => htmlspecialchars($_POST["firstName"]),
-//                            "lastName" => htmlspecialchars($_POST["lastName"]),
-//                            "dateOfBirth" => $birthDate,
-//                            "email" => htmlspecialchars($_POST["email"]),
-//                            "password" => htmlspecialchars($_POST["password"]),
-//                            "picture" => $_FILES['createUserImage'],
-//                            "role" => Roles::customer()
-//                        );
-//                        $this->userService->registerUser($newUser);
-//                    }
-//                }
-//            } else {
-//                echo "<script>alert('you are a robot');</script>";
-//            }
-//        }
-//        require __DIR__ . '/../views/login/register.php';
-//    }
     public function registerUser()
     {
-        $systemMessage="";
+        $systemMessage = "";
         if (isset($_POST["registerBtn"])) {
-            $this->captchaVerification($systemMessage);
+            if (empty($_POST["firstName"])) {
+                $systemMessage = "Please fill out your first name";
+            } else if (empty($_POST["lastName"])) {
+                $systemMessage = "Please fill out your last name";
+            } else if (empty($_POST["email"])) {
+                $systemMessage = "Please fill out your email";
+            } else if (empty($_POST["password"])) {
+                $systemMessage = "Please fill out your password";
+            }
+            else{
+                $this->captchaVerification($systemMessage);
+            }
         }
         require __DIR__ . '/../views/login/register.php';
     }
@@ -131,10 +104,9 @@ class LoginController extends Controller
         $date = DateTime::createFromFormat('Y-m-d', $birthDate);
         if ($date === false || array_sum($date->getLastErrors()) > 0) {
             $systemMessage = "please input a valid date format (YYYY-MM-DD) for birthdate";
-        }
-        else if($birthDate>$current_date){
+        } else if ($birthDate > $current_date) {
             $systemMessage = "Please select a date that is not in the future";
-        }else {
+        } else {
             $newUser = array(
                 "firstName" => htmlspecialchars($_POST["firstName"]),
                 "lastName" => htmlspecialchars($_POST["lastName"]),
@@ -145,10 +117,9 @@ class LoginController extends Controller
                 "role" => Roles::customer()
             );
             $this->userService->registerUser($newUser);
-            $systemMessage="registration was successful! You can log in with your credential.";
+            $systemMessage = "registration was successful! You can log in with your credential.";
         }
     }
-
     /**
      * @throws Exception
      */
@@ -164,7 +135,6 @@ class LoginController extends Controller
         }
         require __DIR__ . '/../views/login/sendEmailForgotPassword.php';
     }
-
     public function updatePassword()
     {
         if (isset($_POST["updatePassword"])) {
