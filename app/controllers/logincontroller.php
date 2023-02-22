@@ -26,27 +26,43 @@ class LoginController extends Controller
 
     public function index($query)
     {
+        // check if the user is already logged in.
+        // if $_SESSION["loggedUser"] is set, it means the user has already logged in.
+        // if the user is already logged in, redirect her to /home.
         if (isset($_SESSION["loggedUser"])) {
+            // echo "you are already logged in";
             header("location: /home");
             exit();
         }
-        if (isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
+
+        // if the user has submitted a login request,
+        // the form calls login again, but this time, the $_POST parameters
+        // are set. So, we enter the else if.
+        else if(isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
             $inputUserName = $_POST["username"];
             $inputPassword = $_POST["pwd"];
             // using html special chars function to clean up the input
             $inputUserName = htmlspecialchars($inputUserName);
             $inputPassword = htmlspecialchars($inputPassword);
+            // checkLogin method in UserService class checks if the user with the given username and password exists in the database. If it exits, it returns the user object, if it does not exists or the password is wrong, it returns null.
             $user = $this->userService->checkLogin($inputUserName, $inputPassword);
-            if (isset($user) && $user != null) {
 
-                if ($user instanceof User) {
-                    $_SESSION['loggedUser'] = $user;
-                }
+            if (isset($user) && $user != null ) {
+                // if the user exists in the database, log it in.
+                // to show the user is logged in, we set the loggeUser value in $_SESSION dictionary. Then, we redirect to home.
+                $_SESSION['loggedUser']=$user;
+
                 header("location: /home");
-            } else {
+            }
+            // if the username or password is wrong, we are here
+            else {
+                // displayView shows the contents of views/login/index.php
                 $this->displayView("Wrong Credentials. Try again.");
             }
-        } else {
+        } 
+        // if the user is visiting the login page normally, show her the login page!
+        else {
+            // displayView shows the contents of views/login/index.php
             $this->displayView(null);
         }
     }

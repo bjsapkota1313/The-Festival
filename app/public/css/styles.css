@@ -1,31 +1,39 @@
-body {
-    margin: 0 10% 0 10%;
-    background-color: white;
-  }
+  body {
+        background-color: white;
+      }
 
-  nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+      label {
+        display: inline-block;
+        width: 100px;
+        text-align: left;
+    }
 
-  }
 
-  ul {
-    list-style: none;
-  }
+    img {width: 40%;}
+
+    #navbarMain { padding-left:5%;
+    padding-right:10%;}
+
+    #updateAccountForm {margin-left:0%;}
+
+    li:hover {background-color:white;}
+
+    #homePageImg{width:100%;}
+
+    #homePageImagesPanel {border: 1px solid white;
+      margin:5%;
+   }
+
+    .homePagePanelImg, .homePageVideoPlaceholder, .homePageMapPlaceholder
+    {width:100%; }
   
-  nav ul li {
-    display: inline;
-    padding-right: 20px;
-    text-align: left;
-  }
+    #homePageVideoPanel {background-color:  #f0f3f4;
+      border: 1px solid white;
+   }
 
-  label {
-    display: inline-block;
-    width: 100px;
-    text-align: left;
-}
+   #homePageVideo, #homePageMap {
+    border: 1px solid black;
+    margin: 5%;}
 
-img {width: 40%;}
-
-h1, h2 {text-align: center;}
+   #homePageLinkToFestival {background-color:white;}
+   .homePageInfoImg {width:20%;}
