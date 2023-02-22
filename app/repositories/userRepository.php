@@ -46,10 +46,11 @@ class UserRepository extends Repository
             // echo "no user found";
             return null;
 
-        } catch (Exception | PDOException $e) {
+        } catch (Exception|PDOException $e) {
             echo $e;
         }
     }
+
     private function createUserInstance($dbRow): User
     {
         try {
@@ -164,6 +165,8 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+
+    //TODO : Delete pic related to user when deleting user
     public function deleteUserById($id)
     {
         try {
@@ -178,11 +181,11 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+
     public function registerUser($newUser)
     {
         try {
             $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, picture, role) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :picture, :role)");
-
             $stmt->bindValue(':firstName', $newUser["firstName"]);
             $stmt->bindValue(':lastName', $newUser["lastName"]);
             $stmt->bindValue(':dateOfBirth', $newUser["dateOfBirth"]);
@@ -191,6 +194,11 @@ class UserRepository extends Repository
             $stmt->bindValue(':picture', $newUser['picture']);
             $stmt->bindValue(':role', Roles::getLabel($newUser['role']));
             $stmt->execute();
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+            return true;
+
         } catch (PDOException $e) {
             echo $e;
         }
@@ -228,7 +236,7 @@ class UserRepository extends Repository
 //            http_response_code(500);
 //            exit();
             echo $e;
-       }
+        }
     }
 //    public function getUserIdByEmail($email)
 //    {
@@ -330,6 +338,37 @@ class UserRepository extends Repository
         $query->bindParam(":picture", $picture);
         $query->execute();
     }
+
+    //Todo: update user with password make one method implemnt pic
+    function updateUserV2($updatedUser)
+    {
+        $query = "UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture";
+        if (!empty($updatedUser->getHashedPassword())) {
+            $query .= ", password=:password"; // adding password to the query when password will be changed
+        }
+        $query .= " WHERE id=:id";
+        try {
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindValue(":id", $updatedUser->getId());
+            $stmt->bindValue(":role", Roles::getLabel($updatedUser->getRole()));
+            $stmt->bindValue(":firstName", $updatedUser->getFirstName());
+            $stmt->bindValue(":lastName", $updatedUser->getLastName());
+            $stmt->bindValue(":dateOfBirth", $updatedUser->getDateOfBirth()->format('Y-m-d'));
+            $stmt->bindValue(":email", $updatedUser->getEmail());
+            $stmt->bindValue(":picture", $updatedUser->getPicture());
+            if (!empty($updatedUser->getHashedPassword())) {
+                $stmt->bindParam(":password", $updatedUser->getHashedPassword());
+            }
+            $stmt->execute();
+            if ($stmt->rowcount() == 0) {
+                return false;
+            }
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
 
 }
 

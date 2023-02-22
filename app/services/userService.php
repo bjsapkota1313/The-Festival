@@ -62,14 +62,14 @@ class UserService
         $repository = new UserRepository();
         return $repository->deleteUserById($userId);
     }
-    public function registerUser($newUser): void
+    public function registerUser($newUser): bool
     {
         $repository = new UserRepository();
         $plainPassword=$newUser['password'];
         $image = $newUser['picture'];
         $newUser['password']=$this->hashPassword($plainPassword);
         $newUser['picture']=$this->storeImage($image);
-        $repository->registerUser($newUser);
+         return $repository->registerUser($newUser);
     }
 
     public function checkUserExistenceByEmail($email)
@@ -168,6 +168,15 @@ class UserService
     {
         $repository = new UserRepository();
         return $repository->updateUser($connection, $id, $role, $firstName, $lastName,  $dateOfBirth, $email, $picture);
+    }
+    public function updateUserV2($updatingUser,$picture){
+        $repository = new UserRepository();
+        $plainPassword=$updatingUser->getHashedPassword();
+        if(!empty($plainPassword)){
+            $updatingUser->setHashPassword($this->hashPassword($plainPassword));  // when password is empty it will not be hashed sent as null
+        }
+        $updatingUser->setPicture("/image/WhoreYun.jpeg");
+        return $repository->updateUserV2($updatingUser);
     }
 
 

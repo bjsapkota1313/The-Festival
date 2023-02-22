@@ -192,6 +192,125 @@ function btnDeleteUserClicked(id) {
         })
     }
 }
-function onChangePasswordBox(){
+
+function onChangePasswordBox() {
     document.getElementById('password-fields').classList.toggle('d-none');
+}
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('imagePreview').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+async function onEditUserSubmitChangesBtn(userId) {
+    let lastName = document.getElementById('lastName').value;
+    let firstName = document.getElementById('firstName').value;
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
+    let profilePicture = document.getElementById('profilePicture').files[0];
+    let role = document.getElementById('role').value;
+    let dateOfBirth = document.getElementById('dateOfBirth').value;
+    let confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    let changePasswordCheckBox = document.getElementById('changePasswordCheckBox').checked;
+    if (!profilePicture) {
+        profilePicture = await getImageFileUsingPath();
+    }
+    if (!validateForm(lastName, firstName, email, dateOfBirth,profilePicture)) {
+        return;
+    }
+    let data = {
+        id: userId,
+        lastName: lastName,
+        firstName: firstName,
+        email: email,
+        role: role,
+        dateOfBirth: dateOfBirth
+    };
+
+    if (changePasswordCheckBox) {
+        if(!password || !confirmNewPassword){
+            alert('Password and confirm password are required');
+            return;
+        }
+        else if (password != confirmNewPassword) {
+            alert('Password and confirm password do not match');
+            return;
+        }
+        data = {
+            id: userId,
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+            role: role,
+            dateOfBirth: dateOfBirth,
+            password: password
+        };
+    }
+    let formData = new FormData();
+    formData.append('profilePicture', profilePicture);
+    formData.append('details', JSON.stringify(data));
+    fetch("http://localhost/api/manageusers/editUserDetails", {
+        method: 'POST',
+        body: formData,
+    }).then(function (response) {
+        return response.json();
+    }).then(function ( ) {
+        console.log(data);
+    });
+}
+
+function getImageFileUsingPath() {
+    let imgElement = document.getElementById('profilePicView');
+    let imgSrc = imgElement.src;
+    // taking the current previewing image src and sending this data if user does not select image
+    return fetch(imgSrc)
+        .then(response => response.blob())
+        .then(blob => {
+            let fileName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
+            let fileType = blob.type;
+            // taking the file type from blob and passing filetype as argument while creating File
+            // Create a new File object
+            let file = new File([blob], fileName, { type: fileType });
+            return file;
+        });
+
+}
+function validateForm(lastName, firstName, email,dateOfBirth, profilePicture) {
+    if (!lastName) {
+        alert('Please enter a Last name');
+        return false;
+    }
+
+    if (!firstName) {
+        alert('Please enter a firstName');
+        return false;
+    }
+
+    if (!email) {
+        alert('Please enter a email');
+        return false;
+    }
+    if (!dateOfBirth) {
+        alert('Please enter a date of birth');
+    }
+    if (!checkUploadedFile(profilePicture)) {
+        return false;
+    }
+    return true;
+}
+
+function checkUploadedFile(image) {
+    let fileType = image.type;
+    let validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+
+    if (validImageTypes.indexOf(fileType) < 0) {
+        alert("Invalid file type. Please select an image file (jpg, jpeg, png)");
+        return false;
+    }
+    return true;
 }

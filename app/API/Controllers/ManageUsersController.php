@@ -71,8 +71,8 @@ class ManageUsersController
         }
     }
 
-    public
-    function sortUsers(): void
+
+    public function sortUsers(): void
     {
         try {
             $this->sendHeaders();
@@ -100,8 +100,7 @@ class ManageUsersController
         header('Content-Type: application/json');
     }
 
-    private
-    function getUsersBySortingOptionSelected($selectedOption): ?array
+    private function getUsersBySortingOptionSelected($selectedOption): ?array
     {
         $users = null;
         switch ($selectedOption) {
@@ -119,5 +118,49 @@ class ManageUsersController
                 break;
         }
         return $users;
+    }
+
+//TODO: 1. Add Request Handler for edit user details
+    public function editUserDetails()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->sendHeaders();
+            $userDetails = json_decode($_POST['details']);
+            $profilePicture = $_FILES['profilePicture'];
+            $userID = htmlspecialchars($userDetails->id);
+            $userFirstName = htmlspecialchars($userDetails->firstName);
+            $userLastName = htmlspecialchars($userDetails->lastName);
+            $userEmail = htmlspecialchars($userDetails->email);
+            $userDateOfBirth = htmlspecialchars($userDetails->dateOfBirth);
+            $userRole = htmlspecialchars($userDetails->role);
+            $userPassword = ""; // setting up the default value
+
+            if (!empty($userDetails->password)) {
+                $userPassword = htmlspecialchars($userDetails->password);
+            }
+            $updatingUser = $this->createUserInstance($userID, $userFirstName, $userLastName, $userEmail, $userDateOfBirth, $userRole, $userPassword);
+            $success = $this->userService->updateUserV2($updatingUser, $profilePicture);
+        }
+
+
+    }
+
+    private function createUserInstance($id, $firstName, $lastName, $email, $dateOfBirth, $role, $password)
+    {
+        try {
+            $user = new User();
+            $user->setId($id);
+            $user->setFirstName($firstName);
+            $user->setLastName($lastName);
+            $user->setEmail($email);
+            $user->setDateOfBirth(new DateTime($dateOfBirth));
+            $user->setRole(Roles::fromString($role));
+            $user->setHashedPassword($password);
+
+            return $user;
+        } catch (InvalidArgumentException|Exception $e) { // whenever something goes wrong while parsing
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+        }
+
     }
 }

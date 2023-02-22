@@ -21,45 +21,6 @@ class ManageUsersController extends Controller
         }
     }
 
-    public function editUser()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
-            $userId = htmlspecialchars($_POST['hiddenUserId']);
-            $editingUser = $this->userService->getUserById($userId);
-            if (!is_null($editingUser)) {
-
-                require __DIR__ . '/../views/ManageUsers/EditUser.php';
-            } else {
-                echo "User is not found";
-            }
-        } else {
-            http_response_code(401); // Unauthorised Request
-        }
-    }
-
-    public function editUserDetailsSubmit() //need to be done
-    {
-        if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnSaveChanges'])) {
-            $message = "";
-            if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['email']) && isset($_POST['dateOfBirth']) && isset($_POST['role'])) {
-                $firstName = htmlspecialchars($_POST['firstName']);
-                $lastName = htmlspecialchars($_POST['lastName']);
-                $email = htmlspecialchars($_POST['email']);
-                $dateOfBirth = htmlspecialchars($_POST['dateOfBirth']);
-                $role = htmlspecialchars($_POST['role']);
-                echo $role;
-                echo $dateOfBirth;
-                echo $email;
-                echo $lastName;
-                echo $firstName;
-
-
-            } else {
-                $message = "Please, Dont leave any field empty";
-            }
-        }
-    }
-
     private function checkLoggedInUserIsAdminstrator()
     {
         if (isset($_SESSION["loggedUser"])) {
@@ -75,6 +36,26 @@ class ManageUsersController extends Controller
         }
     }
 
+    public function editUser()
+    {
+        if ($this->checkLoggedInUserIsAdminstrator()) {
+            if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
+                $userId = htmlspecialchars($_POST['hiddenUserId']);
+                $editingUser = $this->userService->getUserById($userId);
+                if (!is_null($editingUser)) {
+
+                    require __DIR__ . '/../views/ManageUsers/EditUser.php';
+                } else {
+                    echo "User is not found";
+                }
+            } else {
+                http_response_code(401); // Unauthorised Request
+                exit();
+            }
+        }
+
+    }
+
     public function registerNewUser()
     {
         if ($this->checkLoggedInUserIsAdminstrator()) {
@@ -82,6 +63,7 @@ class ManageUsersController extends Controller
             require __DIR__ . '/../views/ManageUsers/RegisterNewUser.php';
         }
     }
+
 
     private function registerNewUserSubmit()
     {
@@ -94,8 +76,6 @@ class ManageUsersController extends Controller
                     $message = "Please enter a valid date";
                     return;
                 }
-
-                $role = htmlspecialchars($_POST['role']);
                 $password = htmlspecialchars($_POST['password']);
                 $passwordConfirm = htmlspecialchars($_POST['passwordConfirm']);
                 if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST['email']))) {
@@ -108,10 +88,15 @@ class ManageUsersController extends Controller
                             "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
                             "email" => htmlspecialchars($_POST["email"]),
                             "password" => htmlspecialchars($_POST["password"]),
-                            "role" => htmlspecialchars($_POST["role"]),
+                            "role" => Roles::fromString($_POST["role"]),
                             "picture" => $_FILES['profilePicUpload']
-
                         );
+                        if ($this->userService->registerUser($user)) {
+                            echo "<script>location.href='/manageusers'</script>";
+                            exit();
+                        } else {
+                            $message = "Something went wrong while creating an account please try again later";
+                        }
 
                     } else {
                         $message = "Password and Confirm Password does not match";
