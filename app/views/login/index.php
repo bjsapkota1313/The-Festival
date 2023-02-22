@@ -28,7 +28,8 @@ require_once __DIR__ . '/../header2.php';
                             </div>
                             <div class="form-floating mb-3">
                                 <label>
-                                    <?php
+                                <?php
+                                    // $model is the input passed by the displayView method. We check it: if it is not null, we print it here (in the label html tag).
                                     if(isset($model) && $model!=null) echo $model
                                     ?>
                                 </label>

@@ -13,21 +13,37 @@ class PatternRouter
 
     private function getQueries($uri) {
         if (str_contains($uri, '?')) {
-            return substr($uri, strpos($uri, '?'));
+            return substr($uri, strpos($uri, '?')+1);
         }
         else {
             return "";
         }
     }
 
+    // this method gets the $uri and maps it to the correct controller and method.
+    // examples:
+    // $uri: home/about will call: controllers/homecontroller->about("");
+    // $uri: login will call: controllers/logincontroller->index("");
+    // $uri: login/index?hello will call: controllers/logincontroller->index("?hello")
+    // $uri: home/users?id=10 will call: controllers/homecontroller->users("?id=10");
+    // $uri: test/hello will call: controllers/testcontroller->hello("")
+    // $uri: api/test/hello will call: api/controllers/testcontroller->hello("")
     public function route($uri)
     {
         // exclude javascript and css fils.
         if (
-            str_ends_with($uri, ".js")
+            str_contains($uri, "public")
+            || str_ends_with($uri, ".js")
             || str_ends_with($uri, ".css")
+            || str_ends_with($uri, ".ts")
         ) {
-           readfile(__DIR__ . "/" . $uri);
+            // echo $uri;
+            // app\public\Javascripts\tinymce\js\tinymce\tinymce.min.js
+            // echo __DIR__ . "/../public/" . $uri;
+            // readfile($uri);
+            // readfile("/" . $uri);
+            readfile(__DIR__ . "/../public/" . $uri);
+            // return();
             die();
         }
         // Path algorithm
