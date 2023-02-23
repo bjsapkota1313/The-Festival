@@ -25,7 +25,7 @@ require __DIR__ . '/Headers.htm';
                                                     <label for="imageUpload"><i class="fas fa-edit"></i></label>
                                                 </div>
                                                 <div class="avatar-preview">
-                                                    <img id="imagePreview" src="/img/blankuser.png">
+                                                    <img id="profilePicView" src="/image/<?=DEFAULT_AVATAR?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -105,7 +105,7 @@ require __DIR__ . '/Headers.htm';
         if (input.files && input.files[0]) {
             let reader = new FileReader();
             reader.onload = function (e) {
-                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('profilePicView').src = e.target.result;
             }
             reader.readAsDataURL(input.files[0]);
         }

@@ -84,7 +84,7 @@ require_once __DIR__ . '/Headers.htm';
                     foreach ($users as $user){
                         ?>
                         <tr>
-                            <td><img src="<?= $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
+                            <td><img src="<?="/image/". $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
                             <td><?= $user->getFirstName(); ?></td>
                             <td><?= $user->getLastName(); ?></td>
                             <td><?= $user->getEmail(); ?></td>
@@ -111,7 +111,11 @@ require_once __DIR__ . '/Headers.htm';
                     }
                     else{
                     ?>
-                        <script>noSearchResultFoundForSearch();</script>
+                        <script>
+                            window.onload = function() {
+                                noSearchResultFoundForSearch();
+                            };
+                        </script>
                         <?php
                     }
                     ?>

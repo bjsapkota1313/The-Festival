@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../../Services/userService.php';
+require __DIR__ . '/controller.php';
 
-class ManageUsersController
+//TODO: Make REST API Principles
+class UsersController extends Controller
 {
     private $userService;
 
@@ -46,7 +48,10 @@ class ManageUsersController
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $this->sendHeaders();
                 $responseData = "";
-                $users = null;
+                $responseData = array(
+                    "Success" => false,
+                    "Message" => "Sorry, Something went wrong while deleting user"
+                );
                 $body = file_get_contents('php://input');
                 $data = json_decode($body);
                 $checkDeleted = $this->userService->deleteUserById(htmlspecialchars($data->userID));
@@ -58,13 +63,9 @@ class ManageUsersController
                         "users" => json_encode($users)
                     );
                 }
-            } else {
-                $responseData = array(
-                    "Success" => false,
-                    "Message" => "Sorry, Something went wrong while deleting user"
-                );
+                echo json_encode($responseData);
             }
-            echo json_encode($responseData);
+
         } catch (InvalidArgumentException|PDOException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
@@ -92,14 +93,6 @@ class ManageUsersController
         }
     }
 
-    private function sendHeaders(): void
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Headers: *");
-        header("Access-Control-Allow-Methods: *");
-        header('Content-Type: application/json');
-    }
-
     private function getUsersBySortingOptionSelected($selectedOption): ?array
     {
         $users = null;
@@ -119,30 +112,48 @@ class ManageUsersController
         }
         return $users;
     }
-
-//TODO: 1. Add Request Handler for edit user details
     public function editUserDetails()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $this->sendHeaders();
-            $userDetails = json_decode($_POST['details']);
-            $profilePicture = $_FILES['profilePicture'];
-            $userID = htmlspecialchars($userDetails->id);
-            $userFirstName = htmlspecialchars($userDetails->firstName);
-            $userLastName = htmlspecialchars($userDetails->lastName);
-            $userEmail = htmlspecialchars($userDetails->email);
-            $userDateOfBirth = htmlspecialchars($userDetails->dateOfBirth);
-            $userRole = htmlspecialchars($userDetails->role);
-            $userPassword = ""; // setting up the default value
+        try {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $this->sendHeaders();
+                $responseData = array(
+                    'success' => false,
+                    'message' => "Something went wrong while updating user details,please Try Again!!"
+                ); //making default
 
-            if (!empty($userDetails->password)) {
-                $userPassword = htmlspecialchars($userDetails->password);
+                // parsing input data
+                $userDetails = json_decode($_POST['details']);
+                $profilePicture = $_FILES['profilePicture'];
+                $userID = htmlspecialchars($userDetails->id);
+                $userFirstName = htmlspecialchars($userDetails->firstName);
+                $userLastName = htmlspecialchars($userDetails->lastName);
+                $userEmail = htmlspecialchars($userDetails->email);
+                $userDateOfBirth = htmlspecialchars($userDetails->dateOfBirth);
+                $userRole = htmlspecialchars($userDetails->role);
+                $userPassword = isset($userDetails->password) ? htmlspecialchars($userDetails->password) : ''; // checking if password is sent or not if not setting default value
+
+                if ($this->userService->checkEditingUserEmailExistence($userEmail, $userID)) {
+                    $responseData = array(
+                        'success' => false,
+                        'message' => " This email address: $userEmail already exist, please use another email"
+                    );
+                } else {
+                    $updatingUser = $this->createUserInstance($userID, $userFirstName, $userLastName, $userEmail, $userDateOfBirth, $userRole, $userPassword);
+                    $success = $this->userService->updateUserV2($updatingUser, $profilePicture);
+                    if ($success) {
+                        $responseData = array(
+                            'success' => $success,
+                            'message' => ""
+                        );
+                    }
+                }
             }
-            $updatingUser = $this->createUserInstance($userID, $userFirstName, $userLastName, $userEmail, $userDateOfBirth, $userRole, $userPassword);
-            $success = $this->userService->updateUserV2($updatingUser, $profilePicture);
+            echo json_encode($responseData);
+        } catch (Exception $e) {
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
         }
-
-
     }
 
     private function createUserInstance($id, $firstName, $lastName, $email, $dateOfBirth, $role, $password)
@@ -162,5 +173,8 @@ class ManageUsersController
             http_response_code(500); // sending bad request error to APi request if something goes wrong
         }
 
+    }
+    public function test(){
+        echo $this->userService->getUserPictureById(103);
     }
 }

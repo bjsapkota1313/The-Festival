@@ -6,9 +6,11 @@
 </head>
 
 <body>
-  <textarea>
-    Welcome to TinyMCE!
+<form>
+  <textarea id="editor" name="editor">
+     H1
   </textarea>
+</form>
   <script>
       tinymce.init({
           selector: 'textarea',

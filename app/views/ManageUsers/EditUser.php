@@ -16,19 +16,19 @@ require_once __DIR__ . '/Headers.htm';
                                 <div class="position-relative">
                                     <div class="avatar-upload">
                                         <div class="avatar-edit">
-                                            <input type='file' id="profilePicture" name="profilePicUpload"
+                                            <input type='file' id="imageUpload"
                                                    accept=".png, .jpg, .jpeg"
                                                    onchange="previewImage(this)"/>
                                             <label for="imageUpload" ><i class="fas fa-edit"></i></label>
                                         </div>
                                         <div class="avatar-preview">
-                                            <img id="profilePicView" src="<?= $editingUser->getPicture() ?>">
+                                            <img id="profilePicView" src="<?= "/image/".$editingUser->getPicture() ?>">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    <button type="button" class="btn btn-dark btn-sm">
-                                        <i class="fas fa-user-secret me-2"></i> Reset Profile Picture
+                                    <button type="button" class="btn btn-dark btn-sm" onclick="resetProfilePicClicked('<?=DEFAULT_AVATAR?>')">
+                                        <i class="fas fa-user-secret me-2"></i> No profile picture
                                     </button>
                                 </div>
                             </div>

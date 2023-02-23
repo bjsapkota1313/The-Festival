@@ -1,9 +1,9 @@
 function onInputChange(input) {
     let searchInput = input.value;
-    let uri = "http://localhost/api/ManageUsers/searchUsers?SearchTerm=" + searchInput;
+    let uri = "http://localhost/api/Users/searchUsers?SearchTerm=" + searchInput;
     let searchSortingCondition = getSortingConditionForSearch();
     if (searchSortingCondition !== null) {
-        uri = "http://localhost/api/ManageUsers/searchUsers?SearchTerm=" + searchInput + "&sortSelectedOption=" + searchSortingCondition;
+        uri = "http://localhost/api/Users/searchUsers?SearchTerm=" + searchInput + "&sortSelectedOption=" + searchSortingCondition;
     }
     fetch(uri)
         .then(response => {
@@ -53,7 +53,7 @@ function makeTableBody(user) {
     const tr = document.createElement('tr');
     const td1 = document.createElement('td');
     const img = document.createElement('img');
-    img.src = user.picture;
+    img.src = "/image/"+user.picture;
     img.alt = 'Profile Picture';
     img.classList.add('round-image');
     td1.appendChild(img);
@@ -91,7 +91,7 @@ function makeTableBody(user) {
 // Create the form element
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/manageUsers/editUser';
+    form.action = '/ManageUsers/editUser';
 
 // Create the hidden input element
     const hiddenInput = document.createElement('input');
@@ -136,7 +136,7 @@ function getFormattedDate(dateObj) {
 
 function sortValueChanged(selectElement) {
     let selectedOption = selectElement.value;
-    fetch("http://localhost/api/ManageUsers/sortUsers?selectedOption=" + selectedOption)
+    fetch("http://localhost/api/Users/sortUsers?selectedOption=" + selectedOption)
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText);
@@ -162,7 +162,7 @@ function btnDeleteUserClicked(id) {
     if (confirmation) {
         let sortingCondition = document.getElementById('filter-select').value;
         data = {'userID': id, 'SortingCondition': sortingCondition};
-        fetch('http://localhost/api/ManageUsers/deleteUser', {
+        fetch('http://localhost/api/Users/deleteUser', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -185,9 +185,9 @@ function btnDeleteUserClicked(id) {
                 } else {
                     noSearchResultFoundForSearch();
                 }
-            } else {
-                // Handle unsuccessful response
-                console.error(data.message);
+            }
+            else {
+                alert(data.Message);
             }
         })
     }
@@ -201,7 +201,7 @@ function previewImage(input) {
     if (input.files && input.files[0]) {
         let reader = new FileReader();
         reader.onload = function (e) {
-            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById('profilePicView').src = e.target.result;
         }
         reader.readAsDataURL(input.files[0]);
     }
@@ -212,7 +212,7 @@ async function onEditUserSubmitChangesBtn(userId) {
     let firstName = document.getElementById('firstName').value;
     let email = document.getElementById('email').value;
     let password = document.getElementById('password').value;
-    let profilePicture = document.getElementById('profilePicture').files[0];
+    let profilePicture = document.getElementById('imageUpload').files[0];
     let role = document.getElementById('role').value;
     let dateOfBirth = document.getElementById('dateOfBirth').value;
     let confirmNewPassword = document.getElementById('confirmNewPassword').value;
@@ -254,13 +254,17 @@ async function onEditUserSubmitChangesBtn(userId) {
     let formData = new FormData();
     formData.append('profilePicture', profilePicture);
     formData.append('details', JSON.stringify(data));
-    fetch("http://localhost/api/manageusers/editUserDetails", {
+    fetch("http://localhost/api/Users/editUserDetails", {
         method: 'POST',
         body: formData,
     }).then(function (response) {
         return response.json();
-    }).then(function ( ) {
-        console.log(data);
+    }).then(response => {
+        if (response.success) {
+           location.href="/manageusers";
+        } else {
+            alert(response.message);
+        }
     });
 }
 
@@ -302,6 +306,9 @@ function validateForm(lastName, firstName, email,dateOfBirth, profilePicture) {
         return false;
     }
     return true;
+}
+function resetProfilePicClicked(img){
+    document.getElementById("profilePicView").src="/image/"+img; // putting blank picture
 }
 
 function checkUploadedFile(image) {

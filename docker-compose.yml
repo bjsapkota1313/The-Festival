@@ -31,6 +31,6 @@ services:
         ports:
             - 8080:80
         environment:
-            - PMA_HOST=mysql
+            - PMA_HOST=thefestival2022.mysql.database.azure.com
 volumes:
     mysqldata: {}

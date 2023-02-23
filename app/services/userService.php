@@ -76,9 +76,16 @@ class UserService
 
     public function deleteUserById($userId): bool
     {
-        $repository = new UserRepository();
-        return $repository->deleteUserById($userId);
+        $dbStoredName= $this->repository->getUserPictureById($userId); // first getting and storing the name of the image from db
+        if ($this->repository->deleteUserById($userId)) {
+            return $this->deleteUserImage($dbStoredName); // then deleting the image from the server
+        }
+        return false;
     }
+    public function getUserPictureById($id){
+        return $this->repository->getUserPictureById($id);
+    }
+
     public function registerUser($newUser): bool
     {
         $repository = new UserRepository();
@@ -88,7 +95,7 @@ class UserService
         if (!empty($image['name'])) {
             $newUser['picture'] = $this->storeImage($image);
         } else {
-            $newUser['picture'] = __DIR__ . '/../public/image/blankPerson.png';
+            $newUser['picture'] = DEFAULT_AVATAR; // default image
         }
         return $repository->registerUser($newUser);
     }
@@ -170,6 +177,7 @@ class UserService
         }
     }
 
+//TODO: Storing and dleting Image while Editing and deleting pic
 
     /**
      * @throws uploadFileFailedException
@@ -195,14 +203,63 @@ class UserService
         $repository = new UserRepository();
         return $repository->updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture);
     }
-    public function updateUserV2($updatingUser,$picture){
-        $repository = new UserRepository();
-        $plainPassword=$updatingUser->getHashedPassword();
-        if(!empty($plainPassword)){
-            $updatingUser->setHashPassword($this->hashPassword($plainPassword));  // when password is empty it will not be hashed sent as null
+
+    public function updateUserV2($updatingUser, $picture)
+    {
+        if (!empty($updatingUser->getHashedPassword())) {
+            $updatingUser->setHashedPassword($this->hashPassword($updatingUser->getHashedPassword()));  // when password is empty it will not be hashed sent as null
         }
-        $updatingUser->setPicture("/image/WhoreYun.jpeg");
-        return $repository->updateUserV2($updatingUser);
+        $imageName = $this->processUpdatingUserImage($picture, $this->repository->getUserPictureById($updatingUser->getId()));
+        $updatingUser->setPicture($imageName);
+        return $this->repository->updateUserV2($updatingUser);
+    }
+
+    function processUpdatingUserImage($image, $oldImageName)
+    {
+        try {
+            // Check if a new image was provided
+            if (!empty($image['name']) ) {
+                // Delete the old image from the server
+                $this->deleteUserImage($oldImageName);  // delete methods prevent to delete default pic
+                // If the old image was the default image, don't delete it
+                if ($image['name'] !== DEFAULT_AVATAR) {
+                    // Store the new image on the server and return its filename
+                    return $this->storeImage($image);
+                }else{
+                    return DEFAULT_AVATAR;
+                }
+            } else {
+                // If no new image was provided or the image is "Default", return the filename of the old image
+                return $oldImageName;
+            }
+        } catch (uploadFileFailedException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+
+
+    function checkEditingUserEmailExistence($email, $userID): bool
+    {
+        return $this->repository->checkEditingUserEmailExistence($email, $userID);
+    }
+
+    function deleteUserImage($ImageName)
+    { // using constant DEFAULT_AVATAR
+        if ($ImageName != DEFAULT_AVATAR) {
+            try {
+                $filePath = __DIR__ . '/../public/image/' . $ImageName;
+                if (is_file($filePath) && file_exists($filePath)) {
+                    return unlink($filePath);
+
+                } else {
+                    return false;
+                }
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

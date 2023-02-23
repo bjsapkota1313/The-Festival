@@ -1,6 +1,6 @@
 <?php
-include __DIR__ . '/../header.php';
-?>
+//include __DIR__ . '/../header.php';
+//?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -35,7 +35,7 @@ include __DIR__ . '/../header.php';
                                                     <label for="imageUpload"><i class="fas fa-edit"></i></label>
                                                 </div>
                                                 <div class="avatar-preview">
-                                                    <img id="imagePreview" src="/img/blankuser.png">
+                                                    <img id="imagePreview" src="/image/<?=DEFAULT_AVATAR?>">
                                                 </div>
                                             </div>
                                         </div>

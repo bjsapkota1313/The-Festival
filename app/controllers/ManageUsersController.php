@@ -10,7 +10,7 @@ class ManageUsersController extends Controller
     public function __construct()
     {
         $this->userService = new UserService();
-        $this->testLoggedUser();
+      $this->testLoggedUser();
     }
 
     public function index()
