@@ -9,4 +9,11 @@ class Controller {
         $directory = strtolower(substr(get_class($this), 0, -10));
         require __DIR__ . "/../views/$directory/$view.php";
     }
+    protected function parseDateOfBirth($date){
+        $date = DateTime::createFromFormat('Y-m-d', $date);
+        if ($date === false || array_sum($date->getLastErrors()) > 0) {
+            return null;
+        }
+        return $date;
+    }
 }

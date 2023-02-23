@@ -55,7 +55,7 @@ require_once __DIR__ . '/Headers.htm';
         <div class="col-md-12 col-sm-12">
             <div class="d-flex flex-column flex-md-row justify-content-md-between">
                 <h4 class="pb-2">Users Overview</h4>
-                <a class="btn btn-primary w-100" href="/manageusers/registerNewUser">Register New User</a>
+                <a class="btn btn-primary" href="/manageusers/registerNewUser">Register New User</a>
             </div>
             <div class="table-responsive-sm">
                 <table class="table table-striped">
@@ -81,10 +81,10 @@ require_once __DIR__ . '/Headers.htm';
                     <tbody id="tableDataDisplay">
                     <?php
                     if (!is_null($users)) {
-                    foreach ($users as $user) {
+                    foreach ($users as $user){
                         ?>
                         <tr>
-                            <td><img src="<?= $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
+                            <td><img src="<?="/image/". $user->getPicture() ?>" alt="Profile Picture" class="round-image"></td>
                             <td><?= $user->getFirstName(); ?></td>
                             <td><?= $user->getLastName(); ?></td>
                             <td><?= $user->getEmail(); ?></td>
@@ -96,8 +96,8 @@ require_once __DIR__ . '/Headers.htm';
                                     <form method="POST" action="/manageUsers/editUser">
                                         <input type="hidden" name="hiddenUserId" id="hiddenUserId"
                                                value="<?= $user->getId() ?>">
-                                        <button name="btnEditUser" class="btn btn-primary"><i
-                                                    class="fa-solid fa-file-pen"></i>
+                                        <button class="btn btn-primary" value="" name="btnEditUser"><i
+                                                    class="fa-solid fa-file-pen" ></i>
                                         </button>
                                     </form>
                                     <button class="btn btn-danger ms-2"
@@ -111,7 +111,11 @@ require_once __DIR__ . '/Headers.htm';
                     }
                     else{
                     ?>
-                        <script>noSearchResultFoundForSearch();</script>
+                        <script>
+                            window.onload = function() {
+                                noSearchResultFoundForSearch();
+                            };
+                        </script>
                         <?php
                     }
                     ?>

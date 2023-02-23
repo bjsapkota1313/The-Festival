@@ -1,6 +1,0 @@
-
-dphp:S103"KSplit this 135 characters long line (which is greater than 120 authorized).(èüÄ®ûÿÿÿÿ
-@	php:S2003"&Replace "require" with "require_once".(œ•íÿøÿÿÿÿ
-?php:S125"Remove this commented out code.(œË—ëøÿÿÿÿ8ô¶¡¹å0
-:php:S125"Remove this commented out code.(Ëô×ª8ô¶¡¹å0
-f	php:S4833"LReplace "require" with namespace import mechanism through the "use" keyword.(œ•íÿøÿÿÿÿ
