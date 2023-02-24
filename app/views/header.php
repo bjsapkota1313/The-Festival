@@ -1,7 +1,6 @@
-
 <?php
 if (!isset($_SESSION)) {
-  session_start();
+    session_start();
 }
 //error_reporting(E_ALL | E_WARNING);
 
@@ -16,9 +15,9 @@ include 'displayViewModule.php';
 
 
 try {
-  $connection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    $connection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
 } catch (PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
+    echo "Connection failed: " . $e->getMessage();
 }
 
 
@@ -50,7 +49,7 @@ echo '
 loadCSS();
 
 echo
-  '</head>';
+'</head>';
 
 echo '
 
@@ -114,9 +113,6 @@ echo '</ul>
   </div>
   </nav>
   </header>';
-
-
-
 
 
 ?>

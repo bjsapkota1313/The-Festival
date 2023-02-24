@@ -1,9 +1,9 @@
 function onInputChange(input) {
     let searchInput = input.value;
-    let uri = "http://localhost/api/ManageUsers/searchUsers?SearchTerm=" + searchInput;
+    let uri = "http://localhost/api/Users/searchUsers?SearchTerm=" + searchInput;
     let searchSortingCondition = getSortingConditionForSearch();
     if (searchSortingCondition !== null) {
-        uri = "http://localhost/api/ManageUsers/searchUsers?SearchTerm=" + searchInput + "&sortSelectedOption=" + searchSortingCondition;
+        uri = "http://localhost/api/Users/searchUsers?SearchTerm=" + searchInput + "&sortSelectedOption=" + searchSortingCondition;
     }
     fetch(uri)
         .then(response => {
@@ -53,7 +53,7 @@ function makeTableBody(user) {
     const tr = document.createElement('tr');
     const td1 = document.createElement('td');
     const img = document.createElement('img');
-    img.src = user.picture;
+    img.src = "/image/"+user.picture;
     img.alt = 'Profile Picture';
     img.classList.add('round-image');
     td1.appendChild(img);
@@ -91,7 +91,7 @@ function makeTableBody(user) {
 // Create the form element
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/manageUsers/editUser';
+    form.action = '/ManageUsers/editUser';
 
 // Create the hidden input element
     const hiddenInput = document.createElement('input');
@@ -136,7 +136,7 @@ function getFormattedDate(dateObj) {
 
 function sortValueChanged(selectElement) {
     let selectedOption = selectElement.value;
-    fetch("http://localhost/api/ManageUsers/sortUsers?selectedOption=" + selectedOption)
+    fetch("http://localhost/api/Users/sortUsers?selectedOption=" + selectedOption)
         .then(response => {
             if (!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText);
@@ -162,7 +162,7 @@ function btnDeleteUserClicked(id) {
     if (confirmation) {
         let sortingCondition = document.getElementById('filter-select').value;
         data = {'userID': id, 'SortingCondition': sortingCondition};
-        fetch('http://localhost/api/ManageUsers/deleteUser', {
+        fetch('http://localhost/api/Users/deleteUser', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -185,13 +185,139 @@ function btnDeleteUserClicked(id) {
                 } else {
                     noSearchResultFoundForSearch();
                 }
-            } else {
-                // Handle unsuccessful response
-                console.error(data.message);
+            }
+            else {
+                alert(data.Message);
             }
         })
     }
 }
-function onChangePasswordBox(){
+
+function onChangePasswordBox() {
     document.getElementById('password-fields').classList.toggle('d-none');
+}
+
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById('profilePicView').src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+async function onEditUserSubmitChangesBtn(userId) {
+    let lastName = document.getElementById('lastName').value;
+    let firstName = document.getElementById('firstName').value;
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
+    let profilePicture = document.getElementById('imageUpload').files[0];
+    let role = document.getElementById('role').value;
+    let dateOfBirth = document.getElementById('dateOfBirth').value;
+    let confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    let changePasswordCheckBox = document.getElementById('changePasswordCheckBox').checked;
+    if (!profilePicture) {
+        profilePicture = await getImageFileUsingPath();
+    }
+    if (!validateForm(lastName, firstName, email, dateOfBirth,profilePicture)) {
+        return;
+    }
+    let data = {
+        id: userId,
+        lastName: lastName,
+        firstName: firstName,
+        email: email,
+        role: role,
+        dateOfBirth: dateOfBirth
+    };
+
+    if (changePasswordCheckBox) {
+        if(!password || !confirmNewPassword){
+            alert('Password and confirm password are required');
+            return;
+        }
+        else if (password != confirmNewPassword) {
+            alert('Password and confirm password do not match');
+            return;
+        }
+        data = {
+            id: userId,
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+            role: role,
+            dateOfBirth: dateOfBirth,
+            password: password
+        };
+    }
+    let formData = new FormData();
+    formData.append('profilePicture', profilePicture);
+    formData.append('details', JSON.stringify(data));
+    fetch("http://localhost/api/Users/editUserDetails", {
+        method: 'POST',
+        body: formData,
+    }).then(function (response) {
+        return response.json();
+    }).then(response => {
+        if (response.success) {
+           location.href="/manageusers";
+        } else {
+            alert(response.message);
+        }
+    });
+}
+
+function getImageFileUsingPath() {
+    let imgElement = document.getElementById('profilePicView');
+    let imgSrc = imgElement.src;
+    // taking the current previewing image src and sending this data if user does not select image
+    return fetch(imgSrc)
+        .then(response => response.blob())
+        .then(blob => {
+            let fileName = imgSrc.substring(imgSrc.lastIndexOf('/') + 1);
+            let fileType = blob.type;
+            // taking the file type from blob and passing filetype as argument while creating File
+            // Create a new File object
+            let file = new File([blob], fileName, { type: fileType });
+            return file;
+        });
+
+}
+function validateForm(lastName, firstName, email,dateOfBirth, profilePicture) {
+    if (!lastName) {
+        alert('Please enter a Last name');
+        return false;
+    }
+
+    if (!firstName) {
+        alert('Please enter a firstName');
+        return false;
+    }
+
+    if (!email) {
+        alert('Please enter a email');
+        return false;
+    }
+    if (!dateOfBirth) {
+        alert('Please enter a date of birth');
+    }
+    if (!checkUploadedFile(profilePicture)) {
+        return false;
+    }
+    return true;
+}
+function resetProfilePicClicked(img){
+    document.getElementById("profilePicView").src="/image/"+img; // putting blank picture
+}
+
+function checkUploadedFile(image) {
+    let fileType = image.type;
+    let validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+
+    if (validImageTypes.indexOf(fileType) < 0) {
+        alert("Invalid file type. Please select an image file (jpg, jpeg, png)");
+        return false;
+    }
+    return true;
 }
