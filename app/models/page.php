@@ -1,6 +1,6 @@
 <?php
 
-class Page implements \JsonSerializable{
+class Page implements JsonSerializable{
     private int $id;
     private string $URI;
     private string $title;

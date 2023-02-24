@@ -17,6 +17,7 @@ class HomeController extends Controller
         require __DIR__ . '/../views/home/index.php';
     }
 
+
     public function editor() {
         $this->displayView(null);
     }
