@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../header.php';
+//include __DIR__ . '/../header.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -35,7 +35,7 @@ include __DIR__ . '/../header.php';
                                                     <label for="imageUpload"><i class="fas fa-edit"></i></label>
                                                 </div>
                                                 <div class="avatar-preview">
-                                                    <img id="imagePreview" src="/img/blankuser.png">
+                                                    <img id="imagePreview" src="/image/blankPerson.png">
                                                 </div>
                                             </div>
                                         </div>
@@ -93,7 +93,8 @@ include __DIR__ . '/../header.php';
                                 </div>
                                 <div class="d-flex flex-row align-items-center mb-4">
                                     <div class="form-outline flex-fill mb-0">
-                                        <label class="form-label" for="form3Example4c"><?php echo $systemMessage; ?></label>
+                                        <label class="form-label"
+                                               for="form3Example4c"><?php echo $systemMessage; ?></label>
                                     </div>
                                 </div>
                             </form>

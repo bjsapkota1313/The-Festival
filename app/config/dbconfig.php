@@ -1,9 +1,8 @@
 <?php
     $type = "mysql";
-    $servername = "mysql";
+    $servername = "thefestival2022.mysql.database.azure.com";
     $portNumber = "3306";
-    $username = "root";
-    $password = "secret123";
-    $database = "TheFestivalDb";
-
+    $username = "admin1";
+    $password = "secret123.";
+    $database = "theFestivalDb";
 ?>
