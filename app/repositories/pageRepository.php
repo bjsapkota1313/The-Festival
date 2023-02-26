@@ -68,6 +68,33 @@ class PageRepository extends Repository
         }
     }
 
+    public function updatePageById($pageID, $newPage)
+    {
+        try {
+            $stmt = $this->connection->prepare("UPDATE Page SET title = :title, URI = :URI, creatorUserId = :creatorUserId, bodyContentHTML = :bodyContentHTML WHERE id = :id;");
+            $stmt->bindValue(':URI', $newPage->getURI());
+            $stmt->bindValue(':title', $newPage->getTitle());
+            $stmt->bindValue(':bodyContentHTML', $newPage->getBodyContentHTML());
+            $stmt->bindValue(':creatorUserId', $newPage->getCreatorUserId());
+            $stmt->bindValue(':id',$pageID);
+
+            $stmt->execute();
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+    public function deletePageById($pageID): void
+    {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM Page WHERE id = :id;");
+            $stmt->bindValue(':id',$pageID);
+            $stmt->execute();
+            $stmt->execute();
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+
     function updatePageContentById($id, $bodyContentHTML)
     {
         try {

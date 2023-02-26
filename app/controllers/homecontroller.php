@@ -18,12 +18,25 @@ class HomeController extends Controller
     }
 
 
-    public function editor() {
-        $this->displayView(null);
+    public function editor($query) {
+        parse_str($query, $parsedQuery);
+        if(isset($parsedQuery["title"])) {
+            $page = $this->pageService->getPageByTitle($parsedQuery["title"]);
+            if($page != null) {
+                $this->displayView($page);
+            }
+            else {
+                // page not found
+                $this->displayView(null);
+            }
+        }
+        else {
+            $this->displayView(null);
+        }
     }
     public function editorSubmitted() {
         // $content = null;
-        // print_r($_POST);
+        // submitting new page or updating an existing page
         if(isset($_POST["formSubmit"])) {
             // save to database
             $page = new Page();
@@ -34,10 +47,25 @@ class HomeController extends Controller
             // comment: creation time is set now by database
             // comment: correct userId later.
             $page->setCreatorUserId(1);
-            $this->pageService->createNewPage($page);
+            // check if the page is a new page or updating existing page
+            if(isset($_POST['pageID'])) {
+                $this->pageService->updatePageById($_POST['pageID'], $page);
+            }
+            else {
+                $this->pageService->createNewPage($page);                
+            }
 
             // show the user result.
             $this->displayView($_POST["tinyMCEform"]);
+        }
+        if(isset($_POST["formDelete"])) {
+            if(isset($_POST['pageID'])) {
+                $this->pageService->deletePageById($_POST['pageID']);
+                echo "deleted page with id " . $_POST['pageID'];
+            }
+            else {
+                echo "page id is missing";
+            }            
         }
     }
 
@@ -51,8 +79,13 @@ class HomeController extends Controller
             if($page != null) {
                 $this->displayView($page->getBodyContentHTML());
             }
+            else {
+                echo "title not found";
+            }
         }
-        echo "not found";
+        else {
+            echo "title should be set";
+        }
     }
 
     public function about()

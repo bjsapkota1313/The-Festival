@@ -3,8 +3,8 @@
 //header("Access-Control-Allow-Origin: *");
 //header("Access-Control-Allow-Headers: *");
 
-//error_reporting(E_ALL);
-//ini_set("display_errors", 1);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
 // require (import) PatternRouter class from the following file:
 // __DIR__ represents the current file (index.php) location
