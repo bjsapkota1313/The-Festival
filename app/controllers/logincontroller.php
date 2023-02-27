@@ -115,14 +115,12 @@ class LoginController extends Controller
 
     private function createNewUser(&$systemMessage)
     {
-        $current_date = new DateTime();
         $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
-        $date = DateTime::createFromFormat('Y-m-d', $birthDate);
-        if ($date === false || array_sum($date->getLastErrors()) > 0) {
-            $systemMessage = "please input a valid date format (YYYY-MM-DD) for birthdate";
-        } else if ($birthDate > $current_date) {
-            $systemMessage = "Please select a date that is not in the future";
-        } else {
+        $parsedDate = $this->parseDateOfBirth($birthDate);
+       if(is_string($parsedDate)) {
+           $systemMessage = $parsedDate;
+       }
+        else {
             $newUser = array(
                 "firstName" => htmlspecialchars($_POST["firstName"]),
                 "lastName" => htmlspecialchars($_POST["lastName"]),
