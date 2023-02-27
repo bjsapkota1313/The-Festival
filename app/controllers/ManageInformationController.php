@@ -15,6 +15,7 @@ class ManageInformationController extends Controller
         $this->displayPageView('ManageInformationOverview');
     }
     public function editNav(){
-
+        $navBarItems=$this->navBarService->getAllNavBarItems();
+        require_once __DIR__.'/../views/ManageInformation/HomeNavBar.php';
     }
 }

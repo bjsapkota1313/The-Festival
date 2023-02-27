@@ -32,5 +32,4 @@ class Controller {
         $navBarItems=$this->navBarService->getAllNavBarItems();
         require_once __DIR__.'/../views/HomeNavBar.php';
     }
-
 }
