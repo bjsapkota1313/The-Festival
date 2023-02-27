@@ -32,5 +32,6 @@ services:
             - 8080:80
         environment:
             - PMA_HOST=thefestival2022.mysql.database.azure.com
+            # - PMA_HOST=mysql
 volumes:
     mysqldata: {}
