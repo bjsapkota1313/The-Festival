@@ -1,5 +1,12 @@
 <?php
+require_once __DIR__ . '/../services/NavBarService.php';
 class Controller {
+    private $navBarService;
+
+    public function __construct()
+    {
+        $this->navBarService=new NavBarService();
+    }
     function displayView($model) {        
         $directory = strtolower(substr(get_class($this), 0, -10));
         $view = debug_backtrace()[1]['function'];
@@ -9,11 +16,21 @@ class Controller {
         $directory = strtolower(substr(get_class($this), 0, -10));
         require __DIR__ . "/../views/$directory/$view.php";
     }
-    protected function parseDateOfBirth($date){
-        $date = DateTime::createFromFormat('Y-m-d', $date);
-        if ($date === false || array_sum($date->getLastErrors()) > 0) {
-            return null;
+    protected function parseDateOfBirth($date): bool|string
+    {
+        $current_date = new DateTime();
+        $birthDate = DateTime::createFromFormat('Y-m-d', $date);
+        if ($birthDate===false ||array_sum($birthDate->getLastErrors()) > 0) {
+            return "please input a valid date format (YYYY-MM-DD) for birthdate";
+        } else if ($date > $current_date) {
+            return  "Please select a date that is not in the future";
         }
-        return $date;
+        return true;
     }
+    protected function displayNavBar($title,$pathToCss): void
+    {
+        $navBarItems=$this->navBarService->getAllNavBarItems();
+        require_once __DIR__.'/../views/HomeNavBar.php';
+    }
+
 }

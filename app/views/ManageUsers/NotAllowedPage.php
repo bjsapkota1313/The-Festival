@@ -1,4 +1,6 @@
-
+<?php
+require __DIR__.'/Headers.htm';
+?>
     <title>Access denied</title>
 </head>
 <body>

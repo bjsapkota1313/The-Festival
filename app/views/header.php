@@ -67,7 +67,7 @@ echo '
     <a class="nav-link" aria-current="page" href="/">Home</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="#">History</a>
+    <a class="nav-link" href="#">HistoryController</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="#">Culture</a>
