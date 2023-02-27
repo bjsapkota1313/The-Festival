@@ -8,7 +8,7 @@ ini_set("display_errors", 1);
 
 // require (import) PatternRouter class from the following file:
 // __DIR__ represents the current file (index.php) location
-require __DIR__ . '/../routers/patternrouter.php';
+require __DIR__ . '/../routers/PatternRouter.php';
 
 // trim removes the unwanted '/'
 // $_SERVER is a dictionary containing many things. One of its keys is REQUEST_URI that gives the request uri. For example, /home/about

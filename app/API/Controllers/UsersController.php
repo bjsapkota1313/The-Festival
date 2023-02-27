@@ -174,7 +174,4 @@ class UsersController extends Controller
         }
 
     }
-    public function test(){
-        echo $this->userService->getUserPictureById(103);
-    }
 }
