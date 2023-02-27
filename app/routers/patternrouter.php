@@ -50,9 +50,13 @@ class PatternRouter
         // pattern = /controller/method
         // check if we are requesting an api route
         $api = false;
+        $festival = false; // checking if it is a festival route or not
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
             $api = true;
+        }else if (str_starts_with($uri, "festival/")) {
+            $uri = substr($uri, 9);
+            $festival = true;
         }
 
         // set default controller/method
@@ -87,6 +91,9 @@ class PatternRouter
 
         if ($api) {
             $filename = __DIR__ . '/../api/controllers/' . $controllerName . '.php';
+        }
+        else if ($festival) {
+            $filename = __DIR__ . '/../controllers/festival/' . $controllerName . '.php';
         }
 
         // check if the $filename exists. Here, the homecontroller.php in the controllers folder.
