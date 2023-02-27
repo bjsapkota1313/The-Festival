@@ -50,11 +50,32 @@ class ManageUsersController extends Controller
         }
     }
 
+    public function editUser()
+    {
+        if ($this->checkLoggedInUserIsAdminstrator()) {
+            if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
+                $userId = htmlspecialchars($_POST['hiddenUserId']);
+                $editingUser = $this->userService->getUserById($userId);
+                if (!is_null($editingUser)) {
+
+                    require __DIR__ . '/../views/ManageUsers/EditUser.php';
+                } else {
+                    echo "User is not found";
+                }
+            } else {
+                http_response_code(401); // Unauthorised Request
+                exit();
+            }
+        }
+
+    }
+
     public function registerNewUser()
     {
         $message = $this->registerNewUserSubmit();
         require __DIR__ . '/../views/ManageUsers/RegisterNewUser.php';
     }
+
 
     private function registerNewUserSubmit()
     {

@@ -22,4 +22,16 @@ class PageService
         $repository = new PageRepository();
         $repository->createNewPage($newPage);
     }
+
+    public function updatePageById($pageID, $newPage): void 
+    {
+        $repository = new PageRepository();
+        $repository->updatePageById($pageID, $newPage);
+    }
+
+    public function deletePageById($pageID): void 
+    {
+        $repository = new PageRepository();
+        $repository->deletePageById($pageID);
+    }
 }
