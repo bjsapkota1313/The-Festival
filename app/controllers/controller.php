@@ -16,7 +16,6 @@ class Controller {
         $directory = strtolower(substr(get_class($this), 0, -10));
         require __DIR__ . "/../views/$directory/$view.php";
     }
-
     protected function parseDateOfBirth($date): bool|string
     {
         $current_date = new DateTime();
