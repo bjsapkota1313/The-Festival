@@ -15,33 +15,44 @@ class EventPageRepository extends Repository
             $stmt->bindParam(':name', $name);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $this->createEventInstance($result);
+            if($stmt->rowCount() > 0){
+                return $this->createEventPageInstance($result);
+            }
+            return null;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
 
-    private function createEventInstance($result)
+    private function createEventPageInstance($result) : EventPage
     {
-        $eventPage = new EventPage();
-        $eventPage->setEventPageId($result['eventPageId']);
-        $eventPage->setEventPageName($result['eventPageName']);
-        $contentId = $result['content'];
-        $content = $this->getContent($contentId);
-        $eventPage->setContent($content);
-        $eventPage->setUrl($result['url']);
-        $eventPage->setImage($result['image']);
-        $eventPage->setTicket($result['ticket']);
-        return $eventPage;
+        try{
+            $eventPage = new EventPage();
+            $eventPage->setEventPageId($result['eventPageId']);
+            $eventPage->setEventPageName($result['eventPageName']);
+            $content = $this->getContent($result['content']); // Getting Content Object
+            $eventPage->setContent($content);
+            $eventPage->setUrl($result['url']);
+            $eventPage->setImage($result['image']);
+            $eventPage->setTicket($result['ticket']);
+            return $eventPage;
+        }
+        catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     private function getContent($contentId)
     {
         try {
+            // reading content table and making content object
             $stmt = $this->connection->prepare("SELECT contentId, bodyHead,h2,h3,p FROM content WHERE contentId = :contentId");
             $stmt->bindParam(':contentId', $contentId);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() == 0){
+                return null;
+            }
             return $this->createContentInstance($result);
 
 
@@ -50,22 +61,27 @@ class EventPageRepository extends Repository
         }
     }
 
-    private function createContentInstance($result)
-    {
-        $content = new Content();
-        $content->setContentId($result['contentId']);
-        $bodyHeadId = $result['bodyHead'];
-        $bodyHead = $this->getBodyHead($bodyHeadId);
-        $content->setBodyHead($bodyHead);
-        $sectionText = $this->getSectionText($result['contentId']);
-        $content->setSectionText($sectionText);
-        return $content;
+    private function createContentInstance($result): Content
+    { // create content object by reading from database
+        try{
+            $content = new Content();
+            $content->setContentId($result['contentId']);
+            $content->setH2($result['h2']);
+            $bodyHead = $this->getBodyHead($result['bodyHead']); // getting object Body Head by Reading from database
+            $content->setBodyHead($bodyHead);
+            $sectionText = $this->getSectionText($result['contentId']); // getting object Section Text by Reading from database
+            $content->setSectionText($sectionText);
+            return $content;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
 
     }
 
     private function getBodyHead($bodyHeadId)
     {
         try {
+            // reading bodyhead table and making bodyhead object
             $stmt = $this->connection->prepare("SELECT bodyHeadId,h1,h2,image FROM bodyhead WHERE bodyHeadId = :bodyHeadId");
             $stmt->bindParam(':bodyHeadId', $bodyHeadId);
             $stmt->execute();
@@ -83,6 +99,9 @@ class EventPageRepository extends Repository
             $stmt->bindParam(':contentId', $contentId);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() == 0){
+                return null;
+            }
             return $this->createSectionTextInstance($result);
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -98,58 +117,19 @@ class EventPageRepository extends Repository
         return $sectionText;
     }
 
-//    private function getParagraphs($paragraphId)
-//    {
-//        try {
-//        $stmt=$this->connection->prepare("SELECT paragraphId,title,text FROM paragraph WHERE paragraphId = :paragraphId");
-//        $stmt->bindParam(':paragraphId',$paragraphId);
-//        $stmt->execute();
-//        return $stmt->fetchAll(PDO::FETCH_CLASS,'Paragraph');
-//        } catch (PDOException $e) {
-//            echo $e->getMessage();
-//        }
-//
-//    }
     private function getParagraphsByContentId($contentId)
     {
+        // reading paragraph table and making paragraph object by Content ID
         try {
             $stmt = $this->connection->prepare("SELECT  paragraph.paragraphId,  paragraph.title , paragraph.text  FROM sectiontext JOIN paragraph ON paragraph.paragraphId = sectiontext.paragraph WHERE sectiontext.contentId = :contentId");
             $stmt->bindParam(':contentId', $contentId);
             $stmt->execute();
+            if ($stmt->rowCount() == 0){
+                return null;
+            }
             return $stmt->fetchAll(PDO::FETCH_CLASS, 'Paragraph');
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
     }
-
-//    private function getSectionText($contentId)
-//    {
-//        try {
-//            $stmt = $this->connection->prepare("SELECT  sectiontext.contentId, paragraph.paragraphId, paragraph.title AS paragraphTitle, paragraph.text AS paragraphText FROM sectiontext JOIN paragraph ON paragraph.paragraphId = sectiontext.paragraph WHERE sectiontext.contentId = :contentId");
-//            $stmt->bindParam(':contentId', $contentId);
-//            $stmt->execute();
-//            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//            return $this->createSectionTextInstance($result);
-//        } catch (PDOException $e) {
-//            echo $e->getMessage();
-//        }
-//    }
-//
-//    private function createSectionTextInstance($result): SectionText
-//    {
-//        $sectionText = new SectionText();
-//        $paragraphs = array();
-//        foreach ($result as $row) { // reading result row by row
-//            $paragraph = new Paragraph();
-//            $paragraph->setParagraphId($row['paragraphId']);
-//            $paragraph->setTitle($row['paragraphTitle']);
-//            $paragraph->setText($row['paragraphText']);
-//            $paragraphs[] = $paragraph;
-//        }
-//        $sectionText->setParagraphs($paragraphs);
-//        return $sectionText;
-//    }
-
-
 }
