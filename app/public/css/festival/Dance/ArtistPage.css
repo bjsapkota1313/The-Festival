@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=Bernard+MT+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Baloo+2&display=swap');
+body{
+    font-family: 'Baloo 2',sans-serif;
+    font-size: 36px;
+}
+.compartment-1 {
+    height: 50vh; /* set the height of the compartment to 50% of the viewport height */
+    position: relative; /* set the position to relative so that the absolute positioned child elements are positioned relative to this element */
+}
+
+.compartment-1 img {
+    object-fit: cover; /* set the image to cover the entire container */
+}
+.DanceFont{
+    color: #ffffff;
+    font-family: 'Bernard MT Condensed', serif;
+    font-weight: normal;
+    font-size: 60px;
+    opacity: 1;
+}
+.artistNameFont{
+    color: #ffffff;
+    font-family: 'Bernard MT Condensed', serif;
+    font-weight: normal;
+    font-size: 126px;
+    opacity: 1;
+    padding-top: 20px;
+}
+.BackButton{
+    border: 2px solid rgba(205, 53, 0, 1);
+    background-color: rgba(205,53,0,0.10000000149011612);
+    width: 87px;
+    height: 54px;
+    border-radius: 20px;
+}
+.BackButton:hover{
+    background-color: rgba(205,53,0,0.20000000298023224);
+}
