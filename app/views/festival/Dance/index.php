@@ -19,24 +19,25 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 overflow-hidden p-0">
-                <img src="/image/Festival/Dance/Festival%20Music.png"
+                <img src="<?php echo $this->getImageFullPath($dancePage->getContent()->getBodyHead()->getImage()) ?>"
                      class="img-fluid h-100 position-absolute top-0 start-0" alt="Cover Image">
                 <span class="position-absolute bottom-0 start-0 mb-3 d-flex align-items-center"
                       style="z-index: 99; padding-left: 20px;">
-          <h2 class="text-white fw-bold mb-0 ps-3 festivalFont">Festival</h2>
-          <h5 class="text-white fw-bold mb-0 ms-3 danceFont">Dance</h5>
+          <h2 class="text-white fw-bold mb-0 ps-3 festivalFont"><?= $bodyHead->getH1()?></h2>
+          <h5 class="text-white fw-bold mb-0 ms-3 danceFont"> <?= $bodyHead->getH2()?></h5>
         </span>
             </div>
         </div>
     </div>
 </div>
 <div class="px-4 my-5 text-center">
-    <h4 style="font-weight: 600">Are you ready to dance non-stop?</h4>
+    <?php foreach($paragraphs as $paragraph){ ?>
+
+    <h4 style="font-weight: 600"><?=$paragraph->getTitle() ?></h4>
     <div class="col-lg-10 mx-auto">
-        <p class="lead mb-4">This July 28, 29 and 30 some amazing artists will be performing in Haarlem. If you enjoy
-            dancing to house, trance, techno, or electronic music, check out the schedule at the end of this page.
-            Choose the day that works best for you and enjoy having a wonderful time attending these events. </p>
+        <p class="lead mb-4"><?=$paragraph->getText() ?> </p>
     </div>
+    <?php } ?>
 </div>
 <div id="product-carousel" class="carousel slide carousel-fade py-2" data-bs-ride="carousel">
     <div class="carousel-inner">
