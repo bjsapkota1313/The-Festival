@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../services/NavBarService.php';
 class Controller {
-    private $navBarService;
+    private NavBarService $navBarService;
 
     public function __construct()
     {
