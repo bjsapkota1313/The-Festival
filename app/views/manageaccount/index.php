@@ -15,7 +15,7 @@ echo '<main
         <div class="card shadow-sm">
             <div class="card-body">
                 <h1 class="card-title text-center mb-4">' . $currentUser->getFirstName() . ' ' . $currentUser->getLastName() . '</h2><br>
-                <form method="POST" enctype="multipart/form-data" >
+                <form method="POST" enctype="multipart/form-data" id="updateForm" >
                     <div class="row mb-3 justify-content-center">
                             <div class="profile-img-container mb-3 text-center" >
                               <img src="' . $currentUser->getPicture() . '"alt="Profile Picture" class="img-fluid">
@@ -30,7 +30,7 @@ echo '<main
                             <div class="row mb-3 ">
                                 <div class="col-md-6">
                                         <label for="first-name" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" name="firstName" value="' . $currentUser->getFirstName() . '" required>
+                                        <input type="text" id="firstname" class="form-control" name="firstName" value="' . $currentUser->getFirstName() . '" required>
                                     </div>
                                 
                                 <div class="col-md-6">
@@ -42,12 +42,12 @@ echo '<main
                             </div>';
 
 
-                                echo ' <div class="row mb-3" id="userRole">
-                                                                                                <div class="col-md-6">';
-                                DisplayPage($currentUser);
+                            echo ' <div class="row mb-3" id="userRole">
+                           <div class="col-md-6">';
+                            DisplayPage($currentUser);
 
-                                echo
-                                    '<div class="mb-3">
+                            echo
+                                '<div class="mb-3">
                                     <select name="userRole" >
                                     <option value="none" selected disabled hidden>' . Roles::getLabel($currentUser->getRole()) . '</option>
                                     <option value="Customer">Customer</option>
@@ -84,31 +84,35 @@ echo '<main
                                     </div>
                                 </div>
 
-                                <div id="password-fields" class="row" > 
+                                <div id="password-fields" class="row" style="display:none"> 
                              
                             <div class="col-md-6">
 
                                <div class="mb-3">
                                     <label for="password" class="form-label">New password</label>
-                                    <input type="password" name="newPassword" class="form-control" value="" required>
+                                    <input type="password" name="newPassword" id="newPassword" class="form-control" value="">
                                 </div>
                                 </div>
                                 <div class="col-md-6">
                                 <div class="mb-3">
                                 <label for="password" class="form-label">Confirm password</label>
-                                <input type="password" name="confirmPassword" class="form-control" value="" required>    
+                                <input type="password" name="confirmPassword" id="confirmPassword" class="form-control" value="">    
                             </div>
                             </div>';
-echo '</div>' .
-    $validationMessage;
-echo '</div>
+                            echo '</div>
+                            <p id="validationMessage"></p>';
+                            showPasswordFields();
+                            echo '</div>
                             <div class="row my-3">
                                 <div class="col-md-6">
                                     <div class="d-grid gap-2">
-                                        <button type="submit" name="updateProfile" class="btn btn-primary btn-lg" >Save Changes</button>
+                                        <button type="submit" id="submit" name="updateProfile" class="btn btn-primary btn-lg">Save Changes</button>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
+                                </div>';
+                            submitAccountInfo();
+                            enableSubmitButton();
+                            echo
+                                '<div class="col-md-6">
                                     <div class="d-grid gap-2">
                                         <button type="reset" class="btn btn-secondary btn-lg" onclick="history.back()">Cancel</button>
                                     </div>
