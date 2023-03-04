@@ -19,7 +19,7 @@ else {
       tinymce.init({
         /* replace textarea having class .tinymce with tinymce editor */
         selector: "#mytextarea",
-        plugins: 'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking image wordcount save table contextmenu directionality emoticons template paste textcolor',
+        plugins: 'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking image save table contextmenu directionality emoticons template paste textcolor',
     });
     </script>
   </head>
@@ -39,12 +39,14 @@ else {
 
     ?>
 
-    <form action="/home/editorSubmitted" method="POST">
+    <form action="/page/editorSubmitted" method="POST">
       <div class="form-floating mb-3">
         <textarea id="mytextarea" name="tinyMCEform">
           <?php 
-          if($page == null) echo "Hello World!";
+          // if the user is creating a new page, show the following message
+          if($page == null) echo "Create your new page.";
           else {
+            // if the user is editing an existing page, show the content of that page.
             echo $page->getBodyContentHTML();
           }
           ?>
@@ -58,11 +60,13 @@ else {
         id="pageTitle"
         placeholder="Page Title"
         <?php 
+        // if we are showing a page for editing, fill the page tile field.
         if($page !=null) echo "value=".$page->getTitle();
         ?>
         >
       </div>
       <?php
+      // if we are updating an existing page, we create a hidden input and give its value te pageId. So, when the form is submitted to the server, we know which pageId we are updating or deleting.
       if($page != null) {
         $pageId = $page->getId();
       ?>
@@ -75,6 +79,7 @@ else {
       <div class="form-floating mb-3">
         <button class="btn mb-2" name="formSubmit" type="submit">
         <?php 
+        // if we are creating a new page, use Submit as the button text. But if we are updating an existing page, use Update as the button text.
         if($page == null) echo "Submit";
         else echo "Update";
         ?>
@@ -82,6 +87,7 @@ else {
       </div>
       <?php 
       if($page != null) {
+        // If we are updating an existing page, add a detele Button too.
       ?>
       <div class="form-floating mb-3">
         <button class="btn mb-2" name="formDelete" type="submit">
