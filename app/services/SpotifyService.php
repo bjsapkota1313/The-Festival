@@ -85,7 +85,17 @@ class SpotifyService
     private function getClientCountryCode() :string{
         // Get client's IP address
         $clientIP = $_SERVER['REMOTE_ADDR'];
-        // Get client's country code
-        return file_get_contents("https://ipapi.co/{$clientIP}/country_code");
+        // Initiate curl and pass your API URL
+        $ch = curl_init("https://ipapi.co/{$clientIP}/country_code");
+        // Set curl options
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Execute curl and store received data
+        $countryCode = curl_exec($ch);
+
+        // Close curl
+        curl_close($ch);
+
+        // returning the country code
+        return $countryCode;
     }
 }

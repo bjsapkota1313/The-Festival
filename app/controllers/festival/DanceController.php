@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/EventController.php';
-require_once __DIR__.'/../../services/SpotifyService.php';
+require_once __DIR__ . '/../../services/SpotifyService.php';
 
 
 class DanceController extends eventController
@@ -35,12 +35,10 @@ class DanceController extends eventController
 
     }
 
-
-
     public function test()
     {
-       $ip= $_SERVER['REMOTE_ADDR'];
-       $countrycode = geoip_country_code_by_name($ip);
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $countrycode = geoip_country_code_by_name($ip);
         echo $countrycode;
     }
 
@@ -52,7 +50,6 @@ class DanceController extends eventController
             return $string;
         }
     }
-
 
 
 }

@@ -14,8 +14,6 @@ L
 app/routers/switchrouter.php,7\5\75613c3cab69523424ad229aa6f4ba66eb5d86fe
 D
 app/views/footer.php,9\d\9ddbd475ba1ab6b61e8a82b11467f8378d17d048
-E
-app/views/header2.php,c\0\c020e7069c7577def7b635ffc3bddae6208df7db
 H
 app/views/HomeNavBar.php,b\4\b42bebe1dd25fbb115ea1f801f890dc960419119
 Y
@@ -54,8 +52,6 @@ $app/views/festival/History/index.php,7\b\7b36dc9abc5e7202183f0f673dd01875e3c6e
 ,app/public/css/festival/Dance/ArtistPage.css,5\8\58be4df041c731ab60bacb48321c55777107464b
 L
 app/services/userService.php,1\4\1455355d4f631ca58b715afe4bf149394227dd19
-G
-app/vendor/autoload.php,e\3\e37a1ff7cc7010f110186ae3d0d4b7a9fdb93bad
 O
 app/repositories/repository.php,0\c\0c8ae6aceb34a2a46ad3b4268ac1ee25125bee0f
 g
