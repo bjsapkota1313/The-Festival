@@ -43,6 +43,7 @@ class RestaurantRepository extends Repository
         }
     }
 
+
     public function getRestaurants()
     {
         try {
@@ -61,6 +62,7 @@ class RestaurantRepository extends Repository
             echo $e;
         }
     }
+
 
     public function getRestaurantByName(string $restaurantName)
     {
