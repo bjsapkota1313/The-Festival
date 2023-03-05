@@ -15,6 +15,11 @@ class RestaurantService
         $repository = new RestaurantRepository();
         return $repository->getRestaurantByName($restaurantName);
     }
+    public function getRestaurants()
+    {
+        $repository = new RestaurantRepository();
+        return $repository->getRestaurants();
+    }
 
 
     public function createNewRestaurant($newRestaurant): void

@@ -16,6 +16,17 @@ class YummyController extends eventController {
         $this->displayViewFestival(null);
     }
 
+    public function restaurant($query) {
+        // get all restaurants
+        $restaurants = $this->restaurantService->getRestaurants();
+        // print_r($restaurants);
+        // $c = count($restaurants);
+        // echo "Number of restaurants is {$c}";
+        $this->displayNavBar("Yummy",'/css/festival/yummy.css');
+        // require __DIR__ . '/../../views/festival/History/index.php';
+        $this->displayViewFestival($restaurants);
+    }
+
     public function editRestaurantSubmitted() {
         // submitting new page or updating an existing page
         if(isset($_POST["formSubmit"])) {
@@ -31,10 +42,12 @@ class YummyController extends eventController {
             // if the pageID value exists in the submitted form, we are updating that page. If it does not exist, we are creating a new page.
             if(isset($_POST['restaurantID'])) {
                 $this->restaurantService->updateRestaurantById($_POST['restaurantID'], $restaurant);
+                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
                 echo "existing restaurant updated!";
             }
             else {
                 $this->restaurantService->createNewRestaurant($restaurant);
+                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
                 echo "new restaurant added!";
             }
 
@@ -69,14 +82,17 @@ class YummyController extends eventController {
             $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
             // print_r($restaurant);
             if($restaurant != null) {
+                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
                 $this->displayViewFestival($restaurant);
             }
             else {
                 // page not found
+                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
                 $this->displayViewFestival(null);
             }
         }
         else {
+            $this->displayNavBar("Yummy",'/css/festival/yummy.css');
             $this->displayViewFestival(null);
         }
     }
