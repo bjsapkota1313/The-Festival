@@ -43,6 +43,27 @@ class RestaurantRepository extends Repository
         }
     }
 
+
+    public function getRestaurants()
+    {
+        try {
+            // we make a query to database, to find all restaurants.
+            $stmt = $this->connection->prepare("SELECT * FROM Restaurant");
+            // execute the query.
+            $stmt->execute();
+            $restaurants = array();
+            $results = $stmt->fetchAll();
+            foreach ($results as $row) {
+                $restaurant = $this->createRestaurantInstance($row);
+                array_push($restaurants, $restaurant);
+            }
+            return $restaurants;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
+
+
     public function getRestaurantByName(string $restaurantName)
     {
         try {
