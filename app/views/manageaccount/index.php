@@ -1,5 +1,4 @@
-<?php //load CSS faster in hosted website
-include 'loadCSS.php';
+<?php 
 
 //load module for displaying view
 include 'displayViewModule.php'; ?>
