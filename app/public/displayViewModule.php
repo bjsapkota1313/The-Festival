@@ -1,11 +1,4 @@
 <?
-function DisplayPage($currentUser)
-{
-    if ($currentUser->getRole() == Roles::Customer()) {
-        echo '<script >document.getElementById("manageUsersLink").style.display = "none";</script>';
-    }
-}
-
 function DisplayManageAccountPage($currentUser)
 {
     if ($currentUser->getRole() == Roles::Customer()) {
@@ -20,23 +13,30 @@ function showPasswordFields()
 
     echo "<script > 
     $('#changePasswordCheckBox').click(function(){
-    $('#password-fields').slideToggle('slow');
+    $('#password-fields').slideToggle();
     });</script>";
 
 }
+
 
 function submitAccountInfo()
 {
 
     echo '<script > 
-    $(function(){
-        $("#submit").on("click", function(){   
-    var newPasword = $("#newPassword").val();
+    $(document).ready(function(){       
+        $("#updateForm").on("submit",function(event){ 
+    var newPassword = $("#newPassword").val();
     var confirmPassword = $("#confirmPassword").val();
     if(newPassword !== confirmPassword){
-    $("#validationMessage").text("Passwords Do Not Match!");  
-        $("#submit").prop("disabled", true);}
-        
+    $("#validationMessage").text("Passwords Do Not Match!");
+        $("#submit").prop("disabled", true);
+        event.preventDefault();
+    
+    }    
+    else {
+        event.currentTarget.submit();   
+        document.getElementById("#updateForm").reset();       
+    } 
     });
 });</script>';
 }
