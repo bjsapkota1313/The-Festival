@@ -98,7 +98,6 @@ include 'displayViewModule.php'; ?>
                             </div>
                             </div>
                             <p id="validationMessage"></p>
-                            <?php showPasswordFields();?>
                             </div>
                             <div class="row my-3">
                                 <div class="col-md-6">
@@ -106,8 +105,6 @@ include 'displayViewModule.php'; ?>
                                         <button type="submit" id="submit" name="updateProfile" class="btn btn-primary btn-lg">Save Changes</button>
                                     </div>
                                 </div>
-                            <?php submitAccountInfo(); ?>
-                             <?php enableSubmitButton(); ?>
                             <div class="col-md-6">
                                     <div class="d-grid gap-2">
                                         <button type="reset" class="btn btn-secondary btn-lg" onclick="history.back()">Cancel</button>
