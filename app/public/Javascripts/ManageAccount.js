@@ -1,13 +1,9 @@
 
 
 function showPasswordFields() {
-
-
     $('#changePasswordCheckBox').click(function () {
         $('#password-fields').slideToggle();
     });
-    alert("test");
-
 }
 
 
