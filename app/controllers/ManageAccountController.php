@@ -1,26 +1,33 @@
 <?php
+ require_once __DIR__ . '/controller.php';
+
 require '../services/userService.php';
 
 
-class ManageAccountController
+class ManageAccountController extends Controller
 {
     private $userService;
     private $currentUser;
     private $currentUserId;
-
-    private $updated;
 
     function __construct()
     {
         $this->userService = new UserService();
         $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
         $this->currentUser = $this->userService->getUserById($this->currentUserId);
+
     }
 
     public function index()
     {   
         $currentUser = $this->currentUser;
+
+        $this->displayNavBar("title",'/css/styles.css');
+
         $this->updateAccountData();
+
+        require_once __DIR__ . '/../views/manageAccount/index.php';
+
 
     }
 
@@ -63,7 +70,6 @@ function setUserPassword(){
         $updatedProfile = true;
     }
 
-    require_once __DIR__ . '/../views/manageAccount/index.php';
 
     return $updatedProfile;
 }
@@ -74,7 +80,6 @@ function setUserPassword(){
 
     if (isset($_POST["updateProfile"])) {
 
-        $validationMessage = "";
         $firstName = $_POST["firstName"];
         $lastName = $_POST["lastName"];
         if (isset($_POST["userRole"])) {
@@ -90,20 +95,20 @@ function setUserPassword(){
          $updatedProfile = $this->setUserPassword();
          if($updatedProfile){
             $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-        }echo 'case1';
+        }
         }
         else {
             $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-            echo 'case2';
         }
+        header("location: /manageaccount");
     }
-    require_once __DIR__ . '/../views/manageAccount/index.php';
-
 }
 
     public function updateAccountData(){
         $userId = $this->currentUserId;
         $this->updateProfile($userId);
-
     }
 }
+
+
+?>
