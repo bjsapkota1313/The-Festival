@@ -9,9 +9,7 @@ function showPasswordFields() {
 
 function submitAccountInfo() {
 
-
     $(document).ready(function () {
-
 
         $("#updateForm").on("submit", function (event) {
             if ($("#changePasswordCheckBox").prop("checked")) {
