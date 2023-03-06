@@ -78,6 +78,15 @@ class User implements \JsonSerializable{
     {
         $this->role = $role;
     }
+    public function isAdministrator(): bool
+    {
+        if($this->role == "Administrator") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     /**
      * @return string
      */

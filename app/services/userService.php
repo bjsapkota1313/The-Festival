@@ -198,11 +198,19 @@ class UserService
         }
     }
 
-    public function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
+     public function updateUserProfile($id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
     {
         $repository = new UserRepository();
-        return $repository->updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture);
+        return $repository->updateUserProfile($id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture);
     }
+
+    public function updatePasswordFromAccount($id, $newPassword){
+
+        $repository = new UserRepository();
+        $password=$this->hashPassword($newPassword);
+        return $repository->updatePassword($id, $password);
+    }
+
 
     public function updateUserV2($updatingUser, $picture)
     {

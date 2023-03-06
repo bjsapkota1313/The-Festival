@@ -1,4 +1,5 @@
 
+
 S
 #app/controllers/logincontroller.php,7\3\738053c05837012db25209058909c8ab12772ba2
 [
@@ -72,3 +73,4 @@ Q
 .app/controllers/festival/HistoryController.php,3\1\319158bcc1cb9de0f60859ee64f2da0b584dc5d0
 m
 =app/vendor/jwilsson/spotify-web-api-php/src/SpotifyWebAPI.php,d\b\db1df2b15219f408f941e522b045e8b9941a825e
+
