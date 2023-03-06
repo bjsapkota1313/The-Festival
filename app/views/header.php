@@ -1,33 +1,4 @@
-<?php
-if (!isset($_SESSION)) {
-    session_start();
-}
-//error_reporting(E_ALL | E_WARNING);
 
-include("../config/dbconfig.php");
-require_once '../services/userService.php';
-
-//load CSS faster in hosted website
-include 'loadCSS.php';
-
-//load module for displaying view
-include 'displayViewModule.php';
-
-
-try {
-    $connection = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-
-
-$GLOBALS["currentUserId"] = unserialize(serialize($_SESSION["loggedUser"]))->getId();
-
-$GLOBALS['userService'] = new UserService();
-$currentUser = $GLOBALS['userService']->getUserById($GLOBALS['currentUserId']);
-
-
-echo '
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,20 +10,10 @@ echo '
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  
 
     <meta name="description" content="">
     <meta name="author" content=""> 
-    <script src="/javascript/app.js"></script>
-    <link href="../public/css/styles.css" rel="stylesheet" type="text/css">';
-
-
-loadCSS();
-
-echo
-'</head>';
-
-echo '
+    <link href="../public/css/styles.css" rel="stylesheet" type="text/css"></head>
 
 <body>
 <header >
@@ -104,16 +65,9 @@ echo '
 
     <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="/manageAccount">Manage account</a></li>
-    <li id="manageUsersLink"><a class="dropdown-item" href="/manageUsers" >Manage users</a></li>';
-
-DisplayPage($currentUser);
-
-echo '</ul>
+    <li id="manageUsersLink"><a class="dropdown-item" href="/manageUsers" >Manage users</a></li></ul>
 
 </div>
   </div>
   </nav>
-  </header>';
-
-
-?>
+  </header>
