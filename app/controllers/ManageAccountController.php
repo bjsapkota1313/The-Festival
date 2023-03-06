@@ -91,7 +91,7 @@ function setUserPassword(){
         $birthDate = $this->getInputBirthDate();
         $imagePath = $this->setProfileImagePath();
         
-        if(!empty($_POST['newPassword']) || !empty($_POST['confirmPassword'])){
+        if(!empty($_POST['newPassword']) && !empty($_POST['confirmPassword'])){
          $updatedProfile = $this->setUserPassword();
          if($updatedProfile){
             $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
@@ -100,7 +100,6 @@ function setUserPassword(){
         else {
             $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
         }
-        header("location: /manageaccount");
     }
 }
 
