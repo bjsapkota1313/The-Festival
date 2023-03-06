@@ -123,6 +123,7 @@ include 'displayViewModule.php'; ?>
 </div>
 </div>
 
+<script src="/Javascripts/ManageAccount.js"></script>
 
 </main>
 </body>
