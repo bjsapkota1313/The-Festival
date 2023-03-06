@@ -5,12 +5,12 @@ require_once __DIR__ . '/../../services/SpotifyService.php';
 
 class DanceController extends eventController
 {
-    private $SpotifyService;
+    private $spotifyService;
 
     public function __construct()
     {
         parent::__construct();
-        $this->SpotifyService = new SpotifyService();
+        $this->spotifyService = new SpotifyService();
     }
 
     public function index()
@@ -26,22 +26,14 @@ class DanceController extends eventController
     public function artist()
     {
         try {
-            $artistAlbums = $this->SpotifyService->getArtistAlbumsWithLimit('Prakash saput', 6);
-            $artistTopTracks = $this->SpotifyService->getArtistTopTracksWithLimit('Prakash saput', 10);
+            $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit('Prakash saput', 6);
+            $artistTopTracks = $this->spotifyService ->getArtistTopTracksWithLimit('Prakash saput', 10);
             require __DIR__ . '/../../views/festival/Dance/artist.php';
         } catch (\SpotifyWebAPI\SpotifyWebAPIAuthException $e) {
             echo $e->getMessage();
         }
 
     }
-
-    public function test()
-    {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $countrycode = geoip_country_code_by_name($ip);
-        echo $countrycode;
-    }
-
     private function getFormattedStringToDisplay($string, $length): string
     {
         if (strlen($string) > $length) {
