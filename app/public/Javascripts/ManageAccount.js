@@ -6,7 +6,7 @@ function checkEmailAddress() {
         type: "GET",
         dataType: "JSON",
         success: function (jsonStr) {
-            if(JSON.stringify(jsonStr)!="null"){
+            if(JSON.stringify(jsonStr)=="true"){
             $("#emailValidation").text("This email address is already taken");}
             else {
                 $("#emailValidation").text("");
