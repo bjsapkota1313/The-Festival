@@ -43,6 +43,27 @@ class UsersController extends Controller
     }
     
     
+    
+       public function retrieveUserPermissions(){
+        try {
+            $this->sendHeaders();
+            $userWithEmail=false;
+
+            if (!empty($_GET['id'])) {
+                $id = htmlspecialchars($_GET['id']);
+                $userWithEmail = $this->userService->retrieveUserPermissionsWithUrl($id);
+            }
+            echo JSon_encode($userWithEmail);
+        }
+        catch (InvalidArgumentException|Exception $e) {
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
+        }
+
+    }
+    
+    
+    
       public function checkEmailAddress(){
         try {
             $this->sendHeaders();
