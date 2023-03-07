@@ -46,15 +46,13 @@ class UsersController extends Controller
       public function checkEmailAddress(){
         try {
             $this->sendHeaders();
-            $users=NULL;
+            $userWithEmail=false;
 
             if (!empty($_GET['email'])) {
                 $emailAddress = htmlspecialchars($_GET['email']);
-                $users = $this->userService->checkUserExistenceByEmail($emailAddress);
+                $userWithEmail = $this->userService->checkUserExistenceByEmailWithApi($emailAddress);
             }
-
-            echo JSon_encode($users);
-
+            echo JSon_encode($userWithEmail);
         }
         catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
@@ -62,6 +60,7 @@ class UsersController extends Controller
         }
 
     }
+
 
 
     public function deleteUser(): void
