@@ -218,6 +218,11 @@ class UserService
         return $repository->updateUserV2($updatedUser);
     }
 
+      public function checkUserExistenceByEmailWithApi($email)
+    {
+        $repository = new UserRepository();
+        return $repository->checkUserExistenceByEmailWithApi($email);
+    }
 
 
     function processUpdatingUserImage($image, $oldImageName)
