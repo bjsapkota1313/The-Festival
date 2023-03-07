@@ -323,18 +323,22 @@ class UserRepository extends Repository
         }
     }
 
-    function updateUserProfile($id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
+    
+    public function checkUserExistenceByEmailWithApi($email)
     {
-        $query = $this->connection->prepare("UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture WHERE id=:id");
-        $query->bindParam(":id", $id);
-        $query->bindParam(":role", $role);
-        $query->bindParam(":firstName", $firstName);
-        $query->bindParam(":lastName", $lastName);
-        $query->bindParam(":dateOfBirth", $dateOfBirth);
-        $query->bindParam(":email", $email);
-        $query->bindParam(":picture", $picture);
-        $query->execute();
+        try {
+            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
+            $stmt->bindValue(':email', "%$email%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result[0];
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
     }
+  
 
     //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
