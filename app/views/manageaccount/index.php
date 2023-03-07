@@ -13,8 +13,9 @@ include 'displayViewModule.php'; ?>
         <div class="card shadow-sm">
             <div class="card-body">
                 <h1 class="card-title text-center mb-4"><?= $currentUser->getFirstName() . ' ' . $currentUser->getLastName() ?></h2><br>
-                <form method="POST" enctype="multipart/form-data" id="updateForm" >
+                <form method="POST" enctype="multipart/form-data" id="updateForm" action="/manageaccount/updateAccountData">
                     <div class="row mb-3 justify-content-center">
+                        
                             <div class="profile-img-container mb-3 text-center" >
                               <img src="<?= $currentUser->getPicture() ?>"alt="Profile Picture" class="img-fluid">
                               <div class="mb-3">
@@ -25,12 +26,13 @@ include 'displayViewModule.php'; ?>
 
                         </div>
                         <div class="col-md-8 ">
-                            <div class="row mb-3 ">
-                                <div class="col-md-6">
+                         <div class="row mb-3 ">
+                            <div class="col-md-6">
+                                <div class="mb-3">
                                         <label for="first-name" class="form-label">First Name</label>
                                         <input type="text" id="firstname" class="form-control" name="firstName" value="<?= $currentUser->getFirstName() ?>" required>
                                     </div>
-                                
+                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="last-name" class="form-label">Last Name</label>
@@ -58,10 +60,12 @@ include 'displayViewModule.php'; ?>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" name="email" value="<?= $currentUser->getEmail() ?>" required>
+                                        <input type="email" class="form-control" name="email" id="email" value="<?= $currentUser->getEmail() ?>" required>
                                     </div>
                                 </div>
                             </div>
+                            <p id="emailValidation"></p>
+
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -72,7 +76,7 @@ include 'displayViewModule.php'; ?>
                             </div>
                             <div class="row mb-3">
 
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                     <div class="mb-3 form-check">
                                         <input type="checkbox" class="form-check-input" id="changePasswordCheckBox"
                                                name="changePassword">
@@ -125,4 +129,6 @@ include 'displayViewModule.php'; ?>
 </main>
 </body>
 </html>
+
+
 
