@@ -1,9 +1,3 @@
-<?php 
-
-//load module for displaying view
-include 'displayViewModule.php'; ?>
-
-
 
 <main>
 
@@ -12,7 +6,7 @@ include 'displayViewModule.php'; ?>
     <div class="col-lg-8 col-md-10">
         <div class="card shadow-sm">
             <div class="card-body">
-                <h1 class="card-title text-center mb-4"><?= $currentUser->getFirstName() . ' ' . $currentUser->getLastName() ?></h2><br>
+                <h1 class="card-title text-center mb-4"><?= $currentUser->getFirstName() . ' ' . $currentUser->getLastName() ?></h1><span id="userId" style="display:none"><?php echo $currentUser->getId();?></span><br>
                 <form method="POST" enctype="multipart/form-data" id="updateForm" action="/manageaccount/updateAccountData">
                     <div class="row mb-3 justify-content-center">
                         
