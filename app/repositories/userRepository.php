@@ -359,11 +359,28 @@ class UserRepository extends Repository
     
     
     
-       public function checkUserExistenceByEmailWithApi($email)
+   public function retrieveUserPermissionsWithUrl($id)
     {
         try {
             
-            $stmt = $this->connection->prepare("SELECT * From User WHERE email LIKE :email");
+            $stmt = $this->connection->prepare("SELECT role From User WHERE id LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result[0];
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+
+    public function checkUserExistenceByEmailWithUrl($email)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
             $stmt->bindValue(':email', "%$email%");
             if ($this->checkUserExistence($stmt)) {
                 $stmt->execute();
