@@ -38,8 +38,6 @@
 
                            <div class="row mb-3" id="userRole">
                            <div class="col-md-6">
-                            <?php DisplayManageAccountPage($currentUser); ?>
-
                              <div class="mb-3">
                                     <select name="userRole" >
                                     <option value="none" selected disabled hidden><?= Roles::getLabel($currentUser->getRole()) ?></option>
