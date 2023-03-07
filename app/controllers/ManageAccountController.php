@@ -1,7 +1,7 @@
 <?php
  require_once __DIR__ . '/controller.php';
 
-require '../services/userService.php';
+require_once '../services/userService.php';
 
 
 class ManageAccountController extends Controller
@@ -13,7 +13,7 @@ class ManageAccountController extends Controller
     function __construct()
     {
         $this->userService = new UserService();
-        $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
+        $this->currentUserId = 113;//unserialize(serialize(current($_SESSION["loggedUser"])));
         $this->currentUser = $this->userService->getUserById($this->currentUserId);
 
     }
@@ -23,8 +23,6 @@ class ManageAccountController extends Controller
         $currentUser = $this->currentUser;
 
         $this->displayNavBar("title",'/css/styles.css');
-
-        $this->updateAccountData();
 
         require_once __DIR__ . '/../views/manageAccount/index.php';
 
@@ -61,17 +59,36 @@ function  setProfileImagePath(){
 
 function setUserPassword(){
 
-    $updatedProfile = false;
-    $password = $_POST["newPassword"];
+    $password = NULL;
+    $newPassword = $_POST["newPassword"];
     $confirmedPassword = $_POST["confirmPassword"];
 
-    if ($password == $confirmedPassword){
-        $this->userService->updatePasswordFromAccount($this->currentUserId, $password);
-        $updatedProfile = true;
+    if ($newPassword == $confirmedPassword){
+        $password=$newPassword;
     }
 
+    return $password;
+}
 
-    return $updatedProfile;
+
+private function createUserInstance($id, $role, $firstName, $lastName, $email, $picture, $dateOfBirth, $password)
+{
+    try {
+        $user = new User();
+        $user->setId($id);
+        $user->setRole(Roles::fromString($role));
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setEmail($email);
+        $user->setPicture($picture);
+        $user->setDateOfBirth(new DateTime($dateOfBirth));
+        $user->setHashedPassword($password);
+
+        return $user;
+    } catch (InvalidArgumentException|Exception $e) { 
+        http_response_code(500);
+    }
+
 }
 
   public  function updateProfile($currentUserId)
@@ -91,15 +108,24 @@ function setUserPassword(){
         $birthDate = $this->getInputBirthDate();
         $imagePath = $this->setProfileImagePath();
         
+        $userId = $this->currentUserId;
+
+
         if(!empty($_POST['newPassword']) && !empty($_POST['confirmPassword'])){
-         $updatedProfile = $this->setUserPassword();
-         if($updatedProfile){
-            $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-        }
-        }
-        else {
-            $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-        }
+            $password = $this->setUserPassword();
+            if(!is_null($password)){
+                $password = $this->userService->hashPassword();
+                $updatedUser = $this->createUserInstance($userId, $role, $firstName, $lastName, $email, $imagePath, $birthDate,  $password);
+               $this->userService->updateUserAccount($updatedUser);
+           }
+           }
+           else {
+               $password = $this->currentUser->getHashedPassword();
+               $updatedUser = $this->createUserInstance($userId, $role, $firstName, $lastName, $email, $imagePath, $birthDate,  $password);
+               $this->userService->updateUserAccount($updatedUser);
+           }
+       
+        header("location: /manageaccount");
     }
 }
 
