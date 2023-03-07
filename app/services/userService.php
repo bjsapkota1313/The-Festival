@@ -211,6 +211,17 @@ class UserService
     }
     
     
+     public function retrieveUserPermissionsWithUrl($id){
+
+        $repository = new UserRepository();
+        return $repository->retrieveUserPermissionsWithUrl($id);
+    }
+
+    public function checkUserExistenceByEmailWithUrl($email)
+    {
+        $repository = new UserRepository();
+        return $repository->checkUserExistenceByEmailWithUrl($email);
+    }
     
     public function updateUserAccount($updatedUser)
     {
@@ -218,11 +229,7 @@ class UserService
         return $repository->updateUserV2($updatedUser);
     }
 
-      public function checkUserExistenceByEmailWithApi($email)
-    {
-        $repository = new UserRepository();
-        return $repository->checkUserExistenceByEmailWithApi($email);
-    }
+
 
 
     function processUpdatingUserImage($image, $oldImageName)
