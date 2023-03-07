@@ -324,21 +324,7 @@ class UserRepository extends Repository
     }
 
     
-    public function checkUserExistenceByEmailWithApi($email)
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
-            $stmt->bindValue(':email', "%$email%");
-            if ($this->checkUserExistence($stmt)) {
-                $stmt->execute();
-                $result = $stmt->fetch();
-                return $result[0];
-            }
-        } catch (PDOException $e) {
-            echo $e;
-        }
-    }
-  
+
 
     //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
@@ -369,7 +355,27 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+    
+    
+    
+    
+       public function checkUserExistenceByEmailWithApi($email)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
+            $stmt->bindValue(':email', "%$email%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result[0];
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+  
 
+    
     // used when user edit process is going on
     function checkEditingUserEmailExistence($email, $userID): bool
     {
