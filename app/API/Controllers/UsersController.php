@@ -41,6 +41,28 @@ class UsersController extends Controller
             echo $e->getMessage();
         }
     }
+    
+    
+      public function checkEmailAddress(){
+        try {
+            $this->sendHeaders();
+            $users=NULL;
+
+            if (!empty($_GET['email'])) {
+                $emailAddress = htmlspecialchars($_GET['email']);
+                $users = $this->userService->checkUserExistenceByEmail($emailAddress);
+            }
+
+            echo JSon_encode($users);
+
+        }
+        catch (InvalidArgumentException|Exception $e) {
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
+        }
+
+    }
+
 
     public function deleteUser(): void
     {
