@@ -1,3 +1,26 @@
+
+function retrieveUserPermissions() {
+   
+    $(document).ready(function () {
+    $.ajax({
+        url: "http://localhost/api/Users/retrieveUserPermissions?id=" + $("#userId").text(),
+        type: "GET",
+        dataType: "JSON",
+        success: function (jsonStr) {
+            if(jsonStr=="Customer"){
+                $("#userRole").hide();}
+                else {
+                    $("#userRole").show();
+                }
+        }
+    });
+
+});
+
+}
+
+
+
 function checkEmailAddress() {
    
     $("#email").on("input", function (e) {  
