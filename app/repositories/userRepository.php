@@ -362,12 +362,13 @@ class UserRepository extends Repository
        public function checkUserExistenceByEmailWithApi($email)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
+            
+            $stmt = $this->connection->prepare("SELECT * From User WHERE email LIKE :email");
             $stmt->bindValue(':email', "%$email%");
             if ($this->checkUserExistence($stmt)) {
                 $stmt->execute();
-                $result = $stmt->fetch();
-                return $result[0];
+                if($stmt->rowCount() > 0){return true;}
+                return false;
             }
         } catch (PDOException $e) {
             echo $e;
