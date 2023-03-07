@@ -50,7 +50,7 @@ class UsersController extends Controller
 
             if (!empty($_GET['email'])) {
                 $emailAddress = htmlspecialchars($_GET['email']);
-                $userWithEmail = $this->userService->checkUserExistenceByEmailWithApi($emailAddress);
+                $userWithEmail = $this->userService->checkUserExistenceByEmailWithUrl($emailAddress);
             }
             echo JSon_encode($userWithEmail);
         }
