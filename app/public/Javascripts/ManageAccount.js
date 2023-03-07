@@ -1,3 +1,22 @@
+function checkEmailAddress() {
+   
+    $("#email").on("input", function (e) {  
+    $.ajax({
+        url: "http://localhost/api/Users/checkEmailAddress?email=" + $("#email").val(),
+        type: "GET",
+        dataType: "JSON",
+        success: function (jsonStr) {
+            if(JSON.stringify(jsonStr)!="null"){
+            $("#emailValidation").text("This email address is already taken");}
+            else {
+                $("#emailValidation").text("");
+            }
+        }
+    });
+
+});
+
+}
 
 
 function showPasswordFields() {
