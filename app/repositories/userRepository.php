@@ -390,6 +390,9 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+    
+    
+    
     function getUserPictureById($id){
         try {
             $stmt = $this->connection->prepare("SELECT picture FROM User WHERE id = :id");
