@@ -13,7 +13,7 @@ class ManageAccountController extends Controller
     function __construct()
     {
         $this->userService = new UserService();
-        $this->currentUserId = 113;//unserialize(serialize(current($_SESSION["loggedUser"])));
+        $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
         $this->currentUser = $this->userService->getUserById($this->currentUserId);
 
     }
