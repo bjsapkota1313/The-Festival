@@ -1,15 +1,17 @@
-<?php
-if (!isset($_SESSION)) {
-  session_start();
-}
-//error_reporting(E_ALL | E_WARNING);
+<main>
+ <div id="editHomePage">
+ <button type="button" class="btn btn-primary mx-5 mt-4 ">Edit</button>
 
-include __DIR__ . '/../header.php';
-
-
-
-echo '<main>
- 
+ <p>
+ <span class="badge text-bg-light mx-5 mt-3">
+  <a class="text-dark text-decoration-none" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    View details
+</a></span>
+</p>
+<div class="collapse" id="collapseExample">
+  <p class="mx-5">Last modified by <span id="editor"> </span> on <span id="editTime"> </span>
+  </div>
+</div>
  <img src="./image/imgPlaceholder.png" alt="Home page picture" id="homePageImg">
  <div class="carousel-caption">
  <div class="d-inline p-2 display-2">PLACEHOLDER</div>
@@ -71,7 +73,7 @@ echo '<main>
  <div class="row object-fit-fill border rounded">
  <div class="col col-3 m-0 p-0" >
  <div class="border rounded px-2 ml-0 py-1 "  id="scanCode" >
- <img src="./image/iconPlaceholder.png" alt="" class="scanCodeImg p-3">
+ <img src="./image/iconPlaceholder.png" alt="" class="smallImage p-3">
  <div class="display-6 mt-3 mb-4 px-2  text-center">Placeholder text</div>
  <div class="display-7 mt-3 mb-5 px-2  text-center">Placeholder text</div>
 </div>
@@ -104,5 +106,3 @@ echo '<main>
  </main>
  </body>
  </html>
- ';
-?>
