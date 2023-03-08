@@ -16,12 +16,8 @@
 
 <body>
   <main>
-    <span id="userId" style="display:none">
-      <?php echo $currentUserId; ?>
-    </span>
-    <span id="pageId" style="display:none">
-      <?php echo $pageId; ?>
-    </span>
+    <span id="userId" style="display:none"><?php echo $currentUserId; ?></span>
+    <span id="pageId" style="display:none"><?php echo $pageId; ?></span>
 
 
     <?php if (isset($model) && $model != null)  echo $model;?>
