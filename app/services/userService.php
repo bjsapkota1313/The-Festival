@@ -198,11 +198,7 @@ class UserService
         }
     }
 
-    public function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
-    {
-        $repository = new UserRepository();
-        return $repository->updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture);
-    }
+
 
     public function updateUserV2($updatingUser, $picture)
     {
@@ -213,6 +209,9 @@ class UserService
         $updatingUser->setPicture($imageName);
         return $this->repository->updateUserV2($updatingUser);
     }
+    
+
+
 
     function processUpdatingUserImage($image, $oldImageName)
     {
@@ -236,9 +235,9 @@ class UserService
             echo $e->getMessage();
         }
     }
-
-
-
+    
+    
+ 
     function checkEditingUserEmailExistence($email, $userID): bool
     {
         return $this->repository->checkEditingUserEmailExistence($email, $userID);
@@ -261,6 +260,32 @@ class UserService
         }
         return true;
     }
+    
+    
+      public function retrieveUserByIdWithUrl($id)
+    {
+        $repository = new UserRepository();
+        return $repository->retrieveUserByIdWithUrl($id);
+    }
+    
+     public function retrieveUserPermissionsWithUrl($id){
+
+        $repository = new UserRepository();
+        return $repository->retrieveUserPermissionsWithUrl($id);
+    }
+
+    public function checkUserExistenceByEmailWithUrl($email)
+    {
+        $repository = new UserRepository();
+        return $repository->checkUserExistenceByEmailWithUrl($email);
+    }
+    
+    public function updateUserAccount($updatedUser)
+    {
+        $repository = new UserRepository();
+        return $repository->updateUserV2($updatedUser);
+    }
+
 
 
 }

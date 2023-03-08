@@ -323,19 +323,8 @@ class UserRepository extends Repository
         }
     }
 
-    function updateUser($connection, $id, $role, $firstName, $lastName, $dateOfBirth, $email, $picture)
-    {
+    
 
-        $query = $connection->prepare("UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture WHERE id=:id");
-        $query->bindParam(":id", $id);
-        $query->bindParam(":role", $role);
-        $query->bindParam(":firstName", $firstName);
-        $query->bindParam(":lastName", $lastName);
-        $query->bindParam(":dateOfBirth", $dateOfBirth);
-        $query->bindParam(":email", $email);
-        $query->bindParam(":picture", $picture);
-        $query->execute();
-    }
 
     //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
@@ -366,7 +355,10 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-
+    
+    
+   
+    
     // used when user edit process is going on
     function checkEditingUserEmailExistence($email, $userID): bool
     {
@@ -380,6 +372,9 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+    
+    
+    
     function getUserPictureById($id){
         try {
             $stmt = $this->connection->prepare("SELECT picture FROM User WHERE id = :id");
@@ -390,6 +385,62 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+    
+    
+     
+     public function retrieveUserByIdWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT * From User WHERE id LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+
+    
+    
+   public function retrieveUserPermissionsWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT role From User WHERE id LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result[0];
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+
+    public function checkUserExistenceByEmailWithUrl($email)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
+            $stmt->bindValue(':email', "%$email%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                if($stmt->rowCount() > 0){return true;}
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+  
+
 
 
 }

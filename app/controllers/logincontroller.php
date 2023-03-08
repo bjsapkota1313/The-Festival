@@ -20,8 +20,16 @@ class LoginController extends Controller
 
     public function passhash()
     {
-        $pass = "Test";
+        $pass = "Sara";
         echo password_hash($pass, PASSWORD_DEFAULT);
+    }
+
+    public function logout($query){
+        // session_start();
+        session_unset();
+        session_destroy();
+        header("location: /login");
+        exit();
     }
 
     public function index($query)

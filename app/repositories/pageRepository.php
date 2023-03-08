@@ -39,9 +39,13 @@ class PageRepository extends Repository
     public function getPageByTitle(string $pageTitle)
     {
         try {
+            // we make a query to database, to find the page with the given title.
             $stmt = $this->connection->prepare("SELECT * FROM Page WHERE title = :title");
+            // to increase security, we use bindParam.
             $stmt->bindParam(':title', $pageTitle);
+            // then execute the query.
             $stmt->execute();
+            // if the number of records found with the given title is zero, then that title does not exist in the database.
             if ($stmt->rowCount() == 0) {
                 return null;
             }
@@ -72,6 +76,7 @@ class PageRepository extends Repository
     {
         try {
             $stmt = $this->connection->prepare("UPDATE Page SET title = :title, URI = :URI, creatorUserId = :creatorUserId, bodyContentHTML = :bodyContentHTML WHERE id = :id;");
+            // we use bindValue to increase security and prevent SQL injection.
             $stmt->bindValue(':URI', $newPage->getURI());
             $stmt->bindValue(':title', $newPage->getTitle());
             $stmt->bindValue(':bodyContentHTML', $newPage->getBodyContentHTML());
@@ -88,7 +93,6 @@ class PageRepository extends Repository
         try {
             $stmt = $this->connection->prepare("DELETE FROM Page WHERE id = :id;");
             $stmt->bindValue(':id',$pageID);
-            $stmt->execute();
             $stmt->execute();
         } catch (PDOException|Exception $e) {
             echo $e;
@@ -109,6 +113,39 @@ class PageRepository extends Repository
             }
             return true;
 
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+    
+        private function checkPageExistence($stmt): bool
+    {
+        try {
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
+            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
+            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
+            http_response_code(500);
+            exit();
+        }
+    }
+
+    public function  getPageByIdWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT * From Page WHERE id LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+             if ($this->checkPageExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;}
+            
         } catch (PDOException $e) {
             echo $e;
         }
