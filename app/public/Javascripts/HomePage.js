@@ -24,7 +24,6 @@ function setEditingPermissions() {
 
 function displayPageEditData() {
 
-    //  alert("test");
     $('#viewEditData').click(function () {
         $('#pageEditData').slideToggle();
     });
@@ -35,9 +34,7 @@ function displayPageEditData() {
 
 function retrieveEditorByUserId($userId) {
 
-    var res;
-    // $(document).ready(function () {
-    // alert('test');
+    var res; 
 
     $.ajax({
         url: "http://localhost/api/Users/retrieveUserById?id=" + $userId,
@@ -45,17 +42,13 @@ function retrieveEditorByUserId($userId) {
         dataType: "JSON",
         async: false,
         success: function (jsonStr) {
-            //  alert(JSON.stringify(jsonStr[1]));
-
             res = jsonStr;
-            //alert(res);
-
         }
     });
     return res;
-    //});
-
 }
+
+
 
 function redirectToEditorUrl(title) {
 
@@ -68,7 +61,6 @@ function redirectToEditorUrl(title) {
 function retrievePageData() {
 
     $(document).ready(function () {
-        //  alert('test');
 
         $.ajax({
             url: "http://localhost/api/Pages/retrievePageData?id=" + $("#pageId").text(),
@@ -83,13 +75,8 @@ function retrievePageData() {
                 var editDate = editDateTime.split(' ')[0];
                 redirectToEditorUrl(pageTitle);
 
-                // alert(user[1]);
-
                 $("#editor").text(username);
                 $("#editDate").text(editDate);
-
-
-                //  alert(JSON.stringify(jsonStr[5]));
             }
         });
 
@@ -97,10 +84,6 @@ function retrievePageData() {
 
 }
 
-//var id = $("#userId").text();
 setEditingPermissions();
 displayPageEditData();
-//var user = retrieveEditorByUserId(id);
-//alert(user[1]);
 retrievePageData();
-//redirectToEditorUrl();
