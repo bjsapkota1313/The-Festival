@@ -2,7 +2,6 @@
 require __DIR__ . '/../../Services/pageService.php';
 require __DIR__ . '/controller.php';
 
-//TODO: Make REST API Principles
 class PagesController extends Controller
 {
     private $pageService;
