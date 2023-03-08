@@ -48,7 +48,7 @@ class Controller {
         $directory = strtolower(substr(get_class($this), 0, -10));
         $view = debug_backtrace()[1]['function'];
         $currentUserId = $user;
-        $pageId = func_get_args(2);
+        $pageId = func_get_arg(2);
         require __DIR__ . "/../views/$directory/$view.php";
     }
 }
