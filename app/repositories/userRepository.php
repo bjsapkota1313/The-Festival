@@ -357,6 +357,54 @@ class UserRepository extends Repository
     }
     
     
+   
+    
+    // used when user edit process is going on
+    function checkEditingUserEmailExistence($email, $userID): bool
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM User WHERE email = :email AND id != :userId");
+            $stmt->bindValue(':email', $email);
+            $stmt->bindValue(':userId', $userID);
+            $stmt->execute();
+            return $stmt->fetchColumn() > 0; // returns true if user exist with coming email expect then same user
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+    
+    
+    function getUserPictureById($id){
+        try {
+            $stmt = $this->connection->prepare("SELECT picture FROM User WHERE id = :id");
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+    
+     
+     public function retrieveUserByIdWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT * From User WHERE id LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+            if ($this->checkUserExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+
     
     
    public function retrieveUserPermissionsWithUrl($id)
@@ -393,33 +441,6 @@ class UserRepository extends Repository
     }
   
 
-    
-    // used when user edit process is going on
-    function checkEditingUserEmailExistence($email, $userID): bool
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM User WHERE email = :email AND id != :userId");
-            $stmt->bindValue(':email', $email);
-            $stmt->bindValue(':userId', $userID);
-            $stmt->execute();
-            return $stmt->fetchColumn() > 0; // returns true if user exist with coming email expect then same user
-        } catch (PDOException $e) {
-            echo $e;
-        }
-    }
-    
-    
-    
-    function getUserPictureById($id){
-        try {
-            $stmt = $this->connection->prepare("SELECT picture FROM User WHERE id = :id");
-            $stmt->bindValue(':id', $id);
-            $stmt->execute();
-            return $stmt->fetchColumn();
-        } catch (PDOException $e) {
-            echo $e;
-        }
-    }
 
 
 }
