@@ -12,7 +12,6 @@
     <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
     <meta name="description" content="">
     <meta name="author" content="">
-    <script src="/javascript/app.js"></script>
     <?php
     if(isset($pathToCss)){
         ?>
