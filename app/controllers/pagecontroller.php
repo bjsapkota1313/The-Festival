@@ -73,7 +73,13 @@ class PageController extends Controller
             // getPageByTitle searchs the database for the given title, if the given title is found, we return it. If it is not found, we return null.
             $page = $this->pageService->getPageByTitle($parsedQuery["title"]);
             if($page != null) {
-                $this->displayView($page->getBodyContentHTML());
+                 $args = func_get_args();
+                if (count($args) == 1){
+                $this->displayView($page->getBodyContentHTML());}
+                 else if ($args > 1) {
+                $user = $args[1];
+                $pageId= $page->getId();
+                $this->displayViewUsingPermissions($page->getBodyContentHTML(), $user, $pageId);}
             }
             // if the title is not found in the database, we show the following error.
             else {
