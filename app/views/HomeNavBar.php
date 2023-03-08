@@ -15,6 +15,8 @@
     <script type="text/javascript" 
     src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script> 
+    <script src="http://code.jquery.com/jquery-migrate-1.1.1.js"></script>
+
     <?php
     if(isset($pathToCss)){
         ?>
