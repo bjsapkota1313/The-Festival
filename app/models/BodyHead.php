@@ -70,6 +70,4 @@ class BodyHead
     {
         $this->image = $image;
     }
-
-
 }

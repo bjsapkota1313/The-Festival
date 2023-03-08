@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link href="/css/festival/Dance/ArtistPage.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="description" content="">
     <meta name="author" content="">
 </head>
@@ -42,18 +43,12 @@
         <div class="row ps-3">
             <div class="col-6 ps-3">
                 <p class="text-center" style="font-size: 24px;">
-                    Martin Garrix is a top rated Dutch DJ and producer. He has performed at festivals such as Coachella,
-                    Electric Daisy Carnival, Ultra Music Festival, Tomorrowland, and Creamfields. He made his debut at
-                    age
-                    17, when he was the youngest ever headliner of Ultra South Africa. Martin Garrix founded the label
-                    Stmpd
-                    Rcrds in 2016. He is best known for his singles “Animals”, “In the Name of Love”, and “Scared to be
-                    Lonely”.
+                    <?= nl2br($selectedArtist->getArtistDescription())?>
                 </p>
             </div>
             <div class="col-6 justify-content-center">
                 <svg class="pr-3">
-                    <img src="/image/Festival/Dance/martinGarixx.png">
+                    <img class="image-fluid" src="<?=$this->getImageFullPath($selectedArtist->getArtistLogo())?>" alt="<?= $selectedArtist->getArtistName()?>">
                 </svg>
             </div>
         </div>
@@ -194,149 +189,8 @@
         </div>
     </div>
     <style>
-        .hoverable :hover {
-            background-color: rgba(217, 217, 217, 0.2);
-        }
 
     </style>
 </div>
-
-<script>
-    // let audio =new Audio();
-    // let isPlaying = false;
-    // let currentTrackId = null;
-    //
-    // // Play a track
-    // function playTrack(url, trackId) {
-    //     if (!audio || audio.src !== url) {
-    //         audio = new Audio(url);
-    //         audio.addEventListener('ended', function() {
-    //             stopTrack(trackId);
-    //         });
-    //         audio.addEventListener('pause', function() {
-    //             stopTrack(trackId);
-    //         });
-    //     }
-    //
-    //     audio.src = url;
-    //     audio.play();
-    //     isPlaying = true;
-    //     currentTrackId = trackId;
-    //     updateButton(trackId);
-    // }
-    //
-    // // Pause a track
-    // function pauseTrack() {
-    //     audio.pause();
-    //     isPlaying = false;
-    // }
-    //
-    // // Stop a track
-    // function stopTrack(trackId) {
-    //     audio.currentTime = 0;
-    //     pauseTrack();
-    //     updateButton(trackId);
-    // }
-    //
-    // // Toggle play/pause button and audio playback
-    // function togglePlayPause(url, trackId) {
-    //     if (isPlaying && audio.paused && audio.src === url) {
-    //         audio.play();
-    //         isPlaying = true;
-    //     } else if (isPlaying && !audio.paused && audio.src === url) {
-    //         pauseTrack();
-    //     } else {
-    //         if (isPlaying && audio.src !== url) {
-    //             pauseTrack();
-    //             let playingButtonId = currentTrackId;
-    //             let playingButton = document.getElementById("playPauseButton" + playingButtonId);
-    //             playingButton.innerHTML = '<i class="fa-solid fa-play fa-2xl"></i>';
-    //         }
-    //         pauseTrack(); // pause current track
-    //         playTrack(url, trackId); // play new track
-    //     }
-    // }
-    //
-    // // Update the play/pause button
-    // function updateButton(trackId) {
-    //     let button = document.getElementById("playPauseButton" + trackId);
-    //     button.innerHTML = isPlaying ? '<i class="fa-solid fa-pause fa-2xl"></i>' : '<i class="fa-solid fa-play fa-2xl"></i>';
-    // }
-    let audio = null;
-    let isPlaying = false;
-    let currentTrackId = null;
-    let isTrackPlaying = false;
-
-    // Play a track
-    function playTrack(url, trackId) {
-        if (!audio || audio.src !== url) {
-            audio = new Audio(url);
-            audio.addEventListener('ended', function() {
-                stopTrack(trackId);
-            });
-            audio.addEventListener('pause', function() {
-                stopTrack(trackId);
-            });
-            audio.addEventListener('playing', function() {
-                isTrackPlaying = true;
-            });
-        }
-
-        audio.src = url;
-        if (!isPlaying) {
-            audio.play();
-            isPlaying = true;
-        }
-        currentTrackId = trackId;
-        updateButton(trackId);
-    }
-
-    // Pause a track
-    function pauseTrack() {
-        if (isTrackPlaying) {
-            audio.pause();
-            isPlaying = false;
-            isTrackPlaying = false;
-        }
-    }
-
-    // Stop a track
-    function stopTrack(trackId) {
-        audio.currentTime = 0;
-        pauseTrack();
-        updateButton(trackId);
-    }
-
-    // Toggle play/pause button and audio playback
-    function togglePlayPause(url, trackId) {
-        if (isPlaying && audio.paused && audio.src === url) {
-            audio.play();
-            isPlaying = true;
-        } else if (isPlaying && !audio.paused && audio.src === url) {
-            pauseTrack();
-        } else {
-            if (isPlaying && audio.src !== url) {
-                pauseTrack();
-                let playingButtonId = currentTrackId;
-                let playingButton = document.getElementById("playPauseButton" + playingButtonId);
-                playingButton.innerHTML = '<i class="fa-solid fa-play fa-2xl"></i>';
-            }
-            playTrack(url, trackId);
-        }
-    }
-
-    // Update the play/pause button
-    function updateButton(trackId) {
-        let button = document.getElementById("playPauseButton" + trackId);
-        if (trackId === currentTrackId) {
-            button.innerHTML = isPlaying ? '<i class="fa-solid fa-pause fa-2xl"></i>' : '<i class="fa-solid fa-play fa-2xl"></i>';
-        } else {
-            button.innerHTML = '<i class="fa-solid fa-play fa-2xl"></i>';
-        }
-    }
-
-
-
-</script>
-
+<script src="/Javascripts/festival/Dance/Audioplayer.js" type="text/javascript"></script>
 </body>

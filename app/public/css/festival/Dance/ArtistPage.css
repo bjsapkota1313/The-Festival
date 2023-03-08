@@ -99,3 +99,7 @@ body{
     background-color: rgba(245,215,204,1);
     opacity: 1;
 }
+.hoverable :hover {
+    background-color: rgba(217, 217, 217, 0.2) !important;
+}
+.hover
