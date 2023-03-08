@@ -83,7 +83,8 @@ function enableSubmitButton() {
 
 }
 
-
+retrieveUserPermissions();
+checkEmailAddress();
 showPasswordFields();
 submitAccountInfo();
 enableSubmitButton();
