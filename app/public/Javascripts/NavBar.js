@@ -1,36 +1,35 @@
 
+
 function displayNav() {
-    $("#navbarToggleBtn").toggle(function(){
-        $("#navbarNavDropdown").hide(); 
+    $("#navbarToggleBtn").toggle(function () {
+        $("#navbarNavDropdown").hide();
     },
-    function(){
-         $("#navbarNavDropdown").show(); 
-     },
+        function () {
+            $("#navbarNavDropdown").show();
+        },
     );
 }
 
-function displayAccountSettings(){
-    $("#accountSettings").toggle(function(){
-    $("#accountSettingsLinks").hide(); 
-},function(){
-    $("#accountSettingsLinks").show(); 
-},
+function displayAccountSettings() {
+    $("#accountSettings").toggle(function () {
+        $("#accountSettingsLinks").hide();
+    }, function () {
+        $("#accountSettingsLinks").show();
+    },
 
-);
+    );
 }
 
-function hideAccountSettings(){
+function hideAccountSettings() {
 
     $(document).on("click", function () {
 
-    $("#accountSettingsLinks").hide(); 
+        $("#accountSettingsLinks").hide();
     }
-);
-
-
+    );
 }
 
-function setUserEditingPermission(){
+function setUserEditingPermission() {
 
     $(document).ready(function () {
 
