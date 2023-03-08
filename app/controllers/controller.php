@@ -43,4 +43,12 @@ class Controller {
         $navBarItems=$this->navBarService->getAllNavBarItems();
         require_once __DIR__.'/../views/HomeNavBar.php';
     }
+    
+       function displayViewUsingPermissions($model, $user) {        
+        $directory = strtolower(substr(get_class($this), 0, -10));
+        $view = debug_backtrace()[1]['function'];
+        $currentUserId = $user;
+        $pageId = func_get_args(2);
+        require __DIR__ . "/../views/$directory/$view.php";
+    }
 }
