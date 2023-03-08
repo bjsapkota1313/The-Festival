@@ -1,26 +1,31 @@
 <?php
-require '../services/userService.php';
+ require_once __DIR__ . '/controller.php';
+
+require_once '../services/userService.php';
 
 
-class ManageAccountController
+class ManageAccountController extends Controller
 {
     private $userService;
     private $currentUser;
     private $currentUserId;
-
-    private $updated;
 
     function __construct()
     {
         $this->userService = new UserService();
         $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
         $this->currentUser = $this->userService->getUserById($this->currentUserId);
+
     }
 
     public function index()
     {   
         $currentUser = $this->currentUser;
-        $this->updateAccountData();
+
+        $this->displayNavBar("title",'/css/styles.css');
+
+        require_once __DIR__ . '/../views/manageAccount/index.php';
+
 
     }
 
@@ -54,18 +59,36 @@ function  setProfileImagePath(){
 
 function setUserPassword(){
 
-    $updatedProfile = false;
-    $password = $_POST["newPassword"];
+    $password = NULL;
+    $newPassword = $_POST["newPassword"];
     $confirmedPassword = $_POST["confirmPassword"];
 
-    if ($password == $confirmedPassword){
-        $this->userService->updatePasswordFromAccount($this->currentUserId, $password);
-        $updatedProfile = true;
+    if ($newPassword == $confirmedPassword){
+        $password=$newPassword;
     }
 
-    require_once __DIR__ . '/../views/manageAccount/index.php';
+    return $password;
+}
 
-    return $updatedProfile;
+
+private function createUserInstance($id, $role, $firstName, $lastName, $email, $picture, $dateOfBirth, $password)
+{
+    try {
+        $user = new User();
+        $user->setId($id);
+        $user->setRole(Roles::fromString($role));
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setEmail($email);
+        $user->setPicture($picture);
+        $user->setDateOfBirth(new DateTime($dateOfBirth));
+        $user->setHashedPassword($password);
+
+        return $user;
+    } catch (InvalidArgumentException|Exception $e) { 
+        http_response_code(500);
+    }
+
 }
 
   public  function updateProfile($currentUserId)
@@ -74,7 +97,6 @@ function setUserPassword(){
 
     if (isset($_POST["updateProfile"])) {
 
-        $validationMessage = "";
         $firstName = $_POST["firstName"];
         $lastName = $_POST["lastName"];
         if (isset($_POST["userRole"])) {
@@ -86,24 +108,32 @@ function setUserPassword(){
         $birthDate = $this->getInputBirthDate();
         $imagePath = $this->setProfileImagePath();
         
-        if(!empty($_POST['newPassword']) || !empty($_POST['confirmPassword'])){
-         $updatedProfile = $this->setUserPassword();
-         if($updatedProfile){
-            $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-        }echo 'case1';
-        }
-        else {
-            $this->userService->updateUserProfile($currentUserId, $role, $firstName, $lastName, $birthDate, $email, $imagePath);
-            echo 'case2';
-        }
-    }
-    require_once __DIR__ . '/../views/manageAccount/index.php';
+        $userId = $this->currentUserId;
 
+
+        if(!empty($_POST['newPassword']) && !empty($_POST['confirmPassword'])){
+            $password = $this->setUserPassword();
+            if(!is_null($password)){
+                $password = $this->userService->hashPassword();
+                $updatedUser = $this->createUserInstance($userId, $role, $firstName, $lastName, $email, $imagePath, $birthDate,  $password);
+               $this->userService->updateUserAccount($updatedUser);
+           }
+           }
+           else {
+               $password = $this->currentUser->getHashedPassword();
+               $updatedUser = $this->createUserInstance($userId, $role, $firstName, $lastName, $email, $imagePath, $birthDate,  $password);
+               $this->userService->updateUserAccount($updatedUser);
+           }
+       
+        header("location: /manageaccount");
+    }
 }
 
     public function updateAccountData(){
         $userId = $this->currentUserId;
         $this->updateProfile($userId);
-
     }
 }
+
+
+?>

@@ -188,9 +188,6 @@
             </div>
         </div>
     </div>
-    <style>
-
-    </style>
 </div>
 <script src="/Javascripts/festival/Dance/Audioplayer.js" type="text/javascript"></script>
 </body>
