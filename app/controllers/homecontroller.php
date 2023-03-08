@@ -12,7 +12,6 @@ class HomeController extends Controller
     private $currentUserId;
     private $pageController;
 
-
     // initialize services
     function __construct()
     {
