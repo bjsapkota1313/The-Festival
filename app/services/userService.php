@@ -210,25 +210,6 @@ class UserService
         return $this->repository->updateUserV2($updatingUser);
     }
     
-    
-     public function retrieveUserPermissionsWithUrl($id){
-
-        $repository = new UserRepository();
-        return $repository->retrieveUserPermissionsWithUrl($id);
-    }
-
-    public function checkUserExistenceByEmailWithUrl($email)
-    {
-        $repository = new UserRepository();
-        return $repository->checkUserExistenceByEmailWithUrl($email);
-    }
-    
-    public function updateUserAccount($updatedUser)
-    {
-        $repository = new UserRepository();
-        return $repository->updateUserV2($updatedUser);
-    }
-
 
 
 
@@ -279,6 +260,32 @@ class UserService
         }
         return true;
     }
+    
+    
+      public function retrieveUserByIdWithUrl($id)
+    {
+        $repository = new UserRepository();
+        return $repository->retrieveUserByIdWithUrl($id);
+    }
+    
+     public function retrieveUserPermissionsWithUrl($id){
+
+        $repository = new UserRepository();
+        return $repository->retrieveUserPermissionsWithUrl($id);
+    }
+
+    public function checkUserExistenceByEmailWithUrl($email)
+    {
+        $repository = new UserRepository();
+        return $repository->checkUserExistenceByEmailWithUrl($email);
+    }
+    
+    public function updateUserAccount($updatedUser)
+    {
+        $repository = new UserRepository();
+        return $repository->updateUserV2($updatedUser);
+    }
+
 
 
 }
