@@ -44,6 +44,26 @@ class UsersController extends Controller
     
     
     
+      public function retrieveUserById(){
+        try {
+            $this->sendHeaders();
+            $user=NULL;
+
+            if (!empty($_GET['id'])) {
+                $id = htmlspecialchars($_GET['id']);
+                $user = $this->userService->retrieveUserByIdWithUrl($id);
+            }
+            echo JSon_encode($user);
+        }
+        catch (InvalidArgumentException|Exception $e) {
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
+        }
+
+    }
+    
+    
+    
        public function retrieveUserPermissions(){
         try {
             $this->sendHeaders();
