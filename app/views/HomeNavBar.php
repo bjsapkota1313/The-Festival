@@ -72,5 +72,7 @@
 
                 </ul>
             </div>
+        </div>
     </nav>
+ <script src="/Javascripts/NavBar.js"></script>
 </header>
