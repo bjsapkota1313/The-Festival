@@ -13,7 +13,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <script type="text/javascript" 
-    src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  
+    src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script> 
     <?php
     if(isset($pathToCss)){

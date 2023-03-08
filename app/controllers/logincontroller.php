@@ -102,8 +102,8 @@ class LoginController extends Controller
         $remoteip = $_SERVER['REMOTE_ADDR'];
         $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
         $data = file_get_contents($url);
-        $row = json_decode($data, true);
-        if ($row['success'] == "true") {
+        $row = json_decode($data);
+        if ($row->success== "true") {
             $this->registerValidUser($systemMessage);
         } else {
             $systemMessage = "you are a robot";

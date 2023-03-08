@@ -1,18 +1,19 @@
-<div class="historyMainImage" style="background: url('<?=$this->getImageFullPath($bodyHead->getImage())?>')">
+<div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($bodyHead->getImage()) ?>')">
     <span class="position-absolute bottom-0 start-0 mb-3 ps-3 d-flex align-items-center"
           style="z-index: 99; padding-left: 20px;">
-                  <h5 class="text-white fw-bold mb-0"><?= $bodyHead->getH2()?></h5>
-          <h2 class="text-white fw-bold mb-0 ms-3"> <?= $bodyHead->getH1()?></h2>
+                  <h5 class="text-white fw-bold mb-0"><?= $bodyHead->getH2() ?></h5>
+          <h2 class="text-white fw-bold mb-0 ms-3"> <?= $bodyHead->getH1() ?></h2>
         </span>
 </div>
-<h1 class="historyHeader"><?= $eventPage->getContent()->getH2()?></h1>
+<h1 class="historyHeader"><?= $eventPage->getContent()->getH2() ?></h1>
 <div class="historyContainer">
     <div class="historyInformation">
         <?php
-        foreach ($paragraphs as $paragraph){?>
-            <h2><?= $paragraph->getTitle()?></h2>
-            <p><?= nl2br($paragraph->getText())?></p><br>
-        <?php }?>
+        foreach ($paragraphs as $paragraph) {
+            ?>
+            <h2><?= $paragraph->getTitle() ?></h2>
+            <p><?= nl2br($paragraph->getText()) ?></p><br>
+        <?php } ?>
     </div>
     <div class="historyWalkingRoute">
     <span class="fw-bold fs-4">
@@ -21,15 +22,18 @@
         <span>Take some time to read up on the locations you will visit on our history tours.</span><br>
         <p>The locations that will be visited are: </p>
         <ul>
-            <li>Church of St.Bavo - Starting location</li>
-            <li>Grote Markt</li>
-            <li>De Hallen</li>
-            <li>Proveniershof</li>
-            <li>Jopenkerk - Break location</li>
-            <li>Waalse kerk Haarlem</li>
-            <li>Molen de Adriaan</li>
-            <li>Amsterdamse poort</li>
-            <li>Hof van Bakenes</li>
+            <?php
+            foreach ($allTourLocations as $allTourLocation) {
+                ?>
+
+                    <li>
+                        <form method="GET" >
+                            <input type="hidden" name="locationPostCode"value="<?=$allTourLocation->getPostCode()?>">
+                            <button class="link" formaction="/festival/history/detail" type="submit" name="location"
+                                    value="<?= $allTourLocation->getLocationName() ?>"><?= $allTourLocation->getLocationName() ?></button>
+                        </form>
+                    </li>
+            <?php } ?>
         </ul>
     </div>
 </div>
@@ -104,3 +108,5 @@
         </div>
     </div>
 </div>
+
+getAllHistoryTourLocation()
