@@ -1,21 +1,31 @@
 <?php
 require_once __DIR__ . '/controller.php';
+require_once __DIR__ . '/pagecontroller.php';
+require_once __DIR__ . '/../services/userService.php';
+
+
 
 class HomeController extends Controller
 {
+    
+    private $userService;
+    private $currentUserId;
+    private $pageController;
+
+
+    // initialize services
+    function __construct()
+    {
+        $this->userService = new UserService();
+        $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
+        $this->pageController = new PageController();
+    }
+
     public function index()
     {
-        require __DIR__ . '/../views/home/index.php';
+        $this->displayNavBar("title",'/css/styles.css');
+        $currentUserId = $this->currentUserId;
+       $this->pageController->show("title=newtest", $currentUserId);
     }
 
-    public function about()
-    {
-        require __DIR__ . '/../views/home/about.php';
-
-    }
-
-    public function test()
-    {
-        echo "this is a test";
-    }
-}
+}?>
