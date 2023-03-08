@@ -34,4 +34,10 @@ class PageService
         $repository = new PageRepository();
         $repository->deletePageById($pageID);
     }
+    
+       public function getPageByIdWithUrl(int $pageId)
+    {
+        $repository = new PageRepository();
+        return $repository->getPageByIdWithUrl($pageId);
+    }
 }
