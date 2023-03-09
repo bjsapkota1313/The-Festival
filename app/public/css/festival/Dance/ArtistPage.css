@@ -102,4 +102,15 @@ body{
 .hoverable :hover {
     background-color: rgba(217, 217, 217, 0.2) !important;
 }
-.hover
+.album-link {
+    display: block;
+    position: relative;
+}
+
+.album-link:hover .podcast-card {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px);
+}
+
+
+

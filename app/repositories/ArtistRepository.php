@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/repository.php';
-require_once __DIR__ . '/../models/artist.php';
+require_once __DIR__ . '/../models/DanceEvent/artist.php';
 
 class ArtistRepository extends Repository
 {
@@ -62,6 +62,20 @@ class ArtistRepository extends Repository
         try {
             $stmt = $this->connection->prepare("SELECT artist.artistId, artist.artistName, artist.artistDescription, image.imageName FROM artist JOIN image ON artist.artistLogoId = image.imageId WHERE artistName = :name");
             $stmt->bindParam(':name', $name);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() > 0) {
+                return $this->createArtistInstance($result);
+            }
+            return null;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function getArtistByArtistID($artistID){
+        try {
+            $stmt = $this->connection->prepare("SELECT artist.artistId, artist.artistName, artist.artistDescription, image.imageName FROM artist JOIN image ON artist.artistLogoId = image.imageId WHERE artistId = :artistID");
+            $stmt->bindParam(':artistID', $artistID);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($stmt->rowCount() > 0) {

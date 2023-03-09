@@ -69,18 +69,19 @@
             <div class="row">
                 <?php foreach ($artistAlbums->items as $album) { ?>
                     <div class="col-2">
-                        <div class="podcast-card">
-                            <div class="frame-117">
-                                <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
+                        <a href="<?= $album->external_urls->spotify ?>" class="album-link text-decoration-none">
+                            <div class="podcast-card">
+                                <div class="frame-117">
+                                    <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
+                                </div>
+                                <div class="text ps-3">
+                                    <p class="albumName"><?= $this->getFormattedStringToDisplay($album->name, 7) ?></p>
+                                    <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
+                                                class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
+                                    </p>
+                                </div>
                             </div>
-                            <div class="text ps-3">
-                                <p class="albumName"><?= $this->getFormattedStringToDisplay($album->name, 7) ?></p>
-                                <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
-                                            class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
-                                </p>
-                                </p>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                 <?php } ?>
             </div>

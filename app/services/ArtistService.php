@@ -17,5 +17,8 @@ class ArtistService
     {
         return $this->artistRepository->getArtistByName($name);
     }
+    public function getArtistByArtistID($artistID){
+        return $this->artistRepository->getArtistByArtistID($artistID);
+    }
 
 }

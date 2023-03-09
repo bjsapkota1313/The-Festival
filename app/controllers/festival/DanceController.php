@@ -2,16 +2,20 @@
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/../../services/SpotifyService.php';
 require_once __DIR__ . '/../../services/ArtistService.php';
+require_once __DIR__. '/../../services/EventService.php';
+
 class DanceController extends eventController
 {
     private $spotifyService;
     private $artistService;
+    private $eventService;
 
     public function __construct()
     {
         parent::__construct();
         $this->spotifyService = new SpotifyService();
         $this->artistService = new ArtistService();
+        $this->eventService = new EventService();
     }
 
     public function index()
@@ -52,5 +56,4 @@ class DanceController extends eventController
             return $string;
         }
     }
-
 }

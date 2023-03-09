@@ -15,8 +15,9 @@ class HomeController extends Controller
     // initialize services
     function __construct()
     {
+        parent::__construct();
         $this->userService = new UserService();
-        $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
+        $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]));
         $this->pageController = new PageController();
     }
 
