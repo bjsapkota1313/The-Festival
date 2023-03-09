@@ -1,5 +1,5 @@
 <?php
-class Repository {
+class Repository  {
     protected $connection;
     function __construct() {
         require __DIR__ . '/../config/dbconfig.php';

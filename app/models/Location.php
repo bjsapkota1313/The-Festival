@@ -6,8 +6,8 @@ class Location
     private string $locationName;
     private string $streetName;
     private int $houseNumber;
-    private string $houseNumberAdditional;
     private string $postCode;
+    private ?string $houseNumberAdditional;
 
     /**
      * @return int

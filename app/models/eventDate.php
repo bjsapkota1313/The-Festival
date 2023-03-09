@@ -4,6 +4,7 @@ class eventDate
 {
     private string $date;
     private string $day;
+    private \Cassandra\Date $month;
 
     /**
      * @return string
