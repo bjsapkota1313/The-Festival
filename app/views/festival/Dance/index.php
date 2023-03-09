@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <link href="/css/festival/Dance/IndexPage.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="description" content="">
     <meta name="author" content="">
 </head>
@@ -39,111 +40,38 @@
     </div>
     <?php } ?>
 </div>
-<div id="product-carousel" class="carousel slide carousel-fade py-2" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card border-0">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+1" class="card-img-top border"
-                             alt="..." style="border-radius:50%;max-height: 409px;max-width: 409px ">
-                        <div class="card-body text-center">
-                            <h4 class="card-title">Product 1</h4>
-                            <button class="btn btn-primary">Artist</button>
+<div class="is-layout-flow wp-block-group bs-carousel-incr">
+    <div class="wp-block-group__inner-container">
+        <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <?php foreach($participatingArtists as $artist){ ?>
+                <div class="carousel-item">
+                    <div class="container text-center">
+                        <div class="img-wrapper align-center pb-3">
+
+                            <img src="<?php echo $this->getImageFullPath($artistPortraitImage['imageName']) ?>"
+                                                                        class="border " id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px"></div>
+                        <div>
+                            <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
+                            <form method="GET" action="/festival/dance/artistDetails">
+                            <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+2" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 2</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+3" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 3</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+4" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 4</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
-        <div class="carousel-item">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+5" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 5</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+7" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 7</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+8" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 8</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/300x300.png?text=Product+9" class="card-img-top"
-                             alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title">Product 9</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                                blandit nunc vitae magna viverra, nec ultrices velit suscipit. </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#product-carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#product-carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
     </div>
 </div>
 <div class="d-flex align-items-center justify-content-center container-fluid py-3">
@@ -522,4 +450,5 @@
         </div>
     </div>
 </div>
+<script src="/Javascripts/festival/Dance/Carousal.js" type="text/javascript"></script>
 </body>

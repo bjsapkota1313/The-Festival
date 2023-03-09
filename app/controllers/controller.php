@@ -40,6 +40,7 @@ class Controller {
     }
     protected function displayNavBar($title,$pathToCss): void
     {
+        $this->navBarService=new NavBarService();
         $navBarItems=$this->navBarService->getAllNavBarItems();
         require_once __DIR__.'/../views/HomeNavBar.php';
     }
