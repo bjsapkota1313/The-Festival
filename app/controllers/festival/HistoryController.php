@@ -19,6 +19,7 @@ class HistoryController extends EventController
         $sectionText = $eventPage->getContent()->getSectionText();
         $paragraphs = $sectionText->getParagraphs();
         $allTourLocations = $this->historyService->getAllHistoryTourLocation();
+        $historyTourTimeTables= $this->historyService->getHistoryTourTimeTable();
         $this->displayNavBar("A stroll Through History",'/css/festival/history.css');
         require __DIR__ . '/../../views/festival/History/index.php';
     }

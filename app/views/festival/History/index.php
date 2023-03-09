@@ -40,15 +40,23 @@
 <h1 class="historyHeader">Showing all English tours</h1>
 
 <div class="scheduleContainer">
+    <?php
+    foreach ($historyTourTimeTables as $historyTourTimeTable) {
+    ?>
     <div class="circleLine">
-        <span class="tourDate">26 July - Thursday</span>
+<!--        <span class="tourDate">26 July - Thursday</span>-->
+        <span class="tourDate"><?= $historyTourTimeTable->getDate()->format('Y-m-d') ?></span>
     </div>
-    <div class="circleLine">
-        <span class="tourDate">27 July - Friday</span></div>
-    <div class="circleLine">
-        <span class="tourDate">28 July - Saturday</span></div>
-    <div class="circleLine">
-        <span class="tourDate">29 July - Sunday</span></div>
+    <?php } ?>
+<!--    <div class="circleLine">-->
+<!--        <span class="tourDate">27 July - Friday</span>-->
+<!--    </div>-->
+<!--    <div class="circleLine">-->
+<!--        <span class="tourDate">28 July - Saturday</span>-->
+<!--    </div>-->
+<!--    <div class="circleLine">-->
+<!--        <span class="tourDate">29 July - Sunday</span>-->
+    </div>
 </div>
 <div class="tourContainerRow">
     <div class="tourContainerColumn">
@@ -108,5 +116,3 @@
         </div>
     </div>
 </div>
-
-getAllHistoryTourLocation()

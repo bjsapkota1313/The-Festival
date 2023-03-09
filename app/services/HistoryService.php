@@ -15,4 +15,7 @@ class HistoryService
     public function getAllHistoryTourLocation(){
         return $this->repository->getAllHistoryTourLocation();
     }
+    public function getHistoryTourTimeTable(){
+        return $this->repository->getHistoryTourTimeTable();
+    }
 }
