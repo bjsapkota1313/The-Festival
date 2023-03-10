@@ -15,6 +15,8 @@
     <script type="text/javascript" 
     src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script> 
+    <script src="http://code.jquery.com/jquery-migrate-1.1.1.js"></script>
+
     <?php
     if(isset($pathToCss)){
         ?>
@@ -28,7 +30,7 @@
     <nav class="navbar navbar-expand-md bg-body-tertiary justify-content-right">
         <div class=" container-fluid" id="navbarMain">
             <a class="navbar-brand" href="/">Visit Haarlem</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            <button class="navbar-toggler"  id="navbarToggleBtn"  type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -52,11 +54,9 @@
                             </svg>
                         </a>
 
-
-                        </button>
                     </li>
                     <li class="nav-item dropdown">
-                        <button class="btn btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-light" id="accountSettings" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-person-gear" viewBox="0 0 16 16">
@@ -64,13 +64,15 @@
                             </svg>
                         </button>
 
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/manageAccount">Manage account</a></li>
+                        <ul class="dropdown-menu" id="accountSettingsLinks">
+                            <li><a class="dropdown-item" href="/manageAccount" id="manageAccountLink">Manage account</a></li>
                             <li id="manageUsersLink"><a class="dropdown-item" href="/manageUsers">Manage users</a></li>
                         </ul>
                     </li>
 
                 </ul>
             </div>
+        </div>
     </nav>
+ <script src="/Javascripts/NavBar.js"></script>
 </header>
