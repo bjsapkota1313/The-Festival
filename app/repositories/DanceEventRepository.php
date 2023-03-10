@@ -51,7 +51,8 @@ class DanceEventRepository extends EventRepository
                     FROM artistPerformance
                     join timetable on artistPerformance.timetableId = timetable.timetableId
                     join eventdate on timetable.eventDateId = eventdate.eventDateId
-                    WHERE eventID= :eventId");
+                    WHERE eventID= :eventId
+                    ORDER BY eventdate.date ASC ");
             $stmt->bindParam(':eventId', $eventId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);

@@ -16,7 +16,6 @@ class DanceStyles
         if (!in_array($value, self::getEnumValues())) {
             throw new InvalidArgumentException("Invalid status value: $value");
         }
-
         $this->value = $value;
     }
 
