@@ -13,9 +13,8 @@ class ManageAccountController extends Controller
     function __construct()
     {
         $this->userService = new UserService();
-        $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]));
-        $this->currentUser = $this->userService->getUserById($this->currentUserId);
-
+        $this->currentUser = unserialize(serialize($_SESSION["loggedUser"]));
+        $this->currentUserId = $this->currentUser->getId();
     }
 
     public function index()
