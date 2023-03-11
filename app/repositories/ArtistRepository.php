@@ -28,6 +28,7 @@ class ArtistRepository extends Repository
         $artist->setArtistDescription($row['artistDescription']);
         $artist->setArtistLogo($row['imageName']);
         $artist->setArtistImages($this->getAllImagesOfArtistByArtistId($row['artistId']));
+        $artist->setArtistStyles($this->getArtistStylesByArtistID($row['artistId'])); // getting artist styles
         return $artist;
     }
 
@@ -52,8 +53,7 @@ class ArtistRepository extends Repository
     private function getImageArray($dbRow): array
     {
         return  array(
-            'imageName' => $dbRow['imageName'],
-            'imageSpecification' => $dbRow['imageSpecification'],
+            $dbRow['imageSpecification'] => $dbRow['imageName'],
         );
     }
 
@@ -83,6 +83,21 @@ class ArtistRepository extends Repository
             }
             return null;
         } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function getArtistStylesByArtistID($artistId){
+        try{
+            $stmt = $this->connection->prepare("SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID");
+            $stmt->bindParam(':artistID', $artistId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($stmt->rowCount() > 0) {
+                 return $result;
+            }
+            return null;
+        }
+        catch(PDOException $e) {
             echo $e->getMessage();
         }
     }

@@ -25,6 +25,4 @@ class DanceEvent extends Event
         $this->artistPerformances = $artistPerformances;
     }
 
-
-
 }

@@ -45,20 +45,23 @@
         <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach($participatingArtists as $artist){ ?>
-                <div class="carousel-item">
-                    <div class="container text-center">
-                        <div class="img-wrapper align-center pb-3">
-
-                            <img src="<?php echo $this->getImageFullPath($artistPortraitImage['imageName']) ?>"
-                                                                        class="border " id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px"></div>
-                        <div>
-                            <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
-                            <form method="GET" action="/festival/dance/artistDetails">
-                            <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
-                            </form>
+                    <div class="carousel-item">
+                        <div class="container-hover">
+                            <div class="container text-center">
+                                <div class="img-wrapper align-center pb-3">
+                                    <?php $filteredImage=$this->getFilterdImagesByImageSpecification($artist->getArtistImages()) ?>
+                                    <img src="<?= $this->getImageFullPath($filteredImage['Portrait'][0]) ?>"
+                                         class="border hover-zoom" id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px">
+                                </div>
+                                <div>
+                                    <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
+                                    <form method="GET" action="/festival/dance/artistDetails">
+                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
@@ -276,7 +279,7 @@
                             }
                         }?>
                             <div class="my-3 ps-3">
-                                <div class=" MyContainer position-relative ps-4">
+                                <div class=" MyContainer position-relative ps-4 ">
                                     <div class="container d-flex align-items-center justify-content-center">
                                         <span><?=$performance->getDate()->format('H:i')?></span>
                                         <div class="line flex-grow-1 mx-2"></div>

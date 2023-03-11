@@ -6,13 +6,14 @@ class DanceController extends eventController
 {
     private $spotifyService;
     private $artistService;
+    private $danceEventService;
 
     public function __construct()
     {
         parent::__construct();
         $this->spotifyService = new SpotifyService();
         $this->artistService = new ArtistService();
-
+        $this->danceEventService = new DanceEventService();
     }
 
     public function index()
@@ -22,9 +23,9 @@ class DanceController extends eventController
         $sectionText = $dancePage->getContent()->getSectionText();
         $paragraphs = $sectionText->getParagraphs();
         $participatingArtists = $this->artistService->getAllArtists();
-        $danceEvent= $this->eventService->getEventByName('Dance');
+        $danceEvent= $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getArtistPerformances();
-        $timetable = $this->filterArtistPerformancesWithDate($artistPerformances);
+        $timetable = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }
 
@@ -37,6 +38,9 @@ class DanceController extends eventController
                 $selectedArtist = $this->artistService->getArtistByName($artistName);
                 $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistName, 6);
                 $artistTopTracks = $this->spotifyService ->getArtistTopTracksWithLimit($artistName, 10);
+                $artistImages = $this->getFilterdImagesByImageSpecification($selectedArtist->getArtistImages());
+                $artistPerformances = $this->danceEventService->getAllArtistPerformancesDoneByArtistIdAtEvent($selectedArtist->getArtistId(),'Dance');
+                $filteredArtistPerformances = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
                 require __DIR__ . '/../../views/festival/Dance/artist.php';
             } catch (\SpotifyWebAPI\SpotifyWebAPIAuthException $e) {
                 echo $e->getMessage();
@@ -45,8 +49,23 @@ class DanceController extends eventController
         else{
             echo "Unauthorised access";
         }
-
-
+    }
+    private function getFilterdImagesByImageSpecification($artistImages): ?array
+    {
+        if($artistImages==null){
+            return null;
+        }
+        $newArray = array();
+        foreach ($artistImages as $image) {
+            foreach ($image as $key => $value) {
+                if (isset($newArray[$key])) {
+                    $newArray[$key][] = $value;
+                } else {
+                    $newArray[$key] = array($value);
+                }
+            }
+        }
+        return $newArray;
     }
     private function getFormattedStringToDisplay($string, $length): string
     {
@@ -56,82 +75,15 @@ class DanceController extends eventController
             return $string;
         }
     }
-    private function filterArtistPerformancesWithDate($artistPerformances): ?array
+
+    private function getDayByDateString($dateString): string
     {
-
-        // Assume that $artistPerformances is the original array
-        $groupedArtistPerformances = array();
-        foreach ($artistPerformances as $artistPerformance) {
-            $date = $artistPerformance->getDate()->format('Y-m-d'); // Get the date of the artist performance
-            if (!isset($groupedArtistPerformances[$date])) {
-                $groupedArtistPerformances[$date] = array(); // Initialize an empty array for this date
-            }
-            $groupedArtistPerformances[$date][] = $artistPerformance; // Add the artist performance to the array for this date
+        try{
+            $date = new DateTime($dateString); // Create a DateTime object from the date string
+            return $date->format('l');
         }
-        return $groupedArtistPerformances;
-    }
-    public function test(){
-$colors = ['red', 'green', 'blue'];
-        $enumClass = $this->create_enum('Color', ...$colors);
-        $colorEnum = new $enumClass();
-
-        foreach ($colorEnum->values() as $value) {
-            echo $value->name() . "\n";
+        catch (Exception $e){
+            return "Unknown";
         }
-
-
-    }
-    function create_enum(string $name, $values): object
-    {
-        $constants = [];
-        foreach ($values as $value) {
-            $constantName = strtoupper($value);
-            $constants[$constantName] = new class($value, $constantName) {
-                private $value;
-                private $name;
-
-                public function __construct($value, $name)
-                {
-                    $this->value = $value;
-                    $this->name = $name;
-                }
-
-                public function getValue()
-                {
-                    return $this->value;
-                }
-
-                public function name()
-                {
-                    return $this->name;
-                }
-            };
-        }
-
-        return new class($name, $constants) {
-            private $name;
-            private $constants;
-
-            public function __construct($name, $constants)
-            {
-                $this->name = $name;
-                $this->constants = $constants;
-            }
-
-            public function values()
-            {
-                return array_values($this->constants);
-            }
-
-            public function valueOf($value)
-            {
-                $constantName = strtoupper($value);
-                if (!isset($this->constants[$constantName])) {
-                    throw new InvalidArgumentException("Invalid $this->name value: $value");
-                }
-
-                return $this->constants[$constantName];
-            }
-        };
     }
 }

@@ -232,13 +232,21 @@ pre {
     border-radius: 49px;
     border: none;
 }
-#btnArtist :hover {
-    background: rgba(0, 0, 0, 1);
+.hover-zoom {
+    transition: transform 0.5s ease;
 }
-#hoverArtist :hover{
+.hover-zoom:hover {
+    transform: scale(1.1);
+}
+.container-hover:hover #hoverArtist {
     width: 453px;
     height: 453px;
     left: -3.7px;
     top: -5.91px;
-
 }
+
+.container-hover:hover #btnArtist {
+    background-color: black;
+    color: white;
+}
+
