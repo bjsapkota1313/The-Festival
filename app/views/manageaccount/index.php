@@ -19,7 +19,6 @@
                                 </div>
                              </div>
                         </div>
-                    </div>
                         <div class="col-md-8 ">
                          <div class="row mb-3 ">
                             <div class="col-md-6">
