@@ -13,7 +13,7 @@
 <main>
 <main>
 
-<div class="container d-flex justify-content-center align-items-center pt-5">
+<div class="container d-flex justify-content-center align-items-center pt-5 mb-4">
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10">
         <div class="card shadow-sm">
