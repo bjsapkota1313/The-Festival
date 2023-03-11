@@ -24,6 +24,9 @@ class ManageAccountController extends Controller
         $this->displayNavBar("title",'/css/navBarStyle.css');
 
         require_once __DIR__ . '/../views/manageAccount/index.php';
+     
+        $this->displayFooter();
+
 
 
     }
