@@ -52,4 +52,9 @@ class Controller {
         $pageId = func_get_arg(2);
         require __DIR__ . "/../views/$directory/$view.php";
     }
+    
+      protected function displayFooter(): void
+    {
+        require_once __DIR__.'/../views/Footer.php';
+    }
 }
