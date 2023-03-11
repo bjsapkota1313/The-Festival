@@ -19,6 +19,8 @@ class HomeController extends Controller
         $this->userService = new UserService();
         $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
         $this->pageController = new PageController();
+        $this->displayFooter();
+
     }
 
     public function index()
