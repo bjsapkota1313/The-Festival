@@ -9,7 +9,7 @@
                 <h1 class="card-title text-center mb-4"><?= $currentUser->getFirstName() . ' ' . $currentUser->getLastName() ?></h1><span id="userId" style="display:none"><?php echo $currentUser->getId();?></span><br>
                 <form method="POST" enctype="multipart/form-data" id="updateForm" action="/manageaccount/updateAccountData">
                     <div class="row mb-3 justify-content-center">
-                        
+                         <div class="col-md-4 text-center">
                             <div class="profile-img-container mb-3 text-center" >
                               <img src="<?= $currentUser->getPicture() ?>"alt="Profile Picture" class="img-fluid">
                               <div class="mb-3">
@@ -17,8 +17,9 @@
                               <label>Change your picture:</label>
                                 <input type="file" name="file" id="file"><br><br>
                                 </div>
-
+                             </div>
                         </div>
+                    </div>
                         <div class="col-md-8 ">
                          <div class="row mb-3 ">
                             <div class="col-md-6">
