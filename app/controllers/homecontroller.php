@@ -23,7 +23,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $this->displayNavBar("title",'/css/styles.css');
+        $this->displayNavBar("title",'/css/navBarStyle.css');
         $currentUserId = $this->currentUserId;
        $this->pageController->show("title=newtest", $currentUserId);
     }
