@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/language.php';
+require_once __DIR__ . '/HistoryEvent/language.php';
 require_once __DIR__ . '/timetable.php';
 require_once __DIR__ . '/eventDate.php';
 

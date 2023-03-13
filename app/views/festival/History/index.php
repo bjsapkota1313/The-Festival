@@ -1,3 +1,4 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($bodyHead->getImage()) ?>')">
     <span class="position-absolute bottom-0 start-0 mb-3 ps-3 d-flex align-items-center"
           style="z-index: 99; padding-left: 20px;">
@@ -25,94 +26,228 @@
             <?php
             foreach ($allTourLocations as $allTourLocation) {
                 ?>
-
-                    <li>
-                        <form method="GET" >
-                            <input type="hidden" name="locationPostCode"value="<?=$allTourLocation->getPostCode()?>">
-                            <button class="link" formaction="/festival/history/detail" type="submit" name="location"
-                                    value="<?= $allTourLocation->getLocationName() ?>"><?= $allTourLocation->getLocationName() ?></button>
-                        </form>
-                    </li>
+                <li>
+                    <form method="GET" action="/festival/history/detail">
+                        <input type="hidden" name="locationPostCode" value="<?= $allTourLocation->getPostCode() ?>">
+                        <input type="hidden" name="location" value="<?= $allTourLocation->getLocationName() ?>">
+                        <input type="hidden" name="locationId" value="<?= $allTourLocation->getLocationId() ?>">
+                        <button class="link" type="submit"><?= $allTourLocation->getLocationName() ?></button>
+                    </form>
+                </li>
             <?php } ?>
         </ul>
     </div>
 </div>
 <h1 class="historyHeader">Showing all English tours</h1>
 
-<div class="scheduleContainer">
-    <?php
-    foreach ($historyTourTimeTables as $historyTourTimeTable) {
-    ?>
-    <div class="circleLine">
-<!--        <span class="tourDate">26 July - Thursday</span>-->
-        <span class="tourDate"><?= $historyTourTimeTable->getDate()->format('Y-m-d') ?></span>
-    </div>
-    <?php } ?>
-<!--    <div class="circleLine">-->
-<!--        <span class="tourDate">27 July - Friday</span>-->
+<!--<div class="container">-->
+<!--    <div class="container-fluid pt-5 ps-5">-->
+<!--        <div class="row">-->
+<!--            --><?php //foreach ($timetable as $date => $toursByTime) { ?>
+<!--                <div class="col-md-3 my-3 mx-auto">-->
+<!--                    <button class="circleLine lblButton" disabled>--><?//= $date ?><!--</button>-->
+<!--                    --><?php //foreach ($toursByTime as $time => $tours) { ?>
+<!--                        <div class="tourContainer position-relative" data-date="--><?//= $date ?><!--">-->
+<!--                            <div class="d-flex align-items-center justify-content-center h-100">-->
+<!--                                <span class="align-self-center text-center text-lg tourTime">--><?//= $time ?><!--</span>-->
+<!--                            </div>-->
+<!--                            --><?php //foreach ($tours as $tour) { ?>
+<!--                                <div class="container-fluid d-flex align-items-center justify-content-center tourLanguage">-->
+<!--                                    --><?//= $tour->getTourLanguage()?>
+<!--                                </div>-->
+<!--                            --><?php //} ?>
+<!--                        </div>-->
+<!--                    --><?php //} ?>
+<!--                </div>-->
+<!--            --><?php //} ?>
+<!--        </div>-->
 <!--    </div>-->
-<!--    <div class="circleLine">-->
-<!--        <span class="tourDate">28 July - Saturday</span>-->
-<!--    </div>-->
-<!--    <div class="circleLine">-->
-<!--        <span class="tourDate">29 July - Sunday</span>-->
-    </div>
-</div>
-<div class="tourContainerRow">
-    <div class="tourContainerColumn">
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">13:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">16:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-    </div>
-    <div class="tourContainerColumn">
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-    </div>
-    <div class="tourContainerColumn">
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-    </div>
-    <div class="tourContainerColumn">
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
-        </div>
-        <div class="tourContainer">
-            <div class="tourTime">10:00</div>
-            <div class="tourLanguage">Dutch tour English tour</div>
+<!--</div>-->
+
+<div class="container">
+    <div class="container-fluid pt-5 ps-5">
+        <div class="row">
+            <?php foreach ($timetable as $date => $toursByTime) { ?>
+                <div class="col-md-3 my-3 mx-auto">
+                    <button class="circleLine lblButton" disabled><?= $date ?></button>
+                    <?php foreach ($toursByTime as $time => $tours) { ?>
+                        <div class="tourContainer position-relative">
+                            <div class="d-flex align-items-center justify-content-center h-100">
+                                <span class="align-self-center text-center text-lg tourTime"><?= $time ?></span>
+                            </div>
+                            <?php foreach ($tours as $tour) { ?>
+                                <div class="container-fluid d-flex align-items-center justify-content-center tourLanguage">
+                                    <?= $tour->getTourLanguage()?>
+                                </div>
+                            <?php }  ?>
+                            <button onmouseover="hoverDivv('<?php echo htmlspecialchars(json_encode($tour)); ?>')">
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } ?>
         </div>
     </div>
 </div>
+
+<?php
+//$tour = array(
+//    'name' => 'World Tour',
+//    'locations' => array('New York', 'Paris', 'Tokyo'),
+//    'dates' => array('2023-06-01', '2023-06-15', '2023-06-30')
+//);
+//?>
+
+
+<?php
+//$tour = array(
+//    'name' => "World Tour",
+//    'locations' => array("New York", "Paris", "Tokyo"),
+//    'dates' => array("2023-06-01", "2023-06-15", "2023-06-30")
+//);
+//?>
+<button onmouseover="hoverDivv('<?php echo htmlspecialchars(json_encode($tour)); ?>')">
+    Hover me
+</button>
+
+<script>
+    function hoverDivv(tour) {
+        console.log('hoverDivv() function called!');
+        tour = JSON.parse(tour);
+        console.log(tour.name);
+    }
+</script>
+
+<!---->
+<!--<script>-->
+<!--    const buttons = document.querySelectorAll('.circleLine');-->
+<!--    const tourContainers = document.querySelectorAll('.tourContainer');-->
+<!---->
+<!--    tourContainers.forEach(function(tourContainer) {-->
+<!--        const tourLanguage = tourContainer.querySelectorAll('.tourLanguage');-->
+<!--        const tourTime = tourContainer.querySelector('.tourTime');-->
+<!---->
+<!--        tourTime.style.marginTop = '4px';-->
+<!---->
+<!--        tourContainer.addEventListener('mouseover', function() {-->
+<!--            tourContainer.style.backgroundColor = 'lightgray';-->
+<!--            tourContainer.style.height = '220px';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '24px';-->
+<!--                const icon = document.createElement('i');-->
+<!--                icon.classList.add('fas', 'fa-globe');-->
+<!--                lang.insertBefore(icon, lang.firstChild);-->
+<!--            });-->
+<!--        });-->
+<!---->
+<!--        tourContainer.addEventListener('mouseout', function() {-->
+<!--            tourContainer.style.backgroundColor = '';-->
+<!--            tourContainer.style.height = '';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '';-->
+<!--                lang.removeChild(lang.firstChild);-->
+<!--            });-->
+<!--            tourTime.style.fontSize = '';-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<!--<div class="col-md-3 my-3 mx-auto">-->
+<!--    <button class="circleLine lblButton" disabled>--><?//= $date ?><!--</button>-->
+<!--    --><?php //foreach ($toursByTime as $time => $tours) { ?>
+<!--        <div class="tourContainer position-relative" data-date="--><?//= $date ?><!--">-->
+<!--            <div class="d-flex align-items-center justify-content-center h-100">-->
+<!--                <span class="align-self-center text-center text-lg tourTime">--><?//= $time ?><!--</span>-->
+<!--            </div>-->
+<!--            --><?php //foreach ($tours as $tour) { ?>
+<!--                <div class="container-fluid d-flex align-items-center justify-content-center tourLanguage">-->
+<!--                    --><?//= $tour->getTourLanguage() ?>
+<!--                </div>-->
+<!--            --><?php //} ?>
+<!--        </div>-->
+<!--    --><?php //} ?>
+<!--</div>-->
+
+<!--<script>-->
+<!--    const tourContainers = document.querySelectorAll('.tourContainer');-->
+<!---->
+<!--    tourContainers.forEach(function(tourContainer) {-->
+<!--        const tourLanguage = tourContainer.querySelectorAll('.tourLanguage');-->
+<!--        const tourTime = tourContainer.querySelector('.tourTime');-->
+<!---->
+<!--        tourTime.style.marginTop = '4px';-->
+<!---->
+<!--        tourContainer.addEventListener('mouseover', function() {-->
+<!--            tourContainer.style.backgroundColor = 'lightgray';-->
+<!--            tourContainer.style.height = '220px';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '24px';-->
+<!--                const icon = document.createElement('i');-->
+<!--                icon.classList.add('fas', 'fa-globe');-->
+<!--                lang.insertBefore(icon, lang.firstChild);-->
+<!--            });-->
+<!--            const date = tourContainer.dataset.date;-->
+<!--            // display the date information as desired-->
+<!--        });-->
+<!---->
+<!--        tourContainer.addEventListener('mouseout', function() {-->
+<!--            tourContainer.style.backgroundColor = '';-->
+<!--            tourContainer.style.height = '';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '';-->
+<!--                lang.removeChild(lang.firstChild);-->
+<!--            });-->
+<!--            tourTime.style.fontSize = '';-->
+<!--            // remove the displayed date information-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!---->
+<!--<script>-->
+<!--    function hoverDivv(tour) {-->
+<!--        console.log(tour.name);-->
+<!--        console.log(tour.locations);-->
+<!--        console.log(tour.dates);-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    const buttons = document.querySelectorAll('.circleLine');-->
+<!--    const tourContainers = document.querySelectorAll('.tourContainer');-->
+<!---->
+<!--    tourContainers.forEach(function(tourContainer) {-->
+<!--        const tourLanguage = tourContainer.querySelectorAll('.tourLanguage');-->
+<!--        const tourTime = tourContainer.querySelector('.tourTime');-->
+<!---->
+<!--        tourTime.style.marginTop = '4px';-->
+<!---->
+<!--        tourContainer.addEventListener('mouseover', function() {-->
+<!--            tourContainer.style.backgroundColor = 'lightgray';-->
+<!--            tourContainer.style.height = '220px';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '24px';-->
+<!--                const icon = document.createElement('i');-->
+<!--                icon.classList.add('fas', 'fa-globe');-->
+<!--                lang.insertBefore(icon, lang.firstChild);-->
+<!--            });-->
+<!--            const date = tourContainer.getAttribute('data-date');-->
+<!--            tourContainer.insertAdjacentHTML('afterbegin', `<div class="tourDate">${date}</div>`);-->
+<!--        });-->
+<!---->
+<!--        tourContainer.addEventListener('mouseout', function() {-->
+<!--            tourContainer.style.backgroundColor = '';-->
+<!--            tourContainer.style.height = '';-->
+<!--            tourLanguage.forEach(function(lang) {-->
+<!--                lang.style.fontSize = '';-->
+<!--                lang.removeChild(lang.firstChild);-->
+<!--            });-->
+<!--            tourTime.style.fontSize = '';-->
+<!--            const tourDate = tourContainer.querySelector('.tourDate');-->
+<!--            if (tourDate) {-->
+<!--                tourDate.parentNode.removeChild(tourDate);-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+

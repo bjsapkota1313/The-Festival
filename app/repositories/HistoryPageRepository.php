@@ -1,6 +1,8 @@
 <?php
-require_once __DIR__ . '/../Models/HistoryTourLocation.php';
+require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
 require_once __DIR__ . '/../Models/historyTimeTable.php';
+require_once __DIR__ . '/../Models/location.php';
+require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
 
 class HistoryPageRepository extends Repository
 {
@@ -26,9 +28,9 @@ class HistoryPageRepository extends Repository
 
     public function getAllHistoryTourLocation()
     {
-        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, historytourlocation.historyTourLocationId
+        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId
                                             FROM historytourlocation
-                                            INNER JOIN location ON location.locationId=historytourlocation.locationId");
+                                            INNER JOIN location ON location.locationId=historytourlocation.locationId;");
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -41,7 +43,7 @@ class HistoryPageRepository extends Repository
 
     public function getTourDate()
     {
-        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, historytourlocation.historyTourLocationId
+        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId
                                             FROM historytourlocation
                                             INNER JOIN location ON location.locationId=historytourlocation.locationId");
         $stmt->execute();
@@ -54,12 +56,24 @@ class HistoryPageRepository extends Repository
         return $historyLocations;
     }
 
-    private function createHistoryTourLocation($result): HistoryTourLocation
+    private function createHistoryTourLocation($result)
     {
+//        $historyTourLocation = new Location();
+//        $historyTourLocation->setLocationId($result['locationId']);
+//        $historyTourLocation->setLocationName($result['locationName']);
+//        $historyTourLocation->setPostCode($result['postCode']);
+//        return $historyTourLocation;
+
+        $historyTourLocationObject = new Location();
+        $historyTourLocationObject->setLocationId($result['locationId']);
+        $historyTourLocationObject->setLocationName($result['locationName']);
+        $historyTourLocationObject->setPostCode($result['postCode']);
+
         $historyTourLocation = new HistoryTourLocation();
-        $historyTourLocation->setLocationName($result['locationName']);
-        $historyTourLocation->setPostCode($result['postCode']);
-        return $historyTourLocation;
+        $historyTourLocation->setHistoryTourLocationId($result['historyTourLocationId']);
+        $historyTourLocation->setTourLocation($historyTourLocationObject);
+
+        return $historyTourLocationObject;
     }
 
     public function getHistoryTourTimeTable()
