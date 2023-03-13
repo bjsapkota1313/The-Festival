@@ -2,15 +2,33 @@
 
 class Artist
 {
-    private  $artistId;
-    private  $artistName;
-    private $artistImages;
-    private $artistLogo;
-    private $artistDescription;
+    private int  $artistId;
+    private string $artistName;
+    private ?array $artistImages;
+    private string$artistLogo;
+    private  string $artistDescription;
+    private array $artistStyles;
 
     public function __construct()
     {
         $this->artistImages= array(); // setting up new array whenever the artist object is created
+        $this->artistStyles= array();
+    }
+
+    /**
+     * @return array
+     */
+    public function getArtistStyles(): array
+    {
+        return $this->artistStyles;
+    }
+
+    /**
+     * @param array $artistStyles
+     */
+    public function setArtistStyles(array $artistStyles): void
+    {
+        $this->artistStyles = $artistStyles;
     }
 
     /**

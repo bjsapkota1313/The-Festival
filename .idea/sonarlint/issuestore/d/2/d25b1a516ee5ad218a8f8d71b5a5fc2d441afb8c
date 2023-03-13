@@ -1,3 +1,6 @@
 
 ^	php:S1808"=Move this open curly brace to the beginning of the next line.(Ê«ıùÿÿÿÿ8…˜”óæ0
+b	php:S1808V"FMove this "else" to the same line as the previous closing curly brace.(á¢–¬8Âòù‹ì0
+_	php:S1808S"DPut one space between this "if" keyword and the opening parenthesis.(–À’(8Äòù‹ì0
+`	php:S1126S"EReplace this "if-then-else" statement by a single "return" statement.(–À’(8Äòù‹ì0
 l	php:S4833"QReplace "require_once" with namespace import mechanism through the "use" keyword.(Ø±_8†˜”óæ0
