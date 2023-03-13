@@ -1,5 +1,5 @@
 <?php
-class Event
+ abstract class Event
 {
     protected string $eventName;
     protected int $eventId;

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/../Location.php';
 class ArtistPerformance
 {
     private int $artistPerformanceId;
@@ -6,9 +7,26 @@ class ArtistPerformance
     private DateTime $date;
     private Location $venue;
     private float $duration;
+    private string $session;
     public function __construct()
     {
         $this->artists= array();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSession(): string
+    {
+        return $this->session;
+    }
+
+    /**
+     * @param string $session
+     */
+    public function setSession(string $session): void
+    {
+        $this->session = $session;
     }
     /**
      * @return int
@@ -88,4 +106,15 @@ class ArtistPerformance
     {
         $this->duration = $duration;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getEndDateTime(): DateTime // returns EndDateTime of the performance
+    {
+        $endTime = clone $this->date;
+        $endTime->add(new DateInterval('PT' . $this->duration . 'M'));
+        return $endTime;
+    }
+
 }

@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/repository.php';
-require_once __DIR__ . '/DanceEventRepository.php';
+require_once __DIR__ . '/../services/DanceEventService.php';
+require_once __DIR__ . '/../models/Location.php';
 require_once __DIR__ . '/HistoryEventRepository.php';
 //require_once __DIR__ . '/../models/Location.php';
 class EventRepository extends repository
@@ -22,15 +23,16 @@ class EventRepository extends repository
     private function getEventObjectAccordingToEventName($name, $eventId)
     {
         //Todo: make it dynamic withe the help of the database
-        $repository = null;
+        $service = null;
         switch ($name) {
-
+            $service=null;
             case 'Dance':
-                $repository = new DanceEventRepository();
-                return $repository->getDanceEventByEventId($eventId);
-            case 'A Stroll Through History':
-                $repository = new HistoryEventRepository();
-                return $repository->getHistoryEventByEventId($eventId);;
+                $service = new DanceEventService();
+                return $service->getDanceEventByEventId($eventId);
+   
+                case 'A Stroll Through History':
+                $service = new HistoryEventRepository();
+                return $service->getHistoryEventByEventId($eventId);
         }
     }
     private function getAllEventsName(){

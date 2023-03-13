@@ -20,12 +20,12 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 overflow-hidden p-0">
-                <img src="/image/Festival/Dance/Matrix-Garrix.png"
+                <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Banner'][0]) ?>"
                      class="img-fluid h-100 position-absolute top-0 start-0" alt="Cover Image" style="width: 100vw">
                 <span class="position-absolute bottom-0 start-0 mb-3 d-flex align-items-center"
                       style="z-index: 99; padding-left: 20px;">
                <h2 class="text-white fw-bold mb-0 ps-3 DanceFont">Dance</h2>
-               <h5 class="text-white fw-bold mb-0 ms-3 artistNameFont">Martin Garrix</h5>
+               <h5 class="text-white fw-bold mb-0 ms-3 artistNameFont"><?= $selectedArtist->getArtistName() ?></h5>
                 </span>
             </div>
         </div>
@@ -55,7 +55,7 @@
     </div>
     <div class="container-fluid pb-4 px-md-5">
         <div class="d-flex align-items-center justify-content-center">
-            <img src="/image/Festival/Dance/martinGariixPotrait.png"
+            <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][0]) ?>"
                  style="width: 100%; height: 100%; border-radius: 49px;">
         </div>
         <div class="container-fluid pt-5">
@@ -67,23 +67,35 @@
                 </div>
             </div>
             <div class="row">
-                <?php foreach ($artistAlbums->items as $album) { ?>
-                    <div class="col-2">
-                        <a href="<?= $album->external_urls->spotify ?>" class="album-link text-decoration-none">
-                            <div class="podcast-card">
-                                <div class="frame-117">
-                                    <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
-                                </div>
-                                <div class="text ps-3">
-                                    <p class="albumName"><?= $this->getFormattedStringToDisplay($album->name, 7) ?></p>
-                                    <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
-                                                class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
+                <?php if (isset($errorMessage['connectionToSpotify'])) : ?>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Error:</strong> <?= $errorMessage['connectionToSpotify'] ?>
                     </div>
-                <?php } ?>
+                <?php else: ?>
+                <?php if (isset($errorMessage['artistAlbums'])) : ?>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Error:</strong> <?= $errorMessage['artistAlbums'] ?>
+                    </div>
+                <?php else : ?>
+                    <?php foreach ($artistAlbums->items as $album) : ?>
+                        <div class="col-2">
+                            <a href="<?= $album->external_urls->spotify ?>" class="album-link text-decoration-none">
+                                <div class="podcast-card">
+                                    <div class="frame-117">
+                                        <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
+                                    </div>
+                                    <div class="text ps-3">
+                                        <p class="albumName"><?= $this->getFormattedStringToDisplay($album->name, 7) ?></p>
+                                        <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
+                                                    class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -96,33 +108,19 @@
                         <h5 style="font-weight: bold; font-size: 40px; margin-bottom: -25px;">Show times</h5>
                     </div>
                     <div class="card-body d-flex flex-column justify-content-center text-center">
-                        <div class="container pb-5">
-                            <button class="DateShowButton mx-auto" disabled>Friday</button>
-                            <br>
-                            <label class="timeLabel">22:00 - 23:30 <a class="link">Club Ruis</a></label>
-                            <br>
-                            <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
-                            </button>
-                            <br>
-                        </div>
-                        <div class="container pb-5">
-                            <button class="DateShowButton mx-auto" disabled>Friday</button>
-                            <br>
-                            <label class="timeLabel">22:00 - 23:30 <a class="link">Club Ruis</a></label>
-                            <br>
-                            <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
-                            </button>
-                            <br>
-                        </div>
-                        <div class="container pb-5">
-                            <button class="DateShowButton mx-auto" disabled>Friday</button>
-                            <br>
-                            <label class="timeLabel">22:00 - 23:30 <a class="link">Club Ruis</a></label>
-                            <br>
-                            <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
-                            </button>
-                            <br>
-                        </div>
+                        <?php foreach($filteredArtistPerformances as $date=>$performances) { ?>
+                            <div class="container pb-5">
+                                <button class="DateShowButton mx-auto" disabled><?= $this->getDayByDateString($date) ?></button>
+                                <br>
+                                <?php foreach($performances as $performance) { ?>
+                                    <label class="timeLabel"><?=$performance->getDate()->format('H:i')?> - <?= $performance->getEndDateTime()->format('H:i')?> <a class="link" style="text-decoration: underline; color: black;" href="#"><?= $performance->getVenue()->getLocationName() ?></a></label>
+                                    <br>
+                                    <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
+                                    </button>
+                                    <br>
+                                <?php } ?>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -134,6 +132,16 @@
                     <div class="container-fluid">
 
                         <div class="col">
+                            <?php if (isset($errorMessage['connectionToSpotify'])) : ?>
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Error:</strong> <?= $errorMessage['connectionToSpotify'] ?>
+                                </div>
+                            <?php else: ?>
+                            <?php if (isset($errorMessage['artistTopTracks'])) : ?>
+                                <div class="alert alert-warning" role="alert">
+                                    <strong>Error:</strong> <?= $errorMessage['artistTopTracks'] ?>
+                                </div>
+                            <?php else : ?>
                             <div class="hoverable">
                                 <?php foreach ($artistTopTracks as $track) { ?>
                                     <div class="row-1">
@@ -168,6 +176,8 @@
                                         </div>
                                     </div>
                                 <?php } ?>
+                                <?php endif; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -179,12 +189,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-8" style="border-radius: 49px;">
-                    <img src="/image/Festival/Dance/martinGariixPotrait.png" class="img-fluid" alt="ALBUM_NAME"
+                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][1]) ?>" class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
                          style="height:613px; width: 963px; border-radius: 49px;">
                 </div>
                 <div class="col-4" style="border-radius: 49px;">
-                    <img src="/image/Festival/Dance/martinGariixPotrait.png" class="img-fluid" alt="ALBUM_NAME"
-                         style="height: 613px; width: 524px; border-radius: 49px;">
+                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][2]) ?>" class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
+                         style="height: 613px; width: 924px; border-radius: 49px;">
                 </div>
             </div>
         </div>

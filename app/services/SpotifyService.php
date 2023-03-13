@@ -27,7 +27,7 @@ class SpotifyService
             $api->setAccessToken($accessToken);
             return $api;
         } catch (\SpotifyWebAPI\SpotifyWebAPIException | \SpotifyWebAPI\SpotifyWebAPIAuthException  $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
         }
 
     }

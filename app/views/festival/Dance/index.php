@@ -41,24 +41,27 @@
     <?php } ?>
 </div>
 <div class="is-layout-flow wp-block-group bs-carousel-incr">
+    <h2 class="text-center" style="font-weight: bold">CHOOSE YOUR FAVOURITE ARTIST </h2>
     <div class="wp-block-group__inner-container">
         <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
             <div class="carousel-inner">
                 <?php foreach($participatingArtists as $artist){ ?>
-                <div class="carousel-item">
-                    <div class="container text-center">
-                        <div class="img-wrapper align-center pb-3">
-
-                            <img src="<?php echo $this->getImageFullPath($artistPortraitImage['imageName']) ?>"
-                                                                        class="border " id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px"></div>
-                        <div>
-                            <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
-                            <form method="GET" action="/festival/dance/artistDetails">
-                            <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
-                            </form>
+                    <div class="carousel-item">
+                        <div class="container-hover">
+                            <div class="container text-center">
+                                <div class="img-wrapper align-center pb-3">
+                                    <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>"
+                                         class="border hover-zoom" id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px">
+                                </div>
+                                <div>
+                                    <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
+                                    <form method="GET" action="/festival/dance/artistDetails">
+                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php } ?>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
@@ -260,177 +263,33 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid  pt-5 ps-5">
-            <div class="row">
-                <div class="col-4">
-                    <button class="lblButton w-100" disabled>28 july -Friday</button>
-                </div>
-                <div class="col-4">
-                    <button class="lblButton w-100" disabled>28 july -Friday</button>
-                </div>
-                <div class="col-4">
-                    <button class="lblButton  w-100" disabled>28 july -Friday</button>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
+        <div class=" container-fluid  pt-5 ps-5">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <?php foreach ($timetable as $date => $specificDatePerformances) {?>
+                    <div class="col">
+                        <button class="lblButton w-100" disabled><?=$date?></button>
+                        <?php foreach ($specificDatePerformances as $performance) {
+                        $participatingArtistsInPerformance = $performance->getArtists();
+                        $artistNameToDisplay = '';
+                        $numArtists = count($participatingArtistsInPerformance);
+                        foreach ($participatingArtistsInPerformance as $index => $artist) {
+                            $artistNameToDisplay .= $artist->getArtistName();
+                            if ($index < $numArtists - 1) {
+                                $artistNameToDisplay .= ' | ';
+                            }
+                        }?>
+                            <div class="my-3 ps-3">
+                                <div class=" MyContainer position-relative ps-4 ">
+                                    <div class="container d-flex align-items-center justify-content-center">
+                                        <span><?=$performance->getDate()->format('H:i')?></span>
+                                        <div class="line flex-grow-1 mx-2"></div>
+                                    </div>
+                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $artistNameToDisplay?></label>
+                                </div>
+                            </div>
+                        <?php }?>
                     </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="MyContainer position-relative">
-                        <div class="container d-flex align-items-center justify-content-center">
-                            <span class="time position-absolute top-0 start-50 translate-middle-x">20:00</span>
-                            <div class="line "></div>
-                        </div>
-                        <label class="artistName position-absolute bottom-3 start-50 translate-middle-x">Nicky Romero |
-                            Afrojack</label>
-                    </div>
-                </div>
+                <?php }?>
             </div>
         </div>
     </div>
