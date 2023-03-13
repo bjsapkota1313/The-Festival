@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/../services/DanceEventService.php';
-require_once __DIR__ . '/../models/Location.php';
+require_once __DIR__ . '/../services/HistoryService.php';
 require_once __DIR__ . '/HistoryEventRepository.php';
-//require_once __DIR__ . '/../models/Location.php';
+
 class EventRepository extends repository
 {
     public function getEventByName($name)
@@ -25,17 +25,18 @@ class EventRepository extends repository
         //Todo: make it dynamic withe the help of the database
         $service = null;
         switch ($name) {
-            $service=null;
             case 'Dance':
                 $service = new DanceEventService();
                 return $service->getDanceEventByEventId($eventId);
-   
-                case 'A Stroll Through History':
-                $service = new HistoryEventRepository();
+
+            case 'A Stroll Through History':
+                $service = new HistoryService();
                 return $service->getHistoryEventByEventId($eventId);
         }
     }
-    private function getAllEventsName(){
+
+    private function getAllEventsName()
+    {
 
         try {
             $stmt = $this->connection->prepare("SELECT eventName FROM event");
@@ -55,7 +56,7 @@ class EventRepository extends repository
             $stmt->bindParam(':locationId', $locationId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'Location');
-            return  $stmt->fetch();
+            return $stmt->fetch();
         } catch (PDOException $e) {
             echo $e;
         }

@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
 require_once __DIR__ . '/../Models/historyTimeTable.php';
-require_once __DIR__ . '/../Models/location.php';
 require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
 
 class HistoryPageRepository extends Repository
