@@ -1,18 +1,15 @@
 <?php
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/../../services/HistoryService.php';
-require_once __DIR__ . '/../../services/EventService.php';
 
 class HistoryController extends EventController
 {
-    protected $eventService;
     protected HistoryService $historyService;
 
     public function __construct()
     {
         parent::__construct();
         $this->historyService = new HistoryService();
-        $this->eventService = new EventService();
     }
 
     public function index()
