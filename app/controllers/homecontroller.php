@@ -19,13 +19,16 @@ class HomeController extends Controller
         $this->userService = new UserService();
         $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
         $this->pageController = new PageController();
+
     }
 
     public function index()
     {
-        $this->displayNavBar("title",'/css/styles.css');
+        $this->displayNavBar("title",'/css/navBarStyle.css');
         $currentUserId = $this->currentUserId;
-       $this->pageController->show("title=newtest", $currentUserId);
+        $this->pageController->show("title=newtest", $currentUserId);
+        $this->displayFooter();
+
     }
 
 }?>

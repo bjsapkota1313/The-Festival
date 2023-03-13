@@ -13,18 +13,20 @@ class ManageAccountController extends Controller
     function __construct()
     {
         $this->userService = new UserService();
-        $this->currentUserId = unserialize(serialize(current($_SESSION["loggedUser"])));
-        $this->currentUser = $this->userService->getUserById($this->currentUserId);
-
+        $this->currentUser = unserialize(serialize($_SESSION["loggedUser"]));
+        $this->currentUserId = $this->currentUser->getId();
     }
 
     public function index()
     {   
         $currentUser = $this->currentUser;
-
-        $this->displayNavBar("title",'/css/styles.css');
+       
+        $this->displayNavBar("title",'/css/navBarStyle.css');
 
         require_once __DIR__ . '/../views/manageAccount/index.php';
+     
+        $this->displayFooter();
+
 
 
     }

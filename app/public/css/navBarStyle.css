@@ -1,0 +1,11 @@
+  body {
+        background-color: white;
+      }
+
+
+    #navbarMain { padding-left:5%;
+    padding-right:10%;}
+
+
+    li:hover {background-color:white;}
+
