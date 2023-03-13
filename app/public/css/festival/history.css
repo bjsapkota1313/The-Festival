@@ -221,7 +221,6 @@ body {
 }
 
 @media only screen and (max-width: 768px) {
-    /* Adjustments for tablets */
     .historyContainer {
         flex-direction: column;
         align-items: center;
@@ -282,6 +281,9 @@ body {
         font-size: 1.4em;
         width: 100%;
         text-align: center;
+    }
+    .dateInHover {
+        display: none;
     }
 }
 
