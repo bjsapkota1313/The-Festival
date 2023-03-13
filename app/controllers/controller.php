@@ -58,5 +58,10 @@ require_once __DIR__ . '/../services/NavBarService.php';
     protected function display404PageNotFound():void{
         require_once __DIR__.'/../views/PageNotFound.html';
         return;
+     }
+   
+      protected function displayFooter(): void
+    {
+        require_once __DIR__.'/../views/Footer.php';
     }
 }

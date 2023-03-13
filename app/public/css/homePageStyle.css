@@ -1,0 +1,40 @@
+
+
+    #homePageImg{width:100%;}
+
+    #homePageImagesPanel {border: 1px solid white;
+      margin:5%;
+   }
+
+   .homePagePanelImg, .homePageVideoPlaceholder, .homePageMapPlaceholder
+    {width:100%; }
+  
+    #homePageVideoPanel {background-color:  #f0f3f4;
+      border: 1px solid white;
+   }
+
+   #homePageVideoPanel, #homePageVideo, #homePageMap {
+    margin: 5%;}
+
+   #homePageLinkToFestival {background-color:white;}
+   .homePageInfoImg {width:20%;}
+
+   .smallImage, .InstagramImage {width: 100%;}
+
+   .itemHeader, .itemFooter {border: 2px solid  #e5e9ea ;}
+
+   @media (max-width: 768px) {
+
+    .homePagePanelImg{height: 100%;}
+    #pictureCaption{display:none;}
+    #homePagePanelImgRow{height: 140px;}
+    #homePageLinkToFestival {display:none;}
+    #homePageVideoRow { height:240px;}
+    .homePageVideoPlaceholder{height:100%;
+    width:100%;}
+    #InstagramData{display:none;}
+    #info{display:none;}
+  }
+
+  
+  
