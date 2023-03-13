@@ -27,4 +27,8 @@ class HistoryService
     public function getHistoryTourImageByHistoryTourId($historyTourLocationId){
         return $this->repository2->getHistoryTourImageByHistoryTourId($historyTourLocationId);
     }
+    public function getHistoryEventByEventId($eventId){
+        return $this->repository2->getHistoryEventByEventId($eventId);
+
+    }
 }
