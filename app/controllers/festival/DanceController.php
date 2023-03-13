@@ -2,6 +2,7 @@
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/../../services/SpotifyService.php';
 require_once __DIR__ . '/../../services/ArtistService.php';
+
 class DanceController extends eventController
 {
     private $spotifyService;
@@ -22,8 +23,8 @@ class DanceController extends eventController
         $bodyHead = $dancePage->getContent()->getBodyHead();
         $sectionText = $dancePage->getContent()->getSectionText();
         $paragraphs = $sectionText->getParagraphs();
-        $participatingArtists = $this->artistService->getAllArtists();
-        $danceEvent= $this->eventService->getEventByName('Dance'); //TODO: get event by id
+        $participatingArtists = $this->artistService->getAllArtistsParticipatingInEvent();
+        $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getArtistPerformances();
         $timetable = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
@@ -32,41 +33,37 @@ class DanceController extends eventController
 
     public function artistDetails()
     {
-        if($_SERVER['REQUEST_METHOD']=='GET' && isset($_GET['artist'])){
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['artist'])) {
             try {
-                $artistName = htmlspecialchars($_GET['artist']);
+                $errorMessage = array();
+                $artistName = $this->sanitizeInput($_GET['artist']);
                 $selectedArtist = $this->artistService->getArtistByName($artistName);
-                $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistName, 6);
-                $artistTopTracks = $this->spotifyService ->getArtistTopTracksWithLimit($artistName, 10);
-                $artistImages = $this->getFilterdImagesByImageSpecification($selectedArtist->getArtistImages());
-                $artistPerformances = $this->danceEventService->getAllArtistPerformancesDoneByArtistIdAtEvent($selectedArtist->getArtistId(),'Dance');
+                if (empty($selectedArtist)) {
+                    $this->display404PageNotFound();
+                }
+                try {
+                    $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistName, 6);
+                    if (empty($artistAlbums)) {
+                        $errorMessage['artistAlbums'] = 'No albums found for this artist';
+                    }
+                    $artistTopTracks = $this->spotifyService->getArtistTopTracksWithLimit($artistName, 10);
+                    if (empty($artistTopTracks)) {
+                        $errorMessage['artistTopTracks'] = 'No tracks found for this artist';
+                    }
+                } catch (\SpotifyWebAPI\SpotifyWebAPIException $e) {
+                    $errorMessage['connectionToSpotify'] = $e->getMessage();
+                }
+                $artistPerformances = $this->danceEventService->getAllArtistPerformancesDoneByArtistIdAtEvent($selectedArtist->getArtistId(), 'Dance');
                 $filteredArtistPerformances = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
                 require __DIR__ . '/../../views/festival/Dance/artist.php';
-            } catch (\SpotifyWebAPI\SpotifyWebAPIAuthException $e) {
+            } catch (Exception $e) {
                 echo $e->getMessage();
             }
-        }
-        else{
-            echo "Unauthorised access";
+        } else {
+            $this->display404PageNotFound();
         }
     }
-    private function getFilterdImagesByImageSpecification($artistImages): ?array
-    {
-        if($artistImages==null){
-            return null;
-        }
-        $newArray = array();
-        foreach ($artistImages as $image) {
-            foreach ($image as $key => $value) {
-                if (isset($newArray[$key])) {
-                    $newArray[$key][] = $value;
-                } else {
-                    $newArray[$key] = array($value);
-                }
-            }
-        }
-        return $newArray;
-    }
+
     private function getFormattedStringToDisplay($string, $length): string
     {
         if (strlen($string) > $length) {
@@ -78,12 +75,17 @@ class DanceController extends eventController
 
     private function getDayByDateString($dateString): string
     {
-        try{
+        try {
             $date = new DateTime($dateString); // Create a DateTime object from the date string
             return $date->format('l');
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             return "Unknown";
         }
     }
+
+    public function test()
+    {
+        require_once __DIR__ . '/../../views/festival/Dance/test.php';
+    }
+
 }

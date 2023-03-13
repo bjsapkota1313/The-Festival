@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../controller.php';
 require_once __DIR__ . '/../../services/EventPageService.php';
 require_once __DIR__. '/../../services/EventService.php';
-class EventController extends controller
+ abstract class EventController extends controller
 {
     protected eventPageService $eventPageService;
     protected EventService $eventService;
@@ -16,5 +16,10 @@ class EventController extends controller
     {
         $directory = strtolower(substr(get_class($this), 0, -10));
         return "/image/Festival/$directory/".$imageName;
+    }
+    protected function display404PageNotFound() : void // overwritting the controller method
+    {
+        require_once __DIR__ . '/../../views/PageNotFound.html';
+        return;
     }
 }

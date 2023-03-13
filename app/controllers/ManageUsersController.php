@@ -36,7 +36,7 @@ class ManageUsersController extends Controller
     public function editUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
-            $userId = htmlspecialchars($_POST['hiddenUserId']);
+            $userId = $this->sanitizeInput($_POST['hiddenUserId']);
             $editingUser = $this->userService->getUserById($userId);
             if (!is_null($editingUser)) {
                 require __DIR__ . '/../views/ManageUsers/EditUser.php';
@@ -60,22 +60,22 @@ class ManageUsersController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnRegister'])) {// initialize message variable
             if (!empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['email']) && !empty($_POST['dateOfBirth']) && !empty($_POST['role']) && !empty($_POST['password']) && !empty($_POST['passwordConfirm'])) {
-                $dateParseResult=$this->parseDateOfBirth(htmlspecialchars($_POST['dateOfBirth']));
+                $dateParseResult=$this->parseDateOfBirth($this->sanitizeInput($_POST['dateOfBirth']));
                 if(is_string($dateParseResult)){ // checking if the controller sends some error message or not
                     return $dateParseResult;
                 }
-                $password = htmlspecialchars($_POST['password']);
-                $passwordConfirm = htmlspecialchars($_POST['passwordConfirm']);
-                if ($this->userService->checkUserExistenceByEmail(htmlspecialchars($_POST['email']))) {
+                $password = $this->sanitizeInput($_POST['password']);
+                $passwordConfirm = $this->sanitizeInput($_POST['passwordConfirm']);
+                if ($this->userService->checkUserExistenceByEmail($this->sanitizeInput($_POST['email']))) {
                     return "User with this email already exists";
                 } else {
                     if ($password == $passwordConfirm) {
                         $user = array(
-                            "firstName" => htmlspecialchars($_POST["firstName"]),
-                            "lastName" => htmlspecialchars($_POST["lastName"]),
-                            "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
-                            "email" => htmlspecialchars($_POST["email"]),
-                            "password" => htmlspecialchars($_POST["password"]),
+                            "firstName" => $this->sanitizeInput($_POST["firstName"]),
+                            "lastName" => $this->sanitizeInput($_POST["lastName"]),
+                            "dateOfBirth" => $this->sanitizeInput($_POST["dateOfBirth"]),
+                            "email" => $this->sanitizeInput($_POST["email"]),
+                            "password" => $this->sanitizeInput($_POST["password"]),
                             "role" => Roles::fromString($_POST["role"]),
                             "picture" => $_FILES['profilePicUpload']
                         );

@@ -41,6 +41,7 @@
     <?php } ?>
 </div>
 <div class="is-layout-flow wp-block-group bs-carousel-incr">
+    <h2 class="text-center" style="font-weight: bold">CHOOSE YOUR FAVOURITE ARTIST </h2>
     <div class="wp-block-group__inner-container">
         <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -49,8 +50,7 @@
                         <div class="container-hover">
                             <div class="container text-center">
                                 <div class="img-wrapper align-center pb-3">
-                                    <?php $filteredImage=$this->getFilterdImagesByImageSpecification($artist->getArtistImages()) ?>
-                                    <img src="<?= $this->getImageFullPath($filteredImage['Portrait'][0]) ?>"
+                                    <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>"
                                          class="border hover-zoom" id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px">
                                 </div>
                                 <div>

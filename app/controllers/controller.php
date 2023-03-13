@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../services/NavBarService.php';
-class Controller {
+ abstract class Controller {
     private NavBarService $navBarService;
 
     public function __construct()
@@ -51,5 +51,12 @@ class Controller {
         $currentUserId = $user;
         $pageId = func_get_arg(2);
         require __DIR__ . "/../views/$directory/$view.php";
+    }
+    protected function sanitizeInput($input) {
+        return htmlspecialchars($input);
+    }
+    protected function display404PageNotFound():void{
+        require_once __DIR__.'/../views/PageNotFound.html';
+        return;
     }
 }
