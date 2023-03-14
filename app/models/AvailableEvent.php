@@ -1,7 +1,5 @@
 
 <?php
-require_once __DIR__ . '/../models/Event.php';
-require_once __DIR__ . '/../models/EventDate.php';
 
 
 class AvailableEvent extends Event
