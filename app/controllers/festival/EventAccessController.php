@@ -27,5 +27,8 @@ class EventAccessController extends eventController
         $availableEventsList4 = $this->availableEventService->getAvailableEventsByDate($availableEvents, 4);
 
         require __DIR__ . '/../../views/festival/EventAccess/eventsPage.php';
+        
+        $this->displayFooter();
+
     }}
 ?>
