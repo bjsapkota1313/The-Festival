@@ -33,7 +33,7 @@
   </div>
 
   <p class="text-center display-5">text placeholder</p>
-  <div class="container border" id="schedule1">
+  <div class="container border m-4" id="schedule1">
     <?php
     foreach ($availableEventsList1 as $availableEvent) {
       ?>
@@ -55,7 +55,7 @@
 
 
   <p class="text-center display-5">text placeholder</p>
-  <div class="container border" id="schedule2">
+  <div class="container border m-4" id="schedule2">
     <?php
     foreach ($availableEventsList2 as $availableEvent) {
       ?>
@@ -77,7 +77,7 @@
 
 
   <p class="text-center display-5">text placeholder</p>
-  <div class="container border" id="schedule3">
+  <div class="container border m-4" id="schedule3">
     <?php
     foreach ($availableEventsList3 as $availableEvent) {
       ?>
@@ -102,7 +102,7 @@
 
 
   <p class="text-center display-5">text placeholder</p>
-  <div class="container border" id="schedule4">
+  <div class="container border m-4" id="schedule4">
     <?php
     foreach ($availableEventsList4 as $availableEvent) {
       ?>
