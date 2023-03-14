@@ -7,8 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Festival</title>
   <script src="/Javascripts/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
-  <link href="/../css/homePageStyle.css" rel="stylesheet" type="text/css">
-
 
 </head>
 
