@@ -1,37 +1,23 @@
 <?php
-require_once __DIR__ . '/controller.php';
-require_once __DIR__ . '/../models/user.php';
-require_once __DIR__ . '/../Services/userService.php';
+require_once __DIR__ . '/AdminPanelController.php';
+require_once __DIR__ . '/../../models/user.php';
+require_once __DIR__ . '/../../Services/userService.php';
 
-class ManageUsersController extends Controller
+class ManageUsersController extends AdminPanelController
 {
     private $userService;
 
     public function __construct()
     {
-        $this->checkLoggedInUserIsAdminstrator(); // checking if the logged user or not show that this page can be logged in if the user is not logged in or
-        // if the user is not an administrator, it will redirect to the not allowed page.
+        parent::__construct();
         $this->userService = new UserService();
     }
 
     public function index()
     {
         $users = $this->userService->getAllUsers();
-        require __DIR__ . '/../views/ManageUsers/OverviewManageUsers.php';
-    }
-    private function checkLoggedInUserIsAdminstrator(): void
-    {
-        if (isset($_SESSION["loggedUser"])) {
-            if (unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
-
-            } else {
-                $this->displayPageView("NotAllowedPage");
-                exit(); // exit the controller if user is not admin
-            }
-        } else {
-            header("location: /login");
-            exit();
-        }
+        $this->displaySideBar("User Management");
+        require __DIR__ . '/../../views/AdminPanel/ManageUsers/OverviewManageUsers.php';
     }
     public function editUser()
     {
@@ -39,7 +25,8 @@ class ManageUsersController extends Controller
             $userId = $this->sanitizeInput($_POST['hiddenUserId']);
             $editingUser = $this->userService->getUserById($userId);
             if (!is_null($editingUser)) {
-                require __DIR__ . '/../views/ManageUsers/EditUser.php';
+                $this->displaySideBar("Edit User",'/css/registerStyle.css');
+                require __DIR__ . '/../../views/AdminPanel/ManageUsers/EditUser.php';
             } else {
                 echo "User is not found";
             }
@@ -52,7 +39,8 @@ class ManageUsersController extends Controller
     public function registerNewUser()
     {
         $message = $this->registerNewUserSubmit();
-        require __DIR__ . '/../views/ManageUsers/RegisterNewUser.php';
+        $this->displaySideBar("RegisterNewUSer",'/css/registerStyle.css');
+        require __DIR__ . '/../../views/AdminPanel/ManageUsers/RegisterNewUser.php';
     }
 
 
@@ -80,7 +68,7 @@ class ManageUsersController extends Controller
                             "picture" => $_FILES['profilePicUpload']
                         );
                         if ($this->userService->registerUser($user)) {
-                            echo "<script>location.href='/manageusers'</script>";
+                            echo "<script>location.href='/admin/manageusers'</script>";
                             exit();
                         } else {
                             return "Something went wrong while creating an account please try again later";
@@ -96,4 +84,6 @@ class ManageUsersController extends Controller
             }
         }
     }
+
+
 }

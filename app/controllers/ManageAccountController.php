@@ -21,13 +21,11 @@ class ManageAccountController extends Controller
     {   
         $currentUser = $this->currentUser;
        
-        $this->displayNavBar("title",'/css/navBarStyle.css');
+        $this->displayNavBar("ManageAccount",'/css/manageAccountStyle.css');
 
         require_once __DIR__ . '/../views/manageAccount/index.php';
      
         $this->displayFooter();
-
-
 
     }
 

@@ -9,7 +9,7 @@ class ArtistRepository extends Repository
         $query = "SELECT artist.artistId, artist.artistName, artist.artistDescription, image.imageName FROM artist JOIN image ON artist.artistLogoId = image.imageId";
         $result = $this->executeQuery($query);
         $artists = array();
-        if(empty($result)){
+        if (empty($result)) {
             return null;
         }
         foreach ($result as $artistRow) {
@@ -17,14 +17,16 @@ class ArtistRepository extends Repository
         }
         return $artists;
     }
+
     public function getAllArtistsParticipatingInEvent(): ?array
-    {   $query="SELECT participatingartist.artistId,artist.artistDescription, artist.artistName, image.imageName
+    {
+        $query = "SELECT participatingartist.artistId,artist.artistDescription, artist.artistName, image.imageName
                 FROM participatingartist
                 JOIN artist ON participatingartist.artistId = artist.artistId
                 JOIN image ON artist.artistLogoId = image.imageId
                 GROUP BY participatingartist.artistId"; // gives all the artist participating in the event
         $result = $this->executeQuery($query);
-        if(empty($result)){
+        if (empty($result)) {
             return null;
         }
         $artists = array();
@@ -50,7 +52,7 @@ class ArtistRepository extends Repository
         }
     }
 
-    private function getAllImagesOfArtistByArtistId($artistId):?array
+    private function getAllImagesOfArtistByArtistId($artistId): ?array
     {
         $query = "SELECT image.imageName,artistImage.Imagespecification as imageSpecification  From artistImage JOIN image ON artistImage.imageId = image.imageId WHERE artistImage.artistId = :artistId";
         $result = $this->executeQuery($query, array(':artistId' => $artistId));
@@ -99,5 +101,28 @@ class ArtistRepository extends Repository
     {
         $query = "SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
         return $this->executeQuery($query, array(':artistID' => $artistId));
+    }
+
+    public function deleteArtistById($artistId)
+    {
+        $stmt = $this->connection->prepare("DELETE FROM `artist` WHERE artistId = :artistId");
+        $stmt->bindParam(':aristId', $artistId);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+
+    }
+    public function getAllParticipatingArtistsInPerformance($performanceId): ?array
+    {
+        $query = "SELECT artistId FROM participatingArtist WHERE PerformanceId = :PerformanceId";
+        $result = $this->executeQuery($query, array(':PerformanceId' => $performanceId));
+        if (empty($result)) {
+            return null;
+        }
+        $artists = array();
+        foreach ($result as $row) {
+            $artists[] = $this->getArtistByArtistID($row['artistId']);
+        }
+        return $artists;
     }
 }

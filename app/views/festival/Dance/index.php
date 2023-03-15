@@ -56,7 +56,7 @@
                                 <div>
                                     <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
                                     <form method="GET" action="/festival/dance/artistDetails">
-                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
+                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistId() ?>">Artist</button>
                                     </form>
                                 </div>
                             </div>
@@ -269,22 +269,14 @@
                     <div class="col">
                         <button class="lblButton w-100" disabled><?=$date?></button>
                         <?php foreach ($specificDatePerformances as $performance) {
-                        $participatingArtistsInPerformance = $performance->getArtists();
-                        $artistNameToDisplay = '';
-                        $numArtists = count($participatingArtistsInPerformance);
-                        foreach ($participatingArtistsInPerformance as $index => $artist) {
-                            $artistNameToDisplay .= $artist->getArtistName();
-                            if ($index < $numArtists - 1) {
-                                $artistNameToDisplay .= ' | ';
-                            }
-                        }?>
+                        ?>
                             <div class="my-3 ps-3">
                                 <div class=" MyContainer position-relative ps-4 ">
                                     <div class="container d-flex align-items-center justify-content-center">
                                         <span><?=$performance->getDate()->format('H:i')?></span>
                                         <div class="line flex-grow-1 mx-2"></div>
                                     </div>
-                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $artistNameToDisplay?></label>
+                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists())?></label>
                                 </div>
                             </div>
                         <?php }?>
