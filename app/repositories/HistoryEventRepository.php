@@ -184,4 +184,5 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
 
         return $historyTourImage;
     }
+
 }
