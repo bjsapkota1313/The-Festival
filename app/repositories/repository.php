@@ -19,22 +19,50 @@ class Repository
     {
         try {
             $stmt = $this->connection->prepare($query);
-            foreach ($params as $key => $value) {
-                $stmt->bindValue($key, $value);
-            }
+            $this->bindValuesToQuery($stmt, $params);
             $stmt->execute();
-            if ($stmt->rowCount() == 0) {
-                return null;
+            $rowCount = $stmt->rowCount();
+            if ($rowCount == 0) {
+                return $this->handleZeroRowCount($query);
             }
+            if ($rowCount > 0) {
+                return $this->handlePositiveRowCount($query, $stmt, $fetchAll);
+            }
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+    private function bindValuesToQuery($stmt, $params): void
+    {
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+    }
+
+    private function handleZeroRowCount($query): ?bool
+    {
+        if (stripos($query, 'insert') !== false || stripos($query, 'delete') !== false || stripos($query, 'update') !== false) {
+            return false;
+        }
+        return null;
+    }
+
+    private function handlePositiveRowCount($query, $stmt, $fetchAll)
+    {
+        if (stripos($query, 'insert') !== false || stripos($query, 'delete') !== false || stripos($query, 'update') !== false) {
+            return true;
+        } else {
             if ($fetchAll) {
                 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
             }
             return $result;
-        } catch (PDOException|Exception $e) {
-            echo $e;
         }
     }
+
+
+
 
 }

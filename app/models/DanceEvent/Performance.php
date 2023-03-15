@@ -1,47 +1,49 @@
 <?php
 require_once __DIR__.'/../Location.php';
-class ArtistPerformance
+require_once __DIR__.'/PerformanceSession.php';
+class Performance
 {
-    private int $artistPerformanceId;
+    private int $performanceId;
     private array $artists;
     private DateTime $date;
     private Location $venue;
-    private float $duration;
-    private string $session;
+    private int $duration;
+    private PerformanceSession $session;
     public function __construct()
     {
         $this->artists= array();
     }
 
     /**
-     * @return string
+     * @return PerformanceSession
      */
-    public function getSession(): string
+    public function getSession(): PerformanceSession
     {
         return $this->session;
     }
 
     /**
-     * @param string $session
+     * @param PerformanceSession $session
      */
-    public function setSession(string $session): void
+    public function setSession(PerformanceSession $session): void
     {
         $this->session = $session;
     }
+
     /**
      * @return int
      */
-    public function getArtistPerformanceId(): int
+    public function getPerformanceId(): int
     {
-        return $this->artistPerformanceId;
+        return $this->performanceId;
     }
 
     /**
-     * @param int $artistPerformanceId
+     * @param int $performanceId
      */
-    public function setArtistPerformanceId(int $artistPerformanceId): void
+    public function setPerformanceId(int $performanceId): void
     {
-        $this->artistPerformanceId = $artistPerformanceId;
+        $this->performanceId = $performanceId;
     }
 
     /**
@@ -75,6 +77,7 @@ class ArtistPerformance
     {
         $this->date = $date;
     }
+
     /**
      * @return Location
      */
@@ -92,24 +95,22 @@ class ArtistPerformance
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getDuration(): float
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
     /**
-     * @param float $duration
+     * @param int $duration
      */
-    public function setDuration(float $duration): void
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
 
-    /**
-     * @throws Exception
-     */
+
     public function getEndDateTime(): DateTime // returns EndDateTime of the performance
     {
         $endTime = clone $this->date;

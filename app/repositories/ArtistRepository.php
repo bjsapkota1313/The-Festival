@@ -112,4 +112,17 @@ class ArtistRepository extends Repository
         $result = $stmt->fetch();
 
     }
+    public function getAllParticipatingArtistsInPerformance($performanceId): ?array
+    {
+        $query = "SELECT artistId FROM participatingArtist WHERE PerformanceId = :PerformanceId";
+        $result = $this->executeQuery($query, array(':PerformanceId' => $performanceId));
+        if (empty($result)) {
+            return null;
+        }
+        $artists = array();
+        foreach ($result as $row) {
+            $artists[] = $this->getArtistByArtistID($row['artistId']);
+        }
+        return $artists;
+    }
 }

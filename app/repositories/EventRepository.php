@@ -61,5 +61,17 @@ class EventRepository extends repository
             echo $e;
         }
     }
+    public function getAllLocations(){
+        try{
+            $stmt = $this->connection->prepare("SELECT location.locationId,location.locationName, location.postCode, location.streetName, location.houseNumber, location.houseNumberAdditional
+                                                    FROM location");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Location');
+            return $stmt->fetchAll();
+        }
+        catch(PDOException $e){
+            echo $e;
+        }
+    }
 
 }

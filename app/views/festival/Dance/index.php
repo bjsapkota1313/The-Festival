@@ -56,7 +56,7 @@
                                 <div>
                                     <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
                                     <form method="GET" action="/festival/dance/artistDetails">
-                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistName() ?>">Artist</button>
+                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistId() ?>">Artist</button>
                                     </form>
                                 </div>
                             </div>

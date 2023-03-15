@@ -1,25 +1,25 @@
 <?php
 
-class ArtistPerformanceSession
+class PerformanceSession
 {
-    private int $artistPerformanceSessionId;
+    private int $performanceSessionId;
     private string $sessionName;
-    private ?string $sessionDescription;
+    private ?string $sessionDescription; // mpt every session have description for now so allowing it to be null
 
     /**
      * @return int
      */
-    public function getArtistPerformanceSessionId(): int
+    public function getPerformanceSessionId(): int
     {
-        return $this->artistPerformanceSessionId;
+        return $this->performanceSessionId;
     }
 
     /**
-     * @param int $artistPerformanceSessionId
+     * @param int $performanceSessionId
      */
-    public function setArtistPerformanceSessionId(int $artistPerformanceSessionId): void
+    public function setPerformanceSessionId(int $performanceSessionId): void
     {
-        $this->artistPerformanceSessionId = $artistPerformanceSessionId;
+        $this->performanceSessionId = $performanceSessionId;
     }
 
     /**
@@ -52,7 +52,9 @@ class ArtistPerformanceSession
     public function setSessionDescription(?string $sessionDescription): void
     {
         $this->sessionDescription = $sessionDescription;
-    } // can be null too in the database
+    }
+
+
 
 
 

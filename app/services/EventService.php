@@ -11,4 +11,7 @@ class EventService
     {
         return $this->eventRepository->getEventByName($name);
     }
+    public function getAllLocations(){
+        return $this->eventRepository->getAllLocations();
+    }
 }
