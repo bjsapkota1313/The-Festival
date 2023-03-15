@@ -1,27 +1,29 @@
 <?php
 require_once __DIR__ . '/../event.php';
-require_once __DIR__ . '/ArtistPerformance.php';
+require_once __DIR__ . '/Performance.php';
 class DanceEvent extends Event
 {
-    private array $artistPerformances;
+    private array $performances;
     public function __construct()
     {
-        $this->artistPerformances = array();
+        $this->performances = array();
     }
 
     /**
      * @return array
      */
-    public function getArtistPerformances(): array
+    public function getPerformances(): array
     {
-        return $this->artistPerformances;
+        return $this->performances;
     }
 
     /**
-     * @param array $artistPerformances
+     * @param array $performances
      */
-    public function setArtistPerformances(array $artistPerformances): void
+    public function setPerformances(array $performances): void
     {
-        $this->artistPerformances = $artistPerformances;
+        $this->performances = $performances;
     }
+
+
 }

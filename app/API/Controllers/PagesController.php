@@ -20,13 +20,12 @@ class PagesController extends Controller
                 $id = htmlspecialchars($_GET['id']);
                 $page = $this->pageService->getPageByIdWithUrl($id);
             }
-            echo JSon_encode($page);
+            echo Json_encode($page);
         }
         catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
-
     }
 }
 

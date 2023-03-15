@@ -8,6 +8,7 @@ class DanceController extends eventController
     private $spotifyService;
     private $artistService;
     private $danceEventService;
+    private $performanceService;
 
     public function __construct()
     {
@@ -15,6 +16,7 @@ class DanceController extends eventController
         $this->spotifyService = new SpotifyService();
         $this->artistService = new ArtistService();
         $this->danceEventService = new DanceEventService();
+        $this->performanceService = new PerformanceService();
     }
 
     public function index()
@@ -25,8 +27,8 @@ class DanceController extends eventController
         $paragraphs = $sectionText->getParagraphs();
         $participatingArtists = $this->artistService->getAllArtistsParticipatingInEvent();
         $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
-        $artistPerformances = $danceEvent->getArtistPerformances();
-        $timetable = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
+        $artistPerformances = $danceEvent->getPerformances();
+        $timetable = $this->performanceService->groupPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }
 
@@ -36,25 +38,25 @@ class DanceController extends eventController
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['artist'])) {
             try {
                 $errorMessage = array();
-                $artistName = $this->sanitizeInput($_GET['artist']);
-                $selectedArtist = $this->artistService->getArtistByName($artistName);
+                $artistId = $this->sanitizeInput($_GET['artist']);
+                $selectedArtist = $this->artistService->getArtistByArtistID($artistId);
                 if (empty($selectedArtist)) {
                     $this->display404PageNotFound();
                 }
                 try {
-                    $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistName, 6);
+                    $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistId, 6);
                     if (empty($artistAlbums)) {
                         $errorMessage['artistAlbums'] = 'No albums found for this artist';
                     }
-                    $artistTopTracks = $this->spotifyService->getArtistTopTracksWithLimit($artistName, 10);
+                    $artistTopTracks = $this->spotifyService->getArtistTopTracksWithLimit($artistId, 10);
                     if (empty($artistTopTracks)) {
                         $errorMessage['artistTopTracks'] = 'No tracks found for this artist';
                     }
                 } catch (\SpotifyWebAPI\SpotifyWebAPIException $e) {
                     $errorMessage['connectionToSpotify'] = $e->getMessage();
                 }
-                $artistPerformances = $this->danceEventService->getAllArtistPerformancesDoneByArtistIdAtEvent($selectedArtist->getArtistId(), 'Dance');
-                $filteredArtistPerformances = $this->danceEventService->filterArtistPerformancesWithDate($artistPerformances);
+                $artistPerformances = $this->performanceService->getAllPerformancesDoneByArtistIdAtEvent($selectedArtist->getArtistId(), 'Dance');
+                $filteredArtistPerformances = $this->performanceService->groupPerformancesWithDate($artistPerformances);
                 require __DIR__ . '/../../views/festival/Dance/artist.php';
             } catch (Exception $e) {
                 echo $e->getMessage();
@@ -82,10 +84,19 @@ class DanceController extends eventController
             return "Unknown";
         }
     }
-
-    public function test()
-    {
-        require_once __DIR__ . '/../../views/festival/Dance/test.php';
+    private function formatArtistName($artists){
+        $name='';
+        if(is_array($artists)){
+            foreach ($artists as $artist ){
+                $name=$name.$artist->getArtistName().' | ';
+            }
+            // Remove the last '|' character
+            $name = substr($name, 0, -2);
+        }
+        else{
+            $name=$artists->getArtistName();
+        }
+        return $name;
     }
 
 }

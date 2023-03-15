@@ -133,16 +133,4 @@ JOIN image ON image.imageId = historytourimage.imageId where  historytourimage.h
         }
         return $images;
     }
-
-    private function createHistoryTourImage($row)
-    {
-        $historyTourImage = new HistoryTourImage();
-        $historyTourImage->setHistoryTourLocationId($row['historyTourLocationId']);
-        $historyTourImage->setImageName($row['imageName']);
-        $historyTourImage->setTourLocationImage($row['tourLocationImage']);
-
-        return $historyTourImage;
-    }
-
-
 }

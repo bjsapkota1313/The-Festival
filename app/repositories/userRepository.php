@@ -90,8 +90,8 @@ class UserRepository extends Repository
     public function getUsersBySearchQuery($searchingTerm)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE firstName LIKE ? OR lastName LIKE ? OR email LIKE ?");
-            $stmt->execute(["%$searchingTerm%", "%$searchingTerm%", "%$searchingTerm%"]);
+            $stmt = $this->connection->prepare("SELECT id, firstName, lastName, dateOfBirth, email, registrationDate, picture, role,password FROM User WHERE firstName LIKE ? OR lastName LIKE ? OR email LIKE ? OR id LIKE ?");
+            $stmt->execute(["%$searchingTerm%", "%$searchingTerm%", "%$searchingTerm%", "%$searchingTerm%"]);
             if ($stmt->rowCount() == 0) {
                 return null;
             }
@@ -439,9 +439,6 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-  
-
-
 
 }
 

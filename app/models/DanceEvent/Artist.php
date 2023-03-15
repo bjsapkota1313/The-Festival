@@ -5,7 +5,7 @@ class Artist
     private int  $artistId;
     private string $artistName;
     private ?array $artistImages;
-    private string$artistLogo;
+    private string $artistLogo;
     private  string $artistDescription;
     private array $artistStyles;
 
