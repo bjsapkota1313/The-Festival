@@ -22,7 +22,7 @@ class YummyController extends eventController {
         $restaurants = $this->restaurantService->getRestaurants();
         // print_r($restaurants);
         // $c = count($restaurants);
-        // echo "Number of restaurants is {$c}";
+        // echo "Number of restaurants is {$c}";       
         $this->displayNavBar("Yummy",'/css/festival/yummy.css');
         // require __DIR__ . '/../../views/festival/History/index.php';
         $this->displayViewFestival($restaurants);

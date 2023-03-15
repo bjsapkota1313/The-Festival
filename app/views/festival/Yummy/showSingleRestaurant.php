@@ -3,7 +3,7 @@
 ?>
 
 
-<div class="restaurantContainer">
+<div id="r1" class="container restaurantContainer">
     <div class="restaurantNameField">
         <label class="restaurantNameRowLabel">
             Name:
