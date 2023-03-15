@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../models/DanceEvent/DanceEvent.php';
 require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../services/ArtistService.php';
+require_once __DIR__.'/../models/DanceEvent/ArtistPerformanceSession.php';
 
 class DanceEventRepository extends EventRepository
 {
@@ -110,6 +111,17 @@ class DanceEventRepository extends EventRepository
             $artistPerformances[] = $this->createArtistPerformanceInstance($row);
         }
         return $artistPerformances;
+    }
+    public function getAllArtistPerformanceSessions(){
+        try{
+            $stmt = $this->connection->prepare("SELECT artistPerformanceSessionId,sessionName,sessionDescription FROM artistperformancesession");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'ArtistPerformanceSession');
+            return $stmt->fetchAll();
+        }
+        catch(PDOException $e){
+            echo "Error while getting all artist performance sessions: ".$e->getMessage();
+        }
     }
 
 }

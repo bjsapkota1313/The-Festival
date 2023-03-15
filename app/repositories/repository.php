@@ -1,15 +1,20 @@
 <?php
-class Repository  {
+
+class Repository
+{
     protected $connection;
-    function __construct() {
+
+    function __construct()
+    {
         require __DIR__ . '/../config/dbconfig.php';
         try {
             $this->connection = new PDO("$type:host=$servername;port=$portNumber;dbname=$database", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch(PDOException $e) {
+        } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
-          }
+        }
     }
+
     protected function executeQuery($query, $params = array(), $fetchAll = true)
     {
         try {
@@ -18,7 +23,7 @@ class Repository  {
                 $stmt->bindValue($key, $value);
             }
             $stmt->execute();
-            if($stmt->rowCount() == 0) {
+            if ($stmt->rowCount() == 0) {
                 return null;
             }
             if ($fetchAll) {

@@ -51,6 +51,9 @@ function noSearchResultFoundForSearch() {
 function makeTableBody(user) {
     const tbody = document.getElementById('tableDataDisplay');
     const tr = document.createElement('tr');
+    const td0 = document.createElement('td');
+    td0.textContent = user.id;
+    tr.appendChild(td0);
     const td1 = document.createElement('td');
     const img = document.createElement('img');
     img.src = "/image/"+user.picture;
@@ -261,7 +264,7 @@ async function onEditUserSubmitChangesBtn(userId) {
         return response.json();
     }).then(response => {
         if (response.success) {
-           location.href="/manageusers";
+           location.href="/admin/manageusers";
         } else {
             alert(response.message);
         }

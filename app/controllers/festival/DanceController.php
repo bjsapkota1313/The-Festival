@@ -82,10 +82,19 @@ class DanceController extends eventController
             return "Unknown";
         }
     }
-
-    public function test()
-    {
-        require_once __DIR__ . '/../../views/festival/Dance/test.php';
+    private function formatArtistName($artists){
+        $name='';
+        if(is_array($artists)){
+            foreach ($artists as $artist ){
+                $name=$name.$artist->getArtistName().' | ';
+            }
+            // Remove the last '|' character
+            $name = substr($name, 0, -2);
+        }
+        else{
+            $name=$artists->getArtistName();
+        }
+        return $name;
     }
 
 }

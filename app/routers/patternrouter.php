@@ -51,12 +51,17 @@ class PatternRouter
         // check if we are requesting an api route
         $api = false;
         $festival = false; // checking if it is a festival route or not
+        $adminPanel = false; // checking if it is an admin panel route or not
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
             $api = true;
         }else if (str_starts_with($uri, "festival/")) {
             $uri = substr($uri, 9);
             $festival = true;
+        }
+         else if (str_starts_with($uri, "admin/")) {
+            $uri = substr($uri, 6);
+            $adminPanel = true;
         }
 
         // set default controller/method
@@ -77,7 +82,7 @@ class PatternRouter
             $explodedUri[0] = $defaultcontroller;
         }
         // . (dot) in php for strings is concatination. Similar to + in C#.
-        // $controllerName becomes "homecontroller"
+        // $controllerName becomes "homecontroller";
         $controllerName = $explodedUri[0] . "controller";
 
         if (!isset($explodedUri[1]) || empty($explodedUri[1])) {
@@ -94,6 +99,9 @@ class PatternRouter
         }
         else if ($festival) {
             $filename = __DIR__ . '/../controllers/festival/' . $controllerName . '.php';
+        }
+        else if ($adminPanel) {
+            $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php';
         }
 
         // check if the $filename exists. Here, the homecontroller.php in the controllers folder.

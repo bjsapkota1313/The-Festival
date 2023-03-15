@@ -27,5 +27,9 @@ class DanceEventService
         }
         return $groupedArtistPerformances;
     }
+    public function getAllArtistPerformanceSessions(): ?array
+    {
+        return $this->danceRepo->getAllArtistPerformanceSessions();
+    }
 
 }
