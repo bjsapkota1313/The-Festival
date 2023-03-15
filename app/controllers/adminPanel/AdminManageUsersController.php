@@ -3,12 +3,7 @@ require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../models/user.php';
 require_once __DIR__ . '/../../Services/userService.php';
 
-<<<<<<<< HEAD:app/controllers/adminPanel/AdminManageUsersController.php
-class AdminManageUsersController extends AdminPanelController
-========
-class ManageUsersController extends AdminPanelController
->>>>>>>> main:app/controllers/adminPanel/ManageUsersController.php
-{
+class AdminManageUsersController extends AdminPanelController{
     private $userService;
 
     public function __construct()
