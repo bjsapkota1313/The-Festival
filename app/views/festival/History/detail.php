@@ -1,42 +1,31 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5yDEZxPchpFrGUOTavwzG92Nh6CrvZx0"></script>
-
-<div class="historyMainImage">
+<div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($historyTourLocationObject->getTourImage()['banner'][0]) ?>')">
+    <span class="position-absolute bottom-0 start-0 mb-3 ps-3 d-flex align-items-center"
+          style="z-index: 99; padding-left: 20px;">
+        </span>
 </div>
 <body onload="locate('<?php echo $location . ' ' . $locationPostCode; ?>')">
-<?php
-foreach ($getLocationParagraphsById as $getLocationParagraphById) {
-    ?>
-    <h1 class="detailHeader"><?= $getLocationParagraphById->getLocationName() ?></h1><br>
-<?php } ?>
+    <h1 class="detailHeader"><?= $historyTourLocationObject->getLocationName() ?></h1><br>
 <div class="detailMainContainer">
     <h2> About</h2>
     <div class="detailContainer">
-
             <div class="detailParagraph">
-                <p><?= $getLocationParagraphsById->getHistoryP1()?></p><br>
+                <p><?= $historyTourLocationObject->getHistoryP1()?></p><br>
             </div>
 
         <div class="detailPicture">
-            <img src="<?= $this->getImageFullPath($tourImage['banner'][0]) ?>"
-                 class="border hover-zoom" style="border-radius:50%;height: 409px;width:409px">
+            <img src="<?= $this->getImageFullPath($historyTourLocationObject->getTourImage()['other'][0]) ?>"
+                 class="border hover-zoom" style="border-radius:20%;height: 300px;width:300px">
         </div>
     </div>
     <div class="detailContainer">
-        <div class="detailPicture"></div>
-        <?php
-        foreach ($getLocationParagraphsById as $getLocationParagraphById) {
-            ?>
-            <p class="detailParagraph"><?= $getLocationParagraphById->getHistoryP2() ?></p><br>
-        <?php } ?>
-        <!--        <p class="detailParagraph">During the revolution, Haarlem catholics went underground,-->
-        <!--            after which they would meet in places called “schuilkerken”.-->
-        <!--            One of the most prominant known groups, the st.-->
-        <!--            Josephstatie built a new church across from the Janskerk,-->
-        <!--            and once it became big enough to be a cathedral, they built a new cathedral on the Leidsevaart.-->
-        <!--            Since this cathedral is not dedicated to St. Bavo, the official name for the church is “Grote kerk”,-->
-        <!--            which translates to big church. </p>-->
+        <div class="detailPicture">
+            <img src="<?= $this->getImageFullPath($historyTourLocationObject->getTourImage()['other'][1]) ?>"
+                 class="border hover-zoom" style="border-radius:20%;height: 300px;width:300px">
+        </div>
+            <p class="detailParagraph"><?= $historyTourLocationObject->getHistoryP2() ?></p><br>
     </div>
 </div>
 <div class="detailMainContainer2">
@@ -44,7 +33,10 @@ foreach ($getLocationParagraphsById as $getLocationParagraphById) {
     </h2>
     <div class="detailContainer2">
         <div class="detailMap" id="map_canvas"></div>
-        <div class="detailPicture"></div>
+        <div class="detailPicture">
+            <img src="<?= $this->getImageFullPath($historyTourLocationObject->getTourImage()['other'][2]) ?>"
+                 class="border hover-zoom" style="border-radius:20%;height: 355px;width:350px">
+        </div>
     </div>
 </div>
 </body>
