@@ -122,6 +122,7 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
         $historyTourLocations->setTourImage($this->getHistoryTourLocationImagesByHistoryTourLocationId($row['historyTourLocationId']));
         return $historyTourLocations;
     }
+
     public function test($historyTourLocationId)
     {
         try {
