@@ -1,26 +1,25 @@
 <?php
-class HistoryTour
+
+class HistoryTour implements JsonSerializable
 {
+
     private int $historyTourId;
     private string $tourLanguage;
     private array $historyTourLocations;
-    private DateTime $date;
+    private DateTime $tourDate;
     private float $duration;
+    private DateTime $time;
 
-    /**
-     * @return DateTime
-     */
-    public function getDate(): DateTime
+    public function jsonSerialize() : mixed
     {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTime $date
-     */
-    public function setDate(DateTime $date): void
-    {
-        $this->date = $date;
+        return [
+            'historyTourId' => $this->historyTourId,
+            'tourLanguage' => $this->tourLanguage,
+            'historyTourLocations' => $this->historyTourLocations,
+            'tourDate' => $this->tourDate->format('Y-m-d'),
+            'duration' => $this->duration,
+            'time' => $this->time->format('H:i:s')
+        ];
     }
 
     /**
@@ -79,6 +78,23 @@ class HistoryTour
     }
 
     /**
+     * @return DateTime
+     */
+    public function getTourDate(): DateTime
+    {
+        return $this->tourDate;
+    }
+
+    /**
+     * @param DateTime $tourDate
+     */
+    public function setTourDate(DateTime $tourDate): void
+    {
+        $this->tourDate = $tourDate;
+    }
+
+
+    /**
      * @return array
      */
     public function getHistoryTourLocations(): array
@@ -93,6 +109,23 @@ class HistoryTour
     {
         $this->historyTourLocations = $historyTourLocations;
     }
+
+    /**
+     * @return DateTime
+     */
+    public function getTime(): DateTime
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param DateTime $time
+     */
+    public function setTime(DateTime $time): void
+    {
+        $this->time = $time;
+    }
+
 
 
 

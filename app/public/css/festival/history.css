@@ -5,7 +5,16 @@ body {
     font-size: 14px;
     font-family: 'Baloo 2';
 }
-
+.tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgba(0,0,0,.8);
+    color: #fff;
+    padding: 10px;
+    font-size: 16px;
+    z-index: 999; /* added z-index */
+}
 .historyMainImage {
     height: 400px;
     background: no-repeat center center;
@@ -45,7 +54,7 @@ body {
     text-align: left;
     padding: 30px 20px 0;
     margin-top: 40px;
-    margin-left:60px;
+    margin-left: 60px;
     display: flex;
     flex-direction: column;
     /*flex-shrink: 0;*/
@@ -55,6 +64,7 @@ body {
     font-weight: bold;
     font-size: 1.6em;
 }
+
 .historyWalkingRoute {
     background: rgba(255, 255, 255, 1);
     opacity: 1;
@@ -69,7 +79,7 @@ body {
     width: 400px;
     height: 500px;
     margin-top: 40px;
-    margin-right:60px;
+    margin-right: 60px;
     /*margin: 40px 10px 10px 330px;*/
 }
 
@@ -140,6 +150,12 @@ body {
     align-items: center;
     justify-content: center;
 }
+ /*.tourContainer:hover {*/
+ /*    background-color: #f5f5f5;*/
+ /*    cursor: pointer;*/
+ /*    height: 200px;*/
+
+ /*}*/
 
 .tourLanguage {
     width: 191px;
@@ -207,7 +223,6 @@ body {
 .detailPicture {
     width: 368px;
     height: 355px;
-    background: url("/image/historyIndex.jpeg") no-repeat center center;
     background-size: cover;
     border-radius: 49px;
 }
@@ -215,7 +230,6 @@ body {
 .detailMap {
     width: 600px;
     height: 355px;
-    background: url("/image/historyIndex.jpeg") no-repeat center center;
     background-size: cover;
     border-radius: 49px;
 }
@@ -281,9 +295,6 @@ body {
         font-size: 1.4em;
         width: 100%;
         text-align: center;
-    }
-    .dateInHover {
-        display: none;
     }
 }
 

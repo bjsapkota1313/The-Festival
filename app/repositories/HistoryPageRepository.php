@@ -27,7 +27,7 @@ class HistoryPageRepository extends Repository
 
     public function getAllHistoryTourLocation()
     {
-        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId
+        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId, historytourlocation.locationInformation
                                             FROM historytourlocation
                                             INNER JOIN location ON location.locationId=historytourlocation.locationId;");
         $stmt->execute();
@@ -40,20 +40,7 @@ class HistoryPageRepository extends Repository
         return $historyLocations;
     }
 
-    public function getTourDate()
-    {
-        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId
-                                            FROM historytourlocation
-                                            INNER JOIN location ON location.locationId=historytourlocation.locationId");
-        $stmt->execute();
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($result as $dbRow) {
-            $historyLocations[] = $this->createHistoryTourLocation($dbRow);
-        }
-
-        return $historyLocations;
-    }
 
     private function createHistoryTourLocation($result)
     {
@@ -63,16 +50,28 @@ class HistoryPageRepository extends Repository
 //        $historyTourLocation->setPostCode($result['postCode']);
 //        return $historyTourLocation;
 
-        $historyTourLocationObject = new Location();
-        $historyTourLocationObject->setLocationId($result['locationId']);
-        $historyTourLocationObject->setLocationName($result['locationName']);
-        $historyTourLocationObject->setPostCode($result['postCode']);
+//        $historyTourLocationObject = new Location();
+//        $historyTourLocationObject->setLocationId($result['locationId']);
+//        $historyTourLocationObject->setLocationName($result['locationName']);
+//        $historyTourLocationObject->setPostCode($result['postCode']);
+//
+//        $historyTourLocation = new HistoryTourLocation();
+//        $historyTourLocation->setHistoryTourLocationId($result['historyTourLocationId']);
+//        $historyTourLocation->setLocationInfo($result['locationInformation']);
+//        $historyTourLocation->setTourLocation($historyTourLocationObject);
+//
+//        return $historyTourLocationObject;
+        $locationObject = new Location();
+        $locationObject->setLocationId($result['locationId']);
+        $locationObject->setLocationName($result['locationName']);
+        $locationObject->setPostCode($result['postCode']);
 
-        $historyTourLocation = new HistoryTourLocation();
-        $historyTourLocation->setHistoryTourLocationId($result['historyTourLocationId']);
-        $historyTourLocation->setTourLocation($historyTourLocationObject);
+        $historyLocations = new HistoryTourLocation();
+        $historyLocations->setHistoryTourLocationId($result['historyTourLocationId']);
+        $historyLocations->setLocationInfo($result['locationInformation']);
+        $historyLocations->setTourLocation($locationObject);
 
-        return $historyTourLocationObject;
+        return $historyLocations;
     }
 
     public function getHistoryTourTimeTable()
@@ -90,6 +89,20 @@ class HistoryPageRepository extends Repository
         }
 
         return $historyTourTimeTables;
+    }
+    public function getTourDate()
+    {
+        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId
+                                            FROM historytourlocation
+                                            INNER JOIN location ON location.locationId=historytourlocation.locationId");
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($result as $dbRow) {
+            $historyLocations[] = $this->createHistoryTourLocation($dbRow);
+        }
+
+        return $historyLocations;
     }
 
     /**

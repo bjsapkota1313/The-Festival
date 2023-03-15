@@ -36,7 +36,7 @@ INNER JOIN timetable ON eventdate.eventDateId = timetable.eventDateId
 INNER JOIN historytour ON historytour.timeTableId = timetable.timeTableId
 INNER JOIN language ON language.languageId = historytour.languageId
 WHERE historytour.eventId = :eventId
-ORDER BY eventDate.date ASC;");
+ORDER BY eventDate.date ASC, timetable.time ASC;");
             $stmt->bindParam(':eventId', $eventId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -61,20 +61,43 @@ ORDER BY eventDate.date ASC;");
         $historyTours->setHistoryTourId($dbRow['historyTourId']);
         $historyTours->setTourLanguage($dbRow['name']);
         $dateTime = $dbRow['date'] . '' . $dbRow['time'];
-        $historyTours->setDate(new DateTime($dateTime));
-        $historyTours->setHistoryTourLocations((array)$this->getHistoryTourLocationsByHistoryTourId($dbRow['historyTourId']));
+        $historyTours->setTourDate(new DateTime($dateTime));
+        $timeString = $dbRow['time'];
+        $time = DateTime::createFromFormat('H:i:s', $timeString);
+        $historyTours->setTime($time);
+        $historyTours->setHistoryTourLocations((array)$this->getHistoryTourLocationsByLocationName($dbRow['historyTourId']));
         $historyTours->setDuration(90.00); //ToDO: get duration from database
         return $historyTours;
     }
 
-    public function getHistoryTourLocationsByHistoryTourId($historyTourLocationId)
+    public function getHistoryTourLocationsByLocationName($historyTourId)
     {
         try {
             $stmt = $this->connection->prepare("SELECT historyTourLocation.historyTourLocationId, historyTourLocation.locationId, historyTourLocation.locationInformation, historyTourLocation.historyP1, historyTourLocation.historyP2, location.locationName 
         FROM historyTourLocation 
         INNER JOIN location on location.locationId = historyTourLocation.locationId
-        where location.locationName = :locationName");
-            $stmt->bindParam(':locationName', $historyTourLocationId);
+        where historytourlocation.historytourId = :historyTourId");
+            $stmt->bindParam(':historyTourId', $historyTourId);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch();
+            if (!empty($result)) {
+                return $this->createHistoryTourLocations($result);
+            }
+            return null;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+    public function getHistoryTourLocationByLocationId($locationId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT historyTourLocation.historyTourLocationId, historyTourLocation.locationId, historyTourLocation.locationInformation, historyTourLocation.historyP1, historyTourLocation.historyP2, location.locationName 
+        FROM historyTourLocation 
+        INNER JOIN location on location.locationId = historyTourLocation.locationId
+        where location.locationId = :locationId");
+            $stmt->bindParam(':locationId', $locationId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetch();
@@ -96,16 +119,34 @@ ORDER BY eventDate.date ASC;");
         $historyTourLocations->setLocationInfo($row['locationInformation']);
         $historyTourLocations->setHistoryP1($row['historyP1']);
         $historyTourLocations->setHistoryP2($row['historyP2']);
-        $historyTourLocations->setTourImage($this->getHistoryTourImageByHistoryTourId($row['historyTourLocationId']));
+        $historyTourLocations->setTourImage($this->getHistoryTourLocationImagesByHistoryTourLocationId($row['historyTourLocationId']));
         return $historyTourLocations;
     }
-
-    public function getHistoryTourImageByHistoryTourId($historyTourLocationId)
+    public function test($historyTourLocationId)
     {
         try {
             $stmt = $this->connection->prepare("SELECT historytourimage.historyTourLocationId, historytourimage.imageId, historytourimage.tourLocationImage, image.imageName
-FROM historytourimage
-JOIN image ON image.imageId = historytourimage.imageId where  historytourimage.historyTourLocationId = :historyTourLocationId;");
+                                                    FROM historytourimage
+                                                    JOIN image ON image.imageId = historytourimage.imageId where  historytourimage.historyTourLocationId = :historyTourLocationId;");
+            $stmt->bindParam(':historyTourLocationId', $historyTourLocationId);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            if (!empty($result)) {
+                return $this->getImagesWithKeyValue($result);
+            }
+            return null;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
+    public function getHistoryTourLocationImagesByHistoryTourLocationId($historyTourLocationId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT historytourimage.historyTourLocationId, historytourimage.imageId, historytourimage.tourLocationImage, image.imageName
+                                                    FROM historytourimage
+                                                    JOIN image ON image.imageId = historytourimage.imageId where  historytourimage.historyTourLocationId = :historyTourLocationId;");
             $stmt->bindParam(':historyTourLocationId', $historyTourLocationId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
