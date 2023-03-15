@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Bernard+MT+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Baloo+2&display=swap');
+
+
+.imgCaptionWordFont{
+    color: #ffffff;
+    font-family: 'Bernard MT Condensed', serif;
+    font-weight: normal;
+    font-size: 126px;
+    opacity: 1;
+    padding-top: 20px;
+}
+
+.imgCaptionArticleFont{
+    color: #ffffff;
+    font-family: 'Bernard MT Condensed', serif;
+    font-weight: normal;
+    font-size: 60px;
+    opacity: 1;
+}
+
+#eventPageImg{width: 100%;}
+
+
+@media (max-width: 768px) {
+
+    .eventPageImg{height: 100%;}
+    #eventInfoRow{height: 140px;}
+    #imgCaption{display:none;}
+    #eventInfo{display:none;}
+    
+}
