@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
 
-class DanceController extends AdminPanelController
+class AdminDanceController extends AdminPanelController
 {
     private $artistService;
     private $event;

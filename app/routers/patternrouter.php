@@ -101,7 +101,8 @@ class PatternRouter
             $filename = __DIR__ . '/../controllers/festival/' . $controllerName . '.php';
         }
         else if ($adminPanel) {
-            $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php';
+             $controllerName='Admin'.$controllerName;
+            $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php'; // makking all admin panel controllers start with Admin
         }
 
         // check if the $filename exists. Here, the homecontroller.php in the controllers folder.
