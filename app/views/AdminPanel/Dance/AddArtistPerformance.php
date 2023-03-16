@@ -2,16 +2,16 @@
     <div class="container pb-3 pt-3">
         <div class="row">
             <div class="col-md-12">
-                <h1> Add Artist Performance</h1>
+                <h1> <?=$title?></h1>
             </div>
         </div>
     </div>
     <div class="container">
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-md-6 col-lg-6 col-xl-5">
                 <form id="AddPerformance" class="mx-1 mx-md-4" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label class="form-label" for="performanceDate">Event Date</label>
+                        <label class="form-label" for="performanceDate">performance Date</label>
                         <input type="date" name="performanceDate" id="performanceDate" class="form-control"/>
                     </div>
                     <div class="mb-3">
@@ -40,16 +40,19 @@
                     <div class="mb-3">
                         <label class="form-label" for="sessionSelect">Select Session</label>
                         <select class="form-select" id="performanceSession" name="performanceSession">
-                            <?php foreach ($allPerformingSessions as $session) : ?>
-                                <option value="<?= $session->getPerformanceSessionId() ?>"><?= $session->getSessionName();
-                                if(!empty($session->getSessionDescription())) :echo " (". $session->getSessionDescription() .") " ; endif;?>
-                                    </option>
-                            <?php endforeach;?>
+                            <?php foreach ($performanceSessions as $session) : ?>
+                                <option value="<?= $session->getPerformanceSessionId(); ?>">
+                                    <?= $session->getSessionName(); ?>
+                                    <?php if ($session->getSessionDescription()) : ?>
+                                        (<?= $session->getSessionDescription(); ?>)
+                                    <?php endif; ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="VenueSelect">Select Venue</label>
-                        <select class="form-select" id="VenueSelect" name="VenueSelect" name="VenueSelect">
+                        <select class="form-select" id="VenueSelect"  name="Venue">
                             <?php foreach ($allLocations as $venue) : ?>
                                 <option value="<?= $venue->getLocationId() ?>"><?= $venue->getLocationName()?>
                                 </option>
@@ -64,9 +67,14 @@
                         <label class="form-label" for="noOfTicket">Price</label>
                         <input type="number" name="price" id="price" step="0.01" name="price" placeholder="Price in Euro" class="form-control" required>
                     </div>
+                    <?php if(!empty($errorMessage)): ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= $errorMessage ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="row justify-content-center">
                         <div class="col-md-6">
-                            <button type="submit" name="AddArtistPerformance" class="btn btn-primary btn-lg w-100">Add Performance</button>
+                            <button type="submit" id="AddArtistPerformance" name="AddArtistPerformance" class="btn btn-primary btn-lg w-100" disabled>Add Performance</button>
                         </div>
                     </div>
                     <script>
@@ -78,6 +86,12 @@
                                 const start = new Date(`2000-01-01T${startTime}:00`);
                                 const end = new Date(`2000-01-01T${endTime}:00`);
                                 const duration = (end.getTime() - start.getTime()) / (1000 * 60); // convert to minutes
+                                if(duration<=0){
+                                    document.getElementById("AddArtistPerformance").disabled = true;
+                                }
+                                else {
+                                    document.getElementById("AddArtistPerformance").disabled = false;
+                                }
                                 document.getElementById("duration").textContent = duration.toFixed(2) + " min";
                             }
                         }

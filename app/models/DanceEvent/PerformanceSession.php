@@ -4,7 +4,7 @@ class PerformanceSession
 {
     private int $performanceSessionId;
     private string $sessionName;
-    private ?string $sessionDescription; // mpt every session have description for now so allowing it to be null
+    private ?string $sessionDescription =null; // nott every session have description for now so allowing it to be null
 
     /**
      * @return int
@@ -53,8 +53,6 @@ class PerformanceSession
     {
         $this->sessionDescription = $sessionDescription;
     }
-
-
 
 
 
