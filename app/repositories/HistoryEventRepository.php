@@ -122,6 +122,7 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
         $historyTourLocations->setTourImage($this->getHistoryTourLocationImagesByHistoryTourLocationId($row['historyTourLocationId']));
         return $historyTourLocations;
     }
+
     public function test($historyTourLocationId)
     {
         try {
@@ -174,15 +175,4 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
         }
         return $images;
     }
-
-    private function createHistoryTourImage($row)
-    {
-        $historyTourImage = new HistoryTourImage();
-        $historyTourImage->setHistoryTourLocationId($row['historyTourLocationId']);
-        $historyTourImage->setImageName($row['imageName']);
-        $historyTourImage->setTourLocationImage($row['tourLocationImage']);
-
-        return $historyTourImage;
-    }
-
 }

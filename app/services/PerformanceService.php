@@ -1,23 +1,30 @@
 <?php
 require_once __DIR__ . '/../repositories/PerformanceRepository.php';
+
 class PerformanceService
 {
-    private $artistPerformanceRepository;
+    private $performanceRepository;
 
     public function __construct()
     {
-        $this->artistPerformanceRepository = new PerformanceRepository();
+        $this->performanceRepository = new PerformanceRepository();
     }
-    public function getPerformancesByEventId($eventId): ?array{
-        return $this->artistPerformanceRepository->getPerformancesByEventId($eventId);
-    }
-    public function getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName): ?array{
-        return $this->artistPerformanceRepository->getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName);
-    }
-    public function getAllPerformanceSessions(): array|null
+
+    public function getPerformancesByEventId($eventId): ?array
     {
-        return $this->artistPerformanceRepository->getAllPerformanceSessions();
+        return $this->performanceRepository->getPerformancesByEventId($eventId);
     }
+
+    public function getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName): ?array
+    {
+        return $this->performanceRepository->getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName);
+    }
+
+    public function getAllPerformanceSessions(): ?array
+    {
+        return $this->performanceRepository->getAllPerformanceSessions();
+    }
+
     public function groupPerformancesWithDate($performances): ?array
     {
         $groupedPerformances = array();
@@ -30,4 +37,10 @@ class PerformanceService
         }
         return $groupedPerformances;
     }
+
+    public function addPerformanceWithEventId($eventId, $data): bool
+    {
+        return $this->performanceRepository->addPerformanceWithEventId($eventId, $data);
+    }
+
 }
