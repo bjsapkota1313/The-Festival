@@ -4,6 +4,7 @@ require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 
+
 class AdminDanceController extends AdminPanelController
 {
     private $artistService;
@@ -97,6 +98,5 @@ class AdminDanceController extends AdminPanelController
         $duration = $startTime->diff($endTime);
         return $duration->format('%h') * 60 + $duration->format('%i');
     }
-
 
 }

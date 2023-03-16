@@ -3,7 +3,6 @@ require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../models/user.php';
 require_once __DIR__ . '/../../Services/userService.php';
 
-
 class AdminManageUsersController extends AdminPanelController
 {
     private $userService;
