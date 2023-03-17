@@ -85,7 +85,7 @@
                                         <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
                                     </div>
                                     <div class="text ps-3">
-                                        <p class="albumName"><?= $this->getFormattedStringToDisplay($album->name, 7) ?></p>
+                                        <p class="albumName"><?= mb_strimwidth($album->name, 0,7,'...') ?></p>
                                         <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
                                                     class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
                                         </p>
@@ -162,7 +162,7 @@
                                                          class="img-fluid" style="width: 40px; height:38px;">
                                                 </div>
                                                 <div class="col-6 " style="margin-left: -15px">
-                                                    <h2 class="pt-2 "><?= $this->getFormattedStringToDisplay($track->name, 20) ?></h2>
+                                                    <h2 class="pt-2 "><?= mb_strimwidth($track->name, 0,20,'...') ?></h2>
                                                 </div>
                                                 <div class="col-4">
                                                 </div>

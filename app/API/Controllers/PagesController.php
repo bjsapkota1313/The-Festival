@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../../Services/pageService.php';
-require __DIR__ . '/controller.php';
+require __DIR__ . '/ApiController.php';
 
 class PagesController extends Controller
 {

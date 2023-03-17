@@ -13,7 +13,6 @@
                 <a class="btn btn-primary" href= "/admin/dance/addPerformance" >Add new Performance</a>
             </div>
         </div>
-
     </div>
     <div class="container-fluid">
         <div class="table-responsive-sm">
@@ -36,8 +35,8 @@
                     <div class="alert alert-warning" role="alert">
                         <strong>Error:</strong> <?= $errorMessage['artistPerformances'] ?>
                     </div>
-                <?php else: ?>
-                <?php foreach ($artistPerformances as $performance) { ?>
+                <?php else:
+                 foreach ($artistPerformances as $performance) { ?>
                     <tr>
                         <td><?= $performance->getPerformanceId() ?></td>
                         <td><?= $performance->getDate()->format('Y-m-d') ?></td>

@@ -1,9 +1,9 @@
 <?php
 require __DIR__ . '/../../Services/userService.php';
-require __DIR__ . '/controller.php';
+require __DIR__ . '/ApiController.php';
 
 //TODO: Make REST API Principles
-class UsersController extends Controller
+class UsersController extends ApiController
 {
     private $userService;
 
@@ -41,67 +41,63 @@ class UsersController extends Controller
             echo $e->getMessage();
         }
     }
-    
-    
-    
-      public function retrieveUserById(){
+
+
+    public function retrieveUserById()
+    {
         try {
             $this->sendHeaders();
-            $user=NULL;
+            $user = NULL;
 
             if (!empty($_GET['id'])) {
                 $id = htmlspecialchars($_GET['id']);
                 $user = $this->userService->retrieveUserByIdWithUrl($id);
             }
             echo JSon_encode($user);
-        }
-        catch (InvalidArgumentException|Exception $e) {
+        } catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
 
     }
-    
-    
-    
-       public function retrieveUserPermissions(){
+
+
+    public function retrieveUserPermissions()
+    {
         try {
             $this->sendHeaders();
-            $userWithEmail=false;
+            $userWithEmail = false;
 
             if (!empty($_GET['id'])) {
                 $id = htmlspecialchars($_GET['id']);
                 $userWithEmail = $this->userService->retrieveUserPermissionsWithUrl($id);
             }
             echo JSon_encode($userWithEmail);
-        }
-        catch (InvalidArgumentException|Exception $e) {
+        } catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
 
     }
-    
-    
-    
-      public function checkEmailAddress(){
+
+
+    public function checkEmailAddress()
+    {
         try {
             $this->sendHeaders();
-            $userWithEmail=false;
+            $userWithEmail = false;
 
             if (!empty($_GET['email'])) {
                 $emailAddress = htmlspecialchars($_GET['email']);
                 $userWithEmail = $this->userService->checkUserExistenceByEmailWithUrl($emailAddress);
             }
             echo JSon_encode($userWithEmail);
-        }
-        catch (InvalidArgumentException|Exception $e) {
+        } catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
         }
 
     }
-
 
 
     public function deleteUser(): void
@@ -174,6 +170,7 @@ class UsersController extends Controller
         }
         return $users;
     }
+
     public function editUserDetails()
     {
         try {

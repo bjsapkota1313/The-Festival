@@ -66,15 +66,6 @@ class DanceController extends eventController
         }
     }
 
-    private function getFormattedStringToDisplay($string, $length): string
-    {
-        if (strlen($string) > $length) {
-            return substr($string, 0, $length) . "....";
-        } else {
-            return $string;
-        }
-    }
-
     private function getDayByDateString($dateString): string
     {
         try {

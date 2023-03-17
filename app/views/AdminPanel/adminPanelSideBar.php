@@ -60,9 +60,9 @@
             </div>
             <ul class="sub-menu">
                 <li><a class="link_name" href="#">Category</a></li>
-                <li><a href="#">Artist</a></li>
+                <li><a href="/admin/dance/artists">Artist</a></li>
                 <li><a href="/admin/dance/Performances">Artist Performances</a></li>
-                <li><a href="#">Venues</a></li>
+                <li><a href="/admin/dance/venues">Venues</a></li>
             </ul>
         </li>
         <li>
