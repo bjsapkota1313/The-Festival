@@ -28,3 +28,4 @@ class AvailableEventRepository extends repository
             echo $e;
         }
     }
+}
