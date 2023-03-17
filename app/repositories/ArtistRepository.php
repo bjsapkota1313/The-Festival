@@ -100,7 +100,8 @@ class ArtistRepository extends Repository
     public function getArtistStylesByArtistID($artistId)
     {
         $query = "SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
-        return $this->executeQuery($query, array(':artistID' => $artistId));
+        $result=$this->executeQuery($query, array(':artistID' => $artistId));
+        return array_column($result,'styleName'); // making array of values of styles
     }
 
     public function deleteArtistById($artistId)

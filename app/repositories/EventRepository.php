@@ -3,6 +3,7 @@ require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/../services/DanceEventService.php';
 require_once __DIR__ . '/../services/HistoryService.php';
 require_once __DIR__ . '/HistoryEventRepository.php';
+require_once __DIR__ . '/../models/Address.php';
 require_once __DIR__ . '/../models/Exceptions/DatabaseQueryException.php';
 
 class EventRepository extends repository
@@ -52,28 +53,55 @@ class EventRepository extends repository
     protected function getLocationById($locationId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT location.locationId,location.locationName, location.postCode, location.streetName, location.houseNumber, location.houseNumberAdditional
-                                                    FROM location WHERE location.locationId = :locationId");
-            $stmt->bindParam(':locationId', $locationId);
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Location');
-            return $stmt->fetch();
+            $query = "SELECT location.locationId,location.locationName,location.addressId
+                                                    FROM location WHERE location.locationId = :locationId";
+            $result = $this->executeQuery($query, [':locationId' => $locationId], false);
+            if (!empty($result)) {
+                return $this->createLocationInstance($result);
+            }
+            return null;
         } catch (PDOException $e) {
             echo $e;
         }
     }
 
-    public function getAllLocations()
+    protected function createLocationInstance($dbRow): Location
+    {
+        $location = new Location();
+        $location->setLocationId($dbRow['locationId']);
+        $location->setLocationName($dbRow['locationName']);
+        $location->setAddress($this->getAddressById($dbRow['addressId']));
+        return $location;
+    }
+
+    private function getAddressById($addressId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT location.locationId,location.locationName, location.postCode, location.streetName, location.houseNumber, location.houseNumberAdditional
-                                                    FROM location");
+            $query = "SELECT address.addressId, address.postCode, address.streetName, address.houseNumber, address.houseNumberAdditional, address.city, address.country
+                                                    FROM address WHERE address.addressId = :addressId";
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':addressId', $addressId);
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Location');
-            return $stmt->fetchAll();
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'Address');
+            return $stmt->fetch();
+
         } catch (PDOException $e) {
             echo $e;
         }
+    }
+
+    public function getAllLocations(): ?array
+    {
+        $query = "SELECT location.locationId,location.locationName, location.addressId FROM location";
+        $result = $this->executeQuery($query);
+        if (!empty($result)) {
+            $locations = [];
+            foreach ($result as $row) {
+                $locations[] = $this->createLocationInstance($row);
+            }
+            return $locations;
+        }
+        return null;
     }
 
     //checks if the date exist or not if exi

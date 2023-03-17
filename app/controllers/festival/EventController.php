@@ -20,6 +20,5 @@ require_once __DIR__. '/../../services/EventService.php';
     protected function display404PageNotFound() : void // overwritting the controller method
     {
         require_once __DIR__ . '/../../views/PageNotFound.html';
-        return;
     }
 }

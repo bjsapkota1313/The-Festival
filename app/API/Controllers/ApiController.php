@@ -1,6 +1,6 @@
 <?php
 
-class Controller
+class ApiController
 {
     function respond($data)
     {
