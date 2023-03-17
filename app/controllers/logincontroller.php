@@ -42,7 +42,6 @@ class LoginController extends Controller
             header("location: /home");
             exit();
         }
-
         // if the user has submitted a login request,
         // the form calls login again, but this time, the $_POST parameters
         // are set. So, we enter the else if.
