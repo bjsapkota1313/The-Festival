@@ -28,5 +28,9 @@ class ArtistService
     public function getAllParticipatingArtistsInPerformance($artistPerformanceId): ?array{
         return $this->artistRepository->getAllParticipatingArtistsInPerformance($artistPerformanceId);
     }
-
+    
+    public function getArtistNameByArtistId($id)
+    {
+        return $this->artistRepository->getArtistNameByArtistId($id);
+    }
 }
