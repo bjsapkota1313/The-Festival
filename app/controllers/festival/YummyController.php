@@ -20,33 +20,9 @@ class YummyController extends eventController {
     public function restaurant($query) {
         // get all restaurants
         $restaurants = $this->restaurantService->getRestaurants();
-        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
-            $sFT = $_POST["restaurantFoodTypesSearch"];
-            $foodTypesArr = explode( ',', $sFT);
-            print_r($foodTypesArr);
-
-            // filter restaurants
-            // for each food type, remove the restaurants not having that type
-            foreach($foodTypesArr as $fValue) {
-                foreach($restaurants as $rKey => $restaurant) {
-                    // print_r($rKey);
-                    // print_r($restaurant);
-                    // if it does not contain it, remove it
-                    if (strpos(" ".$restaurant->getFoodTypes()." ", $fValue) == false) {
-                        // echo "removing ". $fValue . "from ". $restaurant->getFoodTypes();
-                        // print_r($restaurant);
-                        echo $restaurant->getName() . " - ";
-                        echo $restaurant->getFoodTypes(). " - ";
-                        echo $fValue;
-                        echo "---";
-                        unset($restaurants[$rKey]);
-                    }
-                }
-            }
-        }
         // print_r($restaurants);
         // $c = count($restaurants);
-        // echo "Number of restaurants is {$c}";       
+        // echo "Number of restaurants is {$c}";
         $this->displayNavBar("Yummy",'/css/festival/yummy.css');
         // require __DIR__ . '/../../views/festival/History/index.php';
         $this->displayViewFestival($restaurants);
@@ -62,8 +38,6 @@ class YummyController extends eventController {
             $restaurant->setName($_POST['restaurantName']);
             $restaurant->setLocation($_POST['restaurantLocation']);
             $restaurant->setNumberOfSeats($_POST['restaurantNumberOfSeats']);
-            $restaurant->setScore($_POST['restaurantScore']);
-            $restaurant->setFoodTypes($_POST['restaurantFoodTypes']);
             $restaurant->setDescriptionHTML($_POST["tinyMCEform"]);
             
             // check if the page is a new page or updating existing page

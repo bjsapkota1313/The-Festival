@@ -2,10 +2,8 @@
 require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
-require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 
-
-class AdminDanceController extends AdminPanelController
+class DanceController extends AdminPanelController
 {
     private $artistService;
     private $event;
@@ -41,39 +39,29 @@ class AdminDanceController extends AdminPanelController
 
     public function addPerformance()
     {
-        $title = 'Add Performance';
-        $this->displaySideBar($title);
+        $this->displaySideBar('Add Artist Performance');
         $allArtists = $this->artistService->getAllArtists();
         $allLocations = $this->eventService->getAllLocations();
-        $performanceSessions = $this->performanceService->getAllPerformanceSessions();
-        $errorMessage = $this->addPerformanceSubmitted();
+        $allPerformingSessions = $this->performanceService->getAllPerformanceSessions();
+        $this->addPerformanceSubmitted();
         require_once __DIR__ . '/../../views/AdminPanel/Dance/AddArtistPerformance.php';
     }
 
     private function addPerformanceSubmitted()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddArtistPerformance'])) {
-            $checkResult = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtistPerformance'], ['artists']);
-            if (is_string($checkResult)) {
-                return $checkResult;
-            } else {
-                if ($this->checkDateIsInPast('' . $checkResult['performanceDate'] . ' ' . $checkResult['startTime'])) {
-                    return "Entered Date and Time is in the Past";
-                }
-                $checkResult['duration'] = $this->getDurationInMinutes($checkResult['startTime'], $checkResult['endTime']); // adding new key with value to araay
-                try {
-                    $checkResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $checkResult);
-                    if ($checkResult) {
-                        header("location: /admin/dance/performances");
-                        exit();
-                    } else {
-                        return "Error while adding the performance";
-                    }
-                } catch (DatabaseQueryException $e) {
-                    return $e->getMessage(); // will return the error message that got while adding the performance
-                }
-            }
+
+            $performanceDate = $this->sanitizeInput($_POST['performanceDate']);
+            $performanceStartTime = $this->sanitizeInput($_POST['startTime']);
+            $performanceEndTime = $this->sanitizeInput($_POST['endTime']);
+            $performanceSessionId = $this->sanitizeInput($_POST['performanceSession']);
+            $performanceVenueId = $this->sanitizeInput($_POST['VenueSelect']);
+            $performanceTicketsAmount = $this->sanitizeInput($_POST['noOfTicket']);
+            $performancePrice = $this->sanitizeInput($_POST['price']);
+            $performanceArtists=$this->sanitizeInput($_POST["artists"]);
         }
+
+
     }
 
     private function formatArtistName($artists)
@@ -89,14 +77,6 @@ class AdminDanceController extends AdminPanelController
             $name = $artists->getArtistName();
         }
         return $name;
-    }
-
-    private function getDurationInMinutes($startTime, $endTime)
-    {
-        $startTime = new DateTime($startTime);
-        $endTime = new DateTime($endTime);
-        $duration = $startTime->diff($endTime);
-        return $duration->format('%h') * 60 + $duration->format('%i');
     }
 
 }

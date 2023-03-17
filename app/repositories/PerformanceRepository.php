@@ -1,20 +1,16 @@
 <?php
-require_once __DIR__ . '/EventRepository.php';
-require_once __DIR__ . '/../models/DanceEvent/Performance.php';
-require_once __DIR__ . '/../models/DanceEvent/PerformanceSession.php';
-require_once __DIR__ . '/../services/ArtistService.php';
-require_once __DIR__ . '/../models/Exceptions/DatabaseQueryException.php';
-
+require_once __DIR__.'/EventRepository.php';
+require_once __DIR__.'/../models/DanceEvent/Performance.php';
+require_once __DIR__.'/../models/DanceEvent/PerformanceSession.php';
+require_once __DIR__.'/../services/ArtistService.php';
 class PerformanceRepository extends EventRepository
 {
     private ArtistService $artistService;
-
     public function __construct()
     {
         parent::__construct();
         $this->artistService = new ArtistService();
     }
-
     public function getPerformancesByEventId($eventId): ?array
     {
         $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,performance.sessionId,Performance.duration
@@ -23,7 +19,7 @@ class PerformanceRepository extends EventRepository
                 join eventdate on timetable.eventDateId = eventdate.eventDateId
                 WHERE performance.eventID = :eventId
                 ORDER BY eventdate.date ASC,timetable.time ASC";
-        $result = $this->executeQuery($query, array(':eventId' => $eventId));
+        $result = $this->executeQuery($query, array(':eventId'=> $eventId));
         if (empty($result)) {
             return null;
         }
@@ -34,7 +30,6 @@ class PerformanceRepository extends EventRepository
         return $artistPerformances;
 
     }
-
     private function createPerformanceInstance($dbRow): Performance
     {
         try {
@@ -52,7 +47,6 @@ class PerformanceRepository extends EventRepository
         }
 
     }
-
     public function getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName): ?array
     {
 
@@ -74,56 +68,27 @@ class PerformanceRepository extends EventRepository
         }
         return $artistPerformances;
     }
-
-    public function getPerformanceSessionById($performanceSessionId)
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT performanceSessionId ,sessionName,sessionDescription FROM performancesession WHERE performanceSessionId = :performanceSessionId");
-            $stmt->execute(array(':performanceSessionId' => $performanceSessionId));
-            $stmt->setFetchMode(PDO::FETCH_CLASS, 'PerformanceSession');
-            return $stmt->fetch();
-        } catch (PDOException $e) {
-            echo "Error while getting artist performance session by id: " . $e->getMessage();
-        }
-    }
-
-    public function getAllPerformanceSessions()
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT performanceSessionId ,sessionName,sessionDescription FROM performancesession");
+    public function getAllPerformanceSessions(){
+        try{
+            $stmt = $this->connection->prepare("SELECT PerformanceSessionId,sessionName,sessionDescription FROM performancesession");
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_CLASS, 'PerformanceSession');
             return $stmt->fetchAll();
-        } catch (PDOException $e) {
-            echo "Error while getting all artist performance sessions: " . $e->getMessage();
+        }
+        catch(PDOException $e){
+            echo "Error while getting all artist performance sessions: ".$e->getMessage();
         }
     }
-
-    /**
-     * @throws DatabaseQueryException
-     */
-    public function addPerformanceWithEventId($eventId, $data): bool
-    {
-        $query = "INSERT INTO Performance (eventId,venueId,timetableId,sessionId,duration) VALUES (:eventId,:venueId,:timetableId,:sessionId,:duration)";
-        $timetableID = $this->getTimetableIdByDateAndTime($data['performanceDate'], $data['startTime']);
-        $parameters = array(':eventId' => $eventId, ':venueId' => $data['Venue'], ':timetableId' => $timetableID, ':sessionId' => $data['performanceSession'], ':duration' => $data['duration']);
-        $performanceID = $this->executeQuery($query, $parameters, false, true);
-        if (!$performanceID) {
-            throw new DatabaseQueryException("Error while inserting performance in Database");
+    public function getPerformanceSessionById($performanceSessionId){
+        try{
+            $stmt = $this->connection->prepare("SELECT PerformanceSessionId,sessionName,sessionDescription FROM performancesession WHERE PerformanceSessionId = :performanceSessionId");
+            $stmt->execute(array(':performanceSessionId'=>$performanceSessionId));
+            $stmt->setFetchMode(PDO::FETCH_CLASS, 'PerformanceSession');
+            return $stmt->fetch();
         }
-        foreach ($data['artists'] as $artistId) {
-            if (!$this->insertParticipatingArtists($artistId, $performanceID)) {
-                throw new DatabaseQueryException("Error while inserting participating artists, bUt you can always Edit thea participating artists later.");
-            }
+        catch(PDOException $e){
+            echo "Error while getting artist performance session by id: ".$e->getMessage();
         }
-        return true;
-    }
-
-    public function insertParticipatingArtists($artistId, $performanceId)
-    {
-        $query = "INSERT INTO participatingartist (artistId,performanceId) VALUES (:artistId,:performanceId)";
-        $parameters = array(':artistId' => $artistId, ':performanceId' => $performanceId);
-        return $this->executeQuery($query, $parameters); // it returns bool value
     }
 
 
