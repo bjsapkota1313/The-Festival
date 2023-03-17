@@ -19,15 +19,30 @@ else {
   </head>
 
   <body>
-    <div class="restaurantPage1">
-      <label>
-        List of restaurants
-      </label>
-  </div>
-    <div class="container col-sm-12 col-md-6 col-lg-4">
+    <div class="restaurantCards container col-sm-12 col-md-9 col-lg-6">
+    <form action="/festival/Yummy/restaurant" method="POST">
+      <div class="form-floating mb-3">
+        <input type="text"
+        class="form-control"
+        name="restaurantFoodTypesSearch"
+        id="restaurantFoodTypesSearch"
+        placeholder="Search Food Types. Separate by comma"
+        >
+        <label for="restaurantFoodTypesSearch">Food Types. Separate by comma.</label>
+      </div>
+      
+      <div class="form-floating mb-3">
+        <button class="btn mb-2" name="searchSubmit" type="submit">
+          Search
+        </button>
+      </div>
+    </form>
+        
         <?php
-        foreach ($restaurants as $restaurant) {
+        if($restaurants != null && count($restaurants) > 0) {
+          foreach ($restaurants as $restaurant) {
             include("showSingleRestaurant.php");
+          }
         }
         ?>
     </div>

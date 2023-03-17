@@ -3,7 +3,7 @@
 ?>
 
 
-<div id="r1" class="container restaurantContainer">
+<div class="container restaurantContainer">
     <div class="restaurantNameField">
         <label class="restaurantNameRowLabel">
             Name:
@@ -31,6 +31,26 @@
         <label class="restaurantNumOfSeatsRowValue">
             <?php
             echo $restaurant->getNumberOfSeats();
+            ?>
+        </label>
+    </div>
+    <div class="restaurantScoreField">
+        <label class="restaurantScoreRowLabel">
+            Score:
+        </label>
+        <label class="restaurantScoreRowValue">
+            <?php
+            echo $restaurant->getScore();
+            ?>
+        </label>
+    </div>
+    <div class="restaurantFoodTypesField">
+        <label class="restaurantFoodTypesRowLabel">
+            Food Types:
+        </label>
+        <label class="restaurantFoodTypesRowValue">
+            <?php
+            echo $restaurant->getFoodTypes();
             ?>
         </label>
     </div>
