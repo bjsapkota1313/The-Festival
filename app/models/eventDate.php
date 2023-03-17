@@ -37,5 +37,23 @@ class eventDate
     {
         $this->day = $day;
     }
+    
+     public function getEventDay() : string
+   {
+        $date = $this->getDate();
+        $day = date('l', strtotime($date));
+        return $day;
+   }
+
+   public function getFormattedEventDate() : string
+   {
+     $date = $this->date;
+     return date('d, F, Y', strtotime($date));
+   }
+    
+    
+    
+    
+    
 
 }
