@@ -61,7 +61,7 @@
             <ul class="sub-menu">
                 <li><a class="link_name" href="#">Category</a></li>
                 <li><a href="#">Artist</a></li>
-                <li><a href="/admin/dance/artistPerformances">Artist Performances</a></li>
+                <li><a href="/admin/dance/Performances">Artist Performances</a></li>
                 <li><a href="#">Venues</a></li>
             </ul>
         </li>

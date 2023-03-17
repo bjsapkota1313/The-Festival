@@ -80,7 +80,7 @@ else {
         <label for="restaurantLocation">Restaurant Location</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="text"
+        <input type="number"
         class="form-control"
         name="restaurantNumberOfSeats"
         id="restaurantNumberOfSeats"
@@ -92,6 +92,35 @@ else {
         >
         <label for="restaurantNumberOfSeats">Restaurant Number Of Seats</label>
       </div>
+
+      <div class="form-floating mb-3">
+        <input type="number"
+        class="form-control"
+        name="restaurantScore"
+        id="restaurantScore"
+        placeholder="Restaurant Number Of Seats"
+        value="<?php 
+        // if we are showing a page for editing, fill the page tile field.
+        if($restaurant !=null ) echo $restaurant->getScore();
+        ?>"
+        >
+        <label for="restaurantScore">Restaurant Score (1 to 5)</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text"
+        class="form-control"
+        name="restaurantFoodTypes"
+        id="restaurantFoodTypes"
+        placeholder="Food Types. Separate by comma"
+        value="<?php 
+        // if we are showing a page for editing, fill the page tile field.
+        if($restaurant !=null ) echo $restaurant->getFoodTypes();
+        ?>"
+        >
+        <label for="restaurantNumberOfSeats">Food Types. Separate by comma.</label>
+      </div>
+
       <div class="form-floating mb-3">
         <textarea id="mytextarea" name="tinyMCEform">
           <?php 

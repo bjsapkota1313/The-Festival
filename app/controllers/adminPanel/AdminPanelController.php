@@ -7,7 +7,7 @@ require_once __DIR__.'/../../services/EventService.php';
     public function __construct()
     {
         parent::__construct();
-        $this->eventService = new EventService();
+        $this->eventService = new EventService(); //TODO: commentted out for now
           //$this->checkLoggedInUserIsAdminstrator(); // checking if the logged user or not show that this page can be logged in if the user is not logged in or
         // if the user is not an administrator, it will redirect to the not allowed page.
     }
@@ -29,5 +29,11 @@ require_once __DIR__.'/../../services/EventService.php';
              exit();
          }
      }
-
+     protected function checkDateIsInPast( string $dateTimeString){
+         $date = new DateTime($dateTimeString);
+         $currentDateTime = new DateTime();
+            if($date<$currentDateTime){
+                return true;
+            }
+     }
 }
