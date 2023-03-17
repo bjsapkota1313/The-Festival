@@ -19,7 +19,20 @@ class RestaurantRepository extends Repository
             else {
                 $restaurant->setNumberOfSeats(0);
             }
-            
+            $score = $dbRow['score'];
+            if(is_int($score)) {
+                $restaurant->setScore($score);
+            }
+            else {
+                $restaurant->setScore(0);
+            }
+            $foodTypes = $dbRow['foodTypes'];
+            if(is_string($foodTypes)) {
+                $restaurant->setFoodTypes($foodTypes);
+            }
+            else {
+                $restaurant->setFoodTypes("");
+            }
 
             return $restaurant;
         } catch (Exception $e) {
@@ -87,12 +100,14 @@ class RestaurantRepository extends Repository
     public function createNewRestaurant($newRestaurant)
     {
         try {
-            $stmt = $this->connection->prepare("INSERT into Restaurant (name, location, descriptionHTML, numberOfSeats) VALUES (:name, :location, :descriptionHTML, :numberOfSeats)");
+            $stmt = $this->connection->prepare("INSERT into Restaurant (name, location, descriptionHTML, numberOfSeats, score, foodTypes) VALUES (:name, :location, :descriptionHTML, :numberOfSeats, :score, :foodTypes)");
 
             $stmt->bindValue(':name', $newRestaurant->getName());
             $stmt->bindValue(':location', $newRestaurant->getLocation());
             $stmt->bindValue(':descriptionHTML', $newRestaurant->getDescriptionHTML());
             $stmt->bindValue(':numberOfSeats', $newRestaurant->getNumberOfSeats());
+            $stmt->bindValue(':score', $newRestaurant->getScore());
+            $stmt->bindValue(':foodTypes', $newRestaurant->getFoodTypes);
             $stmt->execute();
         } catch (PDOException|Exception $e) {
             echo $e;
@@ -102,12 +117,14 @@ class RestaurantRepository extends Repository
     public function updateRestaurantById($restaurantID, $newRestaurant): void 
     {
         try {
-            $stmt = $this->connection->prepare("UPDATE Restaurant SET name = :name, location = :location, descriptionHTML = :descriptionHTML, numberOfSeats = :numberOfSeats WHERE id = :id;");
+            $stmt = $this->connection->prepare("UPDATE Restaurant SET name = :name, location = :location, descriptionHTML = :descriptionHTML, numberOfSeats = :numberOfSeats, score = :score, foodTypes = :foodTypes WHERE id = :id;");
             // we use bindValue to increase security and prevent SQL injection.
             $stmt->bindValue(':name', $newRestaurant->getName());
             $stmt->bindValue(':location', $newRestaurant->getLocation());
             $stmt->bindValue(':descriptionHTML', $newRestaurant->getDescriptionHTML());
             $stmt->bindValue(':numberOfSeats', $newRestaurant->getNumberOfSeats());
+            $stmt->bindValue(':score', $newRestaurant->getScore());
+            $stmt->bindValue(':foodTypes', $newRestaurant->getFoodTypes());
             $stmt->bindValue(':id',$restaurantID);
 
             $stmt->execute();
