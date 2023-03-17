@@ -68,8 +68,8 @@
                         </tr>
                         </thead>
                         <Style>.round-image {
-                                width: 35px;
-                                height: 35px;
+                                width: 40px;
+                                height: 40px;
                                 border-radius: 50%;
                                 object-fit: cover;
                             }

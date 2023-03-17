@@ -21,11 +21,33 @@ class AdminDanceController extends AdminPanelController
         $this->performanceService = new PerformanceService();
     }
 
-    public function getAllArtists()
+    public function artists()
     {
-        $this->displaySideBar('Artists');
-        $allArtist = $this->artistService->getAllArtists();
-        require_once __DIR__ . '/../../views/AdminPanel/Dance/manageArtist.php';
+        $title = 'Artists';
+        $this->displaySideBar($title);
+        $artists = $this->artistService->getAllArtists();
+        if (empty($artists)) {
+            $errorMessage['artists'] = "No Artists found in system";
+        }
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/artistsOverview.php';
+    }
+
+    public function venues()
+    {
+        $title = 'Venues';
+        $this->displaySideBar($title);
+        $venues = $this->eventService->getAllLocations();
+        if(empty($venues)) {
+            $errorMessage['venues'] = "No Venues found in system";
+        }
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/VenuesOverview.php';
+    }
+
+    public function addArtist()
+    {
+        $title = 'Add Artist';
+        $this->displaySideBar($title);
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/AddArtist.php';
     }
 
     public function performances()
@@ -60,8 +82,8 @@ class AdminDanceController extends AdminPanelController
                 if ($this->checkDateIsInPast('' . $checkResult['performanceDate'] . ' ' . $checkResult['startTime'])) {
                     return "Entered Date and Time is in the Past";
                 }
-                $checkResult['duration'] = $this->getDurationInMinutes($checkResult['startTime'], $checkResult['endTime']); // adding new key with value to araay
                 try {
+                    $checkResult['duration'] = $this->getDurationInMinutes($checkResult['startTime'], $checkResult['endTime']); // adding new key with value to araay
                     $checkResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $checkResult);
                     if ($checkResult) {
                         header("location: /admin/dance/performances");
@@ -71,6 +93,8 @@ class AdminDanceController extends AdminPanelController
                     }
                 } catch (DatabaseQueryException $e) {
                     return $e->getMessage(); // will return the error message that got while adding the performance
+                } catch (Exception $e) {
+                    return "Date and time could NOT be parsed, Please try again";
                 }
             }
         }
@@ -91,6 +115,24 @@ class AdminDanceController extends AdminPanelController
         return $name;
     }
 
+    private function formatArtistStylesToDisplay($artistStyles)
+    {
+        $styles = '';
+        if (is_array($artistStyles)) {
+            foreach ($artistStyles as $artistStyle) {
+                $styles = $styles . $artistStyle . ' | ';
+            }
+            // Remove the last '|' character
+            $styles = substr($styles, 0, -2);
+        } else {
+            $styles = $artistStyles;
+        }
+        return $styles;
+    }
+
+    /**
+     * @throws Exception
+     */
     private function getDurationInMinutes($startTime, $endTime)
     {
         $startTime = new DateTime($startTime);

@@ -1,13 +1,10 @@
 <?php
-
+require_once __DIR__ . '/Address.php';
 class Location
 {
     private int $locationId;
     private string $locationName;
-    private string $streetName;
-    private int $houseNumber;
-    private string $postCode;
-    private ?string $houseNumberAdditional;
+    private Address $address;
 
     /**
      * @return int
@@ -42,66 +39,19 @@ class Location
     }
 
     /**
-     * @return string
+     * @return Address
      */
-    public function getStreetName(): string
+    public function getAddress(): Address
     {
-        return $this->streetName;
+        return $this->address;
     }
 
     /**
-     * @param string $streetName
+     * @param Address $address
      */
-    public function setStreetName(string $streetName): void
+    public function setAddress(Address $address): void
     {
-        $this->streetName = $streetName;
+        $this->address = $address;
     }
 
-    /**
-     * @return int
-     */
-    public function getHouseNumber(): int
-    {
-        return $this->houseNumber;
-    }
-
-    /**
-     * @param int $houseNumber
-     */
-    public function setHouseNumber(int $houseNumber): void
-    {
-        $this->houseNumber = $houseNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHouseNumberAdditional(): string
-    {
-        return $this->houseNumberAdditional;
-    }
-
-    /**
-     * @param string $houseNumberAdditional
-     */
-    public function setHouseNumberAdditional(string $houseNumberAdditional): void
-    {
-        $this->houseNumberAdditional = $houseNumberAdditional;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPostCode(): string
-    {
-        return $this->postCode;
-    }
-
-    /**
-     * @param string $postCode
-     */
-    public function setPostCode(string $postCode): void
-    {
-        $this->postCode = $postCode;
-    }
 }
