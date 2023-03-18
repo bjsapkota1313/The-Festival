@@ -107,8 +107,12 @@ class RestaurantRepository extends Repository
             $stmt->bindValue(':descriptionHTML', $newRestaurant->getDescriptionHTML());
             $stmt->bindValue(':numberOfSeats', $newRestaurant->getNumberOfSeats());
             $stmt->bindValue(':score', $newRestaurant->getScore());
-            $stmt->bindValue(':foodTypes', $newRestaurant->getFoodTypes);
+            $stmt->bindValue(':foodTypes', $newRestaurant->getFoodTypes());
             $stmt->execute();
+
+            $newRestaurant->setId($this->connection->lastInsertId());
+            return $newRestaurant;
+
         } catch (PDOException|Exception $e) {
             echo $e;
         }

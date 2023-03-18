@@ -20,6 +20,15 @@ else {
 
   <body>
     <div class="restaurantCards container col-sm-12 col-md-9 col-lg-6">
+    <div class="addRestaurantDiv">
+        <?php
+        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+        ?>
+        <a class="restaurantAddLink" href="/festival/Yummy/editRestaurant"> Add New Restaurant </a>
+        <?php
+        }
+        ?>
+    </div>
     <form action="/festival/Yummy/restaurant" method="POST">
       <div class="form-floating mb-3">
         <input type="text"
