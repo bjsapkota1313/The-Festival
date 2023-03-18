@@ -24,10 +24,10 @@ class RestaurantService
 
 
 
-    public function createNewRestaurant($newRestaurant): void
+    public function createNewRestaurant($newRestaurant)
     {
         $repository = new RestaurantRepository();
-        $repository->createNewRestaurant($newRestaurant);
+        return $repository->createNewRestaurant($newRestaurant);
     }
 
     public function updateRestaurantById($restaurantID, $newRestaurant): void 
