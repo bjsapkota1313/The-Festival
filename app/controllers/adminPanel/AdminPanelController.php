@@ -7,9 +7,9 @@ require_once __DIR__.'/../../services/EventService.php';
     public function __construct()
     {
         parent::__construct();
-        $this->eventService = new EventService(); //TODO: commentted out for now
-          //$this->checkLoggedInUserIsAdminstrator(); // checking if the logged user or not show that this page can be logged in if the user is not logged in or
+        //$this->checkLoggedInUserIsAdminstrator(); // checking if the logged user or not show that this page can be logged in if the user is not logged in or
         // if the user is not an administrator, it will redirect to the not allowed page.
+        $this->eventService = new EventService(); //TODO: commentted out for now
     }
     protected function displaySideBar($title,$pathToCss=null): void
     {
@@ -21,8 +21,7 @@ require_once __DIR__.'/../../services/EventService.php';
              if (unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
 
              } else {
-                 $this->displayPageView("NotAllowedPage");
-                 exit(); // exit the controller if user is not admin
+                 $this->displayUnauthorisedAccess();
              }
          } else {
              header("location: /login");
@@ -41,5 +40,13 @@ require_once __DIR__.'/../../services/EventService.php';
      {
          $directory = strtolower(substr(get_class($this), 5, -10));
          return "/image/Festival/$directory/".$imageName;
+     }
+     private function displayUnauthorisedAccess(): void
+     {
+         require_once __DIR__ ."/../../views/AdminPanel/NotAllowedPage.php";
+         exit();  // exit the controller if user is not admin
+     }
+     protected function getDanceEvent(){
+          return  $this->eventService->getEventByName('Dance'); //TODO: HardCoded
      }
 }

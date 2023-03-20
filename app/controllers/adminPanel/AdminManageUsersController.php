@@ -28,7 +28,7 @@ class AdminManageUsersController extends AdminPanelController
                 $this->displaySideBar("Edit User",'/css/registerStyle.css');
                 require __DIR__ . '/../../views/AdminPanel/ManageUsers/EditUser.php';
             } else {
-                echo "User is not found";
+                $this->display404PageNotFound();
             }
         } else {
             http_response_code(401); // Unauthorised Request
@@ -38,8 +38,8 @@ class AdminManageUsersController extends AdminPanelController
 
     public function registerNewUser()
     {
+        $this->displaySideBar("RegisterNewUser",'/css/registerStyle.css');
         $message = $this->registerNewUserSubmit();
-        $this->displaySideBar("RegisterNewUSer",'/css/registerStyle.css');
         require __DIR__ . '/../../views/AdminPanel/ManageUsers/RegisterNewUser.php';
     }
 

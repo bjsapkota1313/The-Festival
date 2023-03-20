@@ -21,4 +21,9 @@ require_once __DIR__. '/../../services/EventService.php';
     {
         require_once __DIR__ . '/../../views/PageNotFound.html';
     }
+    protected function getGoogleDirectionsLink( Address $address): string
+    {
+        $addressString=$address->getHouseNumber()." ". $address->getStreetName() . " " . $address->getPostCode() . " "  . $address->getCity() . " " . $address->getCountry();
+        return "https://www.google.com/maps/dir/?api=1&destination=$addressString";
+    }
 }

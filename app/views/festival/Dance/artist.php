@@ -113,7 +113,9 @@
                                 <button class="DateShowButton mx-auto" disabled><?= $this->getDayByDateString($date) ?></button>
                                 <br>
                                 <?php foreach($performances as $performance) { ?>
-                                    <label class="timeLabel"><?=$performance->getDate()->format('H:i')?> - <?= $performance->getEndDateTime()->format('H:i')?> <a class="link" style="text-decoration: underline; color: black;" href="#"><?= $performance->getVenue()->getLocationName() ?></a></label>
+                                    <label class="timeLabel"><?=$performance->getDate()->format('H:i')?> - <?= $performance->getEndDateTime()->format('H:i')?>
+                                        <a class="link" style="text-decoration: underline; color: black;" href="<?= $this->getGoogleDirectionsLink($performance->getVenue()->getAddress()) ?>"><?= $performance->getVenue()->getLocationName() ?>
+                                        </a></label>
                                     <br>
                                     <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
                                     </button>

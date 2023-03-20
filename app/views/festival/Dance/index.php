@@ -265,7 +265,7 @@
         </div>
         <div class=" container-fluid  pt-5 ps-5">
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                <?php foreach ($timetable as $date => $specificDatePerformances) {?>
+                <?php foreach ($groupedPerformances as $date => $specificDatePerformances) {?>
                     <div class="col">
                         <button class="lblButton w-100" disabled><?=$date?></button>
                         <?php foreach ($specificDatePerformances as $performance) {
