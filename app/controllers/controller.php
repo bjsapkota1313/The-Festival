@@ -74,11 +74,11 @@ require_once __DIR__ . '/../services/NavBarService.php';
       * @return array|string Returns an array of sanitized input fields if all fields are valid and sanitized, otherwise
       * returns a string error message indicating which fields are missing or invalid.
       */
-      protected function checkFieldsFilledAndSantizeInput(array $inputArray, array $excludedKeys = [], array $checkBoxKeys = []): array|string
+      protected function open(array $inputArray, array $excludedKeys = [], array $arraysInput = []): array|string
      {
          $sanitizedInputArray = [];
          if(!empty($checkBoxKeys)){
-             $MissingCheckBoxesFields = $this->getMissingCheckBoxFields($inputArray, $checkBoxKeys);
+             $MissingCheckBoxesFields = $this->getMissingFields($inputArray, $checkBoxKeys);
 
              if (!empty($MissingCheckBoxesFields)) {
                  $MissingCheckBoxesFields = implode(", ", $MissingCheckBoxesFields);
@@ -106,7 +106,7 @@ require_once __DIR__ . '/../services/NavBarService.php';
 
          return $sanitizedInputArray;
      }
-     private function getMissingCheckBoxFields(array $inputArray, array $checkBoxKeys): array
+     private function getMissingFields(array $inputArray, array $checkBoxKeys): array
      {
          $missingCheckBoxFields = [];
          foreach ($checkBoxKeys as $checkBoxKey) {

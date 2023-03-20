@@ -8,7 +8,6 @@ require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 class AdminDanceController extends AdminPanelController
 {
     private $artistService;
-    private $event;
     private $danceEventService;
     private $performanceService;
 
@@ -16,7 +15,6 @@ class AdminDanceController extends AdminPanelController
     {
         parent::__construct();
         $this->artistService = new ArtistService();
-        $this->event = $this->eventService->getEventByName('Dance'); //TODO: HardCoded
         $this->danceEventService = new DanceEventService();
         $this->performanceService = new PerformanceService();
     }
@@ -42,50 +40,98 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/VenuesOverview.php';
     }
+    public function addVenue(){
+        $title = 'Add Venue';
+        $errorMessage = $this->addVenueSubmitted();
+        $this->displaySideBar($title);
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/AddVenue.php';
+    }
+    private function addVenueSubmitted(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddVenue'])) {
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddVenue','houseNumberAdditional']);
+            // house number Additional is optional and button is of course
+            if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
+                return $sanitizedInput;
+            } else {
+                $dbResult = $this->eventService->addLocation($sanitizedInput); //TODO: check if this is correct
+                if ($dbResult) {
+                    header("location: /admin/dance/venues");
+                    exit();
+                } else {
+                    return "Error while adding the venue";
+                }
+            }
+        }
+    }
 
     public function addArtist()
     {
         $title = 'Add Artist';
         $this->displaySideBar($title);
+        $errorMessage = $this->addArtistSubmitted();
         require_once __DIR__ . '/../../views/AdminPanel/Dance/AddArtist.php';
+
+    }
+    private function addArtistSubmitted(){
+        if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['AddArtist'])){
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST,['AddArtist','artistImage']);
+            if(is_string($sanitizedInput)){ // check if the controller sends some error message or not
+                return $sanitizedInput;
+            }else{
+                $dbResult = $this->artistService->addArtist($sanitizedInput);
+                if($dbResult){
+                    header("location: /admin/dance/artists");
+                    exit();
+                }else{
+                    return "Error while adding the artist";
+                }
+            }
+        }
     }
 
     public function performances()
     {
         $errorMessage = array();
-        $this->displaySideBar('Artist Performances');
-        $artistPerformances = $this->event->getPerformances();
+        $this->displaySideBar('Performances');
+        $this->deletePerformance();
+        $artistPerformances = $this->getDanceEvent()->getPerformances();
         if (empty($artistPerformances)) {
-            $errorMessage['artistPerformances'] = "No Artist Performances found for {$this->event->getEventName()} event";
+            $errorMessage['artistPerformances'] = "No Artist Performances found for {$this->getDanceEvent()->getEventName()} event";
         }
-        require_once __DIR__ . '/../../views/AdminPanel/Dance/ArtistPerformanceOverview.php';
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
+    }
+    private function deletePerformance(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
+            $id= $this->sanitizeInput($_POST['performanceId']);
+            $dbResult = $this->performanceService->deletePerformanceById($id);
+        }
     }
 
     public function addPerformance()
     {
         $title = 'Add Performance';
+        $errorMessage = $this->addPerformanceSubmitted();
         $this->displaySideBar($title);
         $allArtists = $this->artistService->getAllArtists();
         $allLocations = $this->eventService->getAllLocations();
         $performanceSessions = $this->performanceService->getAllPerformanceSessions();
-        $errorMessage = $this->addPerformanceSubmitted();
-        require_once __DIR__ . '/../../views/AdminPanel/Dance/AddArtistPerformance.php';
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/AddPerformance.php';
     }
 
     private function addPerformanceSubmitted()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddArtistPerformance'])) {
-            $checkResult = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtistPerformance'], ['artists']);
-            if (is_string($checkResult)) {
-                return $checkResult;
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtistPerformance'], ['artists']);
+            if (is_string($sanitizedInput)) {
+                return $sanitizedInput;
             } else {
-                if ($this->checkDateIsInPast('' . $checkResult['performanceDate'] . ' ' . $checkResult['startTime'])) {
+                if ($this->checkDateIsInPast('' . $sanitizedInput['performanceDate'] . ' ' . $sanitizedInput['startTime'])) {
                     return "Entered Date and Time is in the Past";
                 }
                 try {
-                    $checkResult['duration'] = $this->getDurationInMinutes($checkResult['startTime'], $checkResult['endTime']); // adding new key with value to araay
-                    $checkResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $checkResult);
-                    if ($checkResult) {
+                    $sanitizedInput['duration'] = $this->getDurationInMinutes($sanitizedInput['startTime'], $sanitizedInput['endTime']); // adding new key with value to array
+                    $dbResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $sanitizedInput);
+                    if ($dbResult) {
                         header("location: /admin/dance/performances");
                         exit();
                     } else {
@@ -94,7 +140,7 @@ class AdminDanceController extends AdminPanelController
                 } catch (DatabaseQueryException $e) {
                     return $e->getMessage(); // will return the error message that got while adding the performance
                 } catch (Exception $e) {
-                    return "Date and time could NOT be parsed, Please try again";
+                    return "Something went wrong, Please try again";
                 }
             }
         }
@@ -133,7 +179,7 @@ class AdminDanceController extends AdminPanelController
     /**
      * @throws Exception
      */
-    private function getDurationInMinutes($startTime, $endTime)
+    private function getDurationInMinutes($startTime, $endTime): float|int|string
     {
         $startTime = new DateTime($startTime);
         $endTime = new DateTime($endTime);

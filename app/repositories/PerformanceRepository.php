@@ -125,6 +125,12 @@ class PerformanceRepository extends EventRepository
         $parameters = array(':artistId' => $artistId, ':performanceId' => $performanceId);
         return $this->executeQuery($query, $parameters); // it returns bool value
     }
+    public function deletePerformance($performanceId)
+    {
+        $query = "DELETE FROM Performance WHERE performanceId = :performanceId";
+        $parameters = array(':performanceId' => $performanceId);
+        return $this->executeQuery($query, $parameters);
+    }
 
 
 }
