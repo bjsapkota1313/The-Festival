@@ -3,7 +3,7 @@
 ?>
 
 
-<div class="restaurantContainer">
+<div class="container restaurantContainer">
     <div class="restaurantNameField">
         <label class="restaurantNameRowLabel">
             Name:
@@ -33,5 +33,41 @@
             echo $restaurant->getNumberOfSeats();
             ?>
         </label>
+    </div>
+    <div class="restaurantScoreField">
+        <label class="restaurantScoreRowLabel">
+            Score:
+        </label>
+        <label class="restaurantScoreRowValue">
+            <?php
+            echo $restaurant->getScore();
+            ?>
+        </label>
+    </div>
+    <div class="restaurantFoodTypesField">
+        <label class="restaurantFoodTypesRowLabel">
+            Food Types:
+        </label>
+        <label class="restaurantFoodTypesRowValue">
+            <?php
+            echo $restaurant->getFoodTypes();
+            ?>
+        </label>
+    </div>
+    <div class="container-fluid col-md-6 overflow-hidden p-0 restaurantImageCardDiv">
+        <img 
+        src="<?= $restaurant->getRestaurantCardImageFullPath() ?>"
+        class="img-fluid h-100 restaurantImageCardImg"
+        alt="Cover Image"
+        >
+    </div>
+    <div>
+        <?php
+        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+        ?>
+        <a class="restaurantUpdateLink" href="/festival/Yummy/editRestaurant?name=<?= $restaurant->getName() ?>"> Update </a>
+        <?php
+        }
+        ?>
     </div>
 </div>

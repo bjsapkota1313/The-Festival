@@ -5,6 +5,9 @@ class Restaurant implements \JsonSerializable{
     private string $location;
     private string $descriptionHTML;
     private int $numberOfSeats;
+    private int $score;
+    private string $foodTypes;
+    private string $cardImage;
 
     // add number of seats
     // types of foods
@@ -96,4 +99,53 @@ class Restaurant implements \JsonSerializable{
     {
         $this->numberOfSeats = $numberOfSeats;
     }
+
+    /**
+     * @return int
+     */
+    public function getScore(): int
+    {
+        return $this->score;
+    }
+
+    /**
+     * @param int $score
+     */
+    public function setScore(int $score): void
+    {
+        $this->score = $score;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFoodTypes(): string
+    {
+        return $this->foodTypes;
+    }
+
+    /**
+     * @param string $foodTypes
+     */
+    public function setFoodTypes(string $foodTypes): void
+    {
+        $this->foodTypes = $foodTypes;
+    }
+
+    public function getRestaurantCardImageFullPath(): string 
+    {
+        try {
+            $imagePath = '/image/Festival/Yummy/RestaurantCardImage-' . $this->getId() . ".jpg";
+            return $imagePath;
+            if (is_file($imagePath) && file_exists($imagePath)) {
+                return $imagePath;
+            } else {
+                return "111";
+            }
+        } catch (Exception $e) {
+            return "222";
+        }
+        return "";
+    }
+
 }

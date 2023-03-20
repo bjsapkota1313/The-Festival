@@ -14,23 +14,44 @@ else {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Festival</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    
-    <script src="/Javascripts/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-      tinymce.init({
-        /* replace textarea having class .tinymce with tinymce editor */
-        selector: "#mytextarea",
-        plugins: 'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking image save table contextmenu directionality emoticons template paste textcolor',
-    });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   </head>
 
   <body>
-    <div class="container col-sm-12 col-md-6 col-lg-4">
+    <div class="restaurantCards container col-sm-12 col-md-9 col-lg-6">
+    <div class="addRestaurantDiv">
         <?php
-        foreach ($restaurants as $restaurant) {
+        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+        ?>
+        <a class="restaurantAddLink" href="/festival/Yummy/editRestaurant"> Add New Restaurant </a>
+        <?php
+        }
+        ?>
+    </div>
+    <form action="/festival/Yummy/restaurant" method="POST">
+      <div class="form-floating mb-3">
+        <input type="text"
+        class="form-control"
+        name="restaurantFoodTypesSearch"
+        id="restaurantFoodTypesSearch"
+        placeholder="Search Food Types. Separate by comma"
+        >
+        <label for="restaurantFoodTypesSearch">Food Types. Separate by comma.</label>
+      </div>
+      
+      <div class="form-floating mb-3">
+        <button class="btn mb-2" name="searchSubmit" type="submit">
+          Search
+        </button>
+      </div>
+    </form>
+        
+        <?php
+        if($restaurants != null && count($restaurants) > 0) {
+          foreach ($restaurants as $restaurant) {
             include("showSingleRestaurant.php");
+          }
         }
         ?>
     </div>

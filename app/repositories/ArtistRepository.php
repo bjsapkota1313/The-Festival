@@ -126,4 +126,19 @@ class ArtistRepository extends Repository
         }
         return $artists;
     }
+    
+    public function getArtistNameByArtistId($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT artistName FROM artist WHERE artistId=:artistId");
+            $stmt->bindParam(':artistId', $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            if ($result != 0){
+            return current($result);}
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 }

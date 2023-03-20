@@ -16,18 +16,96 @@ class YummyController extends eventController {
         $this->displayViewFestival(null);
     }
 
+    private function filterRestaurants($restaurants, $foodTypesArr) {
+        foreach($foodTypesArr as $fValue) {
+            $fValue = trim($fValue);
+            foreach($restaurants as $rKey => $restaurant) {
+                // print_r($rKey);
+                // print_r($restaurant);
+                // if it does not contain it, remove it
+                if (strpos(" ".$restaurant->getFoodTypes()." ", $fValue) == false) {
+                    // echo "removing ". $fValue . "from ". $restaurant->getFoodTypes();
+                    // print_r($restaurant);
+                    // echo $restaurant->getName() . " - ";
+                    // echo $restaurant->getFoodTypes(). " - ";
+                    // echo $fValue;
+                    // echo "---";
+                    unset($restaurants[$rKey]);
+                }
+            }
+        }
+        return $restaurants;
+    }
 
     public function restaurant($query) {
         // get all restaurants
         $restaurants = $this->restaurantService->getRestaurants();
+        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
+            $sFT = $_POST["restaurantFoodTypesSearch"];
+            $foodTypesArr = explode( ',', $sFT);
+            // print_r($foodTypesArr);
+            $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
+            // filter restaurants
+            // for each food type, remove the restaurants not having that type
+        }
         // print_r($restaurants);
         // $c = count($restaurants);
-        // echo "Number of restaurants is {$c}";
+        // echo "Number of restaurants is {$c}";       
         $this->displayNavBar("Yummy",'/css/festival/yummy.css');
         // require __DIR__ . '/../../views/festival/History/index.php';
         $this->displayViewFestival($restaurants);
     }
 
+    private function deleteFestivalYummyImage($ImageName)
+    {
+        try {
+            $filePath = '/image/Festival/Yummy/' . $ImageName;
+            if (is_file($filePath) && file_exists($filePath)) {
+                return unlink($filePath);
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    private function processUpdatingRestaurantCardImage($image, $restaurantId)
+    {
+        $oldImageName = "RestaurantCardImage-" . $restaurantId;
+        try {
+            // Check if a new image was provided
+            if (!empty($image['name']) ) {
+                // Delete the old image from the server
+                $this->deleteFestivalYummyImage($oldImageName);
+                // Store the new image on the server and return its filename
+                $newImageName = "RestaurantCardImage-" . $restaurantId . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
+                $this->storeImage($image, $newImageName);
+                return $newImageName;
+                
+            } else {
+                // If no new image was provided or the image is "Default", return the filename of the old image
+                return $oldImageName;
+            }
+        } catch (uploadFileFailedException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    private function storeImage($image, $newImageName)
+    {
+        try {
+            $upload_dir = __DIR__ . '/../../public/image/Festival/Yummy/';
+            $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+            if (!move_uploaded_file($image['tmp_name'], $upload_dir . $newImageName)) {
+                throw new Exception("error in move uploaded file");
+            }
+            return;
+        } catch (Exception $exception) {
+            echo $exception->getMessage();
+        }
+    }
 
     public function editRestaurantSubmitted() {
         // submitting new page or updating an existing page
@@ -38,19 +116,28 @@ class YummyController extends eventController {
             $restaurant->setName($_POST['restaurantName']);
             $restaurant->setLocation($_POST['restaurantLocation']);
             $restaurant->setNumberOfSeats($_POST['restaurantNumberOfSeats']);
+            $restaurant->setScore($_POST['restaurantScore']);
+            $restaurant->setFoodTypes($_POST['restaurantFoodTypes']);
             $restaurant->setDescriptionHTML($_POST["tinyMCEform"]);
+
             
             // check if the page is a new page or updating existing page
             // if the pageID value exists in the submitted form, we are updating that page. If it does not exist, we are creating a new page.
             if(isset($_POST['restaurantID'])) {
                 $this->restaurantService->updateRestaurantById($_POST['restaurantID'], $restaurant);
 
+                // handle restaurant card image
+                $restaurantCardPicture = $_FILES['cardRestaurantPicUpload'];
+                $imageName = $this->processUpdatingRestaurantCardImage($restaurantCardPicture, $_POST['restaurantID']);
+
                 $this->displayNavBar("Yummy",'/css/festival/yummy.css');
 
                 echo "existing restaurant updated!";
             }
             else {
-                $this->restaurantService->createNewRestaurant($restaurant);
+                $createdRest = $this->restaurantService->createNewRestaurant($restaurant);
+                $restaurantCardPicture = $_FILES['cardRestaurantPicUpload'];
+                $imageName = $this->processUpdatingRestaurantCardImage($restaurantCardPicture, $createdRest->getId());
 
                 $this->displayNavBar("Yummy",'/css/festival/yummy.css');
 

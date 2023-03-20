@@ -2,10 +2,29 @@
 
 class eventDate
 {
+    private int $eventDateId;
     private string $date;
     private string $day;
     private \Cassandra\Date $month;
 
+   
+     /**
+     * @return int
+     */
+    public function getEventDateId(): int
+    {
+        return $this->eventDateId;
+    }
+
+    /**
+     * @param int $eventDateId
+     */
+    public function setEventDateId(int $eventDateId): void
+    {
+        $this->eventDateId = $eventDateId;
+    }
+
+    
     /**
      * @return string
      */
@@ -37,5 +56,23 @@ class eventDate
     {
         $this->day = $day;
     }
+    
+     public function getEventDay() : string
+   {
+        $date = $this->getDate();
+        $day = date('l', strtotime($date));
+        return $day;
+   }
+
+   public function getFormattedEventDate() : string
+   {
+     $date = $this->date;
+     return date('d, F, Y', strtotime($date));
+   }
+    
+    
+    
+    
+    
 
 }
