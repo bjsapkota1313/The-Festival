@@ -24,6 +24,23 @@ class AvailableEventService
     {
         return $this->availableEventRepository->getAvailableMusicEvents();
     }
+    
+       public function  getAvailableEventByIdWithUrl($id)
+    {
+        return $this->availableEventRepository->getAvailableEventByIdWithUrl($id);
+
+    }
+
+    public function  retrieveParticipatingArtistsDataWithUrl($id)
+    {
+        return $this->availableEventRepository->retrieveParticipatingArtistsDataWithUrl($id);
+
+    }
+
+
+    public function getEventNameByEventTypeIdWithUrl($id){
+        return $this->availableEventRepository->getEventNameByEventTypeIdWithUrl($id);
+    }
 
     public function getAvailableMusicEventsData()
     {
