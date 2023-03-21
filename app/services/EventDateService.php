@@ -13,4 +13,9 @@ class EventDateService
     {
         return $this->eventDateRepository->getEventDateById($id);
     }
+    
+     public function getEventDateByIdWithUrl($id)
+    {
+        return $this->eventDateRepository->getEventDateByIdWithUrl($id);
+    }
 }
