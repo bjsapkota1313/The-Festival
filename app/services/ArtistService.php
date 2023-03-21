@@ -39,4 +39,4 @@ class ArtistService
         return $this->artistRepository->getArtistByIdWithUrl($id);
     }
 }
-}
+
