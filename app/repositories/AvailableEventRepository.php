@@ -28,7 +28,7 @@ class AvailableEventRepository extends repository
             echo $e;
         }
     }
-}
+
 
 
 
@@ -105,3 +105,4 @@ class AvailableEventRepository extends repository
         }
     }
 
+}
