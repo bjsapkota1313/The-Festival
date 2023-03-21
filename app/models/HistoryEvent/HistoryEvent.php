@@ -1,9 +1,9 @@
 <?php
 require_once __DIR__.'/HistoryTour.php';
+
 class HistoryEvent extends Event
 {
     private array $historyTours;
-
 
     public function __construct()
     {
@@ -25,6 +25,4 @@ class HistoryEvent extends Event
     {
         $this->historyTours = $historyTours;
     }
-
-
 }

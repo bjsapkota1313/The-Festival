@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
 require_once __DIR__ . '/../Models/historyTimeTable.php';
 require_once __DIR__ . '/../Models/HistoryEvent/HistoryTourLocation.php';
+require_once __DIR__ . '/repository.php';
 
 class HistoryPageRepository extends Repository
 {
@@ -27,9 +28,10 @@ class HistoryPageRepository extends Repository
 
     public function getAllHistoryTourLocation()
     {
-        $stmt = $this->connection->prepare("SELECT location.locationName, location.postCode, location.locationId, historytourlocation.historyTourLocationId, historytourlocation.locationInformation
+        $stmt = $this->connection->prepare("SELECT location.locationName, address.postCode, address.streetName, address.country, address.city, address.houseNumber, address.houseNumberAdditional, location.locationId, historytourlocation.historyTourLocationId, historytourlocation.locationInformation
                                             FROM historytourlocation
-                                            INNER JOIN location ON location.locationId=historytourlocation.locationId;");
+                                            INNER JOIN location ON location.locationId=historytourlocation.locationId
+                                            INNER JOIN address on address.addressId=location.addressId;");
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,27 +46,18 @@ class HistoryPageRepository extends Repository
 
     private function createHistoryTourLocation($result)
     {
-//        $historyTourLocation = new Location();
-//        $historyTourLocation->setLocationId($result['locationId']);
-//        $historyTourLocation->setLocationName($result['locationName']);
-//        $historyTourLocation->setPostCode($result['postCode']);
-//        return $historyTourLocation;
+        $addressObject = new Address();
+        $addressObject->setPostCode($result['postCode']);
+        $addressObject->setHouseNumber($result['houseNumber']);
+        $addressObject->setStreetName($result['streetName']);
+        $addressObject->setCountry($result['country']);
+        $addressObject->setCity($result['city']);
+        $addressObject->setHouseNumberAdditional($result['houseNumberAdditional']);
 
-//        $historyTourLocationObject = new Location();
-//        $historyTourLocationObject->setLocationId($result['locationId']);
-//        $historyTourLocationObject->setLocationName($result['locationName']);
-//        $historyTourLocationObject->setPostCode($result['postCode']);
-//
-//        $historyTourLocation = new HistoryTourLocation();
-//        $historyTourLocation->setHistoryTourLocationId($result['historyTourLocationId']);
-//        $historyTourLocation->setLocationInfo($result['locationInformation']);
-//        $historyTourLocation->setTourLocation($historyTourLocationObject);
-//
-//        return $historyTourLocationObject;
         $locationObject = new Location();
         $locationObject->setLocationId($result['locationId']);
         $locationObject->setLocationName($result['locationName']);
-        $locationObject->setPostCode($result['postCode']);
+        $locationObject->setAddress($addressObject);
 
         $historyLocations = new HistoryTourLocation();
         $historyLocations->setHistoryTourLocationId($result['historyTourLocationId']);
