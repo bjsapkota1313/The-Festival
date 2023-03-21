@@ -41,7 +41,7 @@ else {
 
     ?>
 
-    <form action="/festival/Yummy/editRestaurantSubmitted" method="POST">
+    <form action="/festival/Yummy/editRestaurantSubmitted" method="POST"  enctype="multipart/form-data" >
     <div class="form-floating mb-3">
         <input type="text"
         class="form-control"
@@ -119,6 +119,17 @@ else {
         ?>"
         >
         <label for="restaurantNumberOfSeats">Food Types. Separate by comma.</label>
+      </div>
+      <div class="form-floating mb-3 restaurantCardImage-upload">
+        <input type='file' id="cardRestaurantPicUpload" name="cardRestaurantPicUpload" accept=".png, .jpg, .jpeg"/>
+          <label for="cardRestaurantPicUpload"><i class="fas fa-edit"></i></label>
+      </div>
+
+      <div class="form-floating mb-3 restaurantCardImageDivShow">
+        <img 
+        class="img-fluid h-200 restaurantCardImageImgShow"
+        alt="Cover Image"
+        src="<?= $restaurant->getRestaurantCardImageFullPath() ?>">
       </div>
 
       <div class="form-floating mb-3">

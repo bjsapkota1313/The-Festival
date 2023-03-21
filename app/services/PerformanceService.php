@@ -42,5 +42,9 @@ class PerformanceService
     {
         return $this->performanceRepository->addPerformanceWithEventId($eventId, $data);
     }
+    public function deletePerformanceById($performanceId): bool
+    {
+        return $this->performanceRepository->deletePerformance($performanceId);
+    }
 
 }

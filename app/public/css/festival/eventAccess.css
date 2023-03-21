@@ -19,6 +19,15 @@
     opacity: 1;
 }
 
+
+.modal:not(#data){background: rgba(255,255,255,0.5);}
+
+#data, #eventPageImg{opacity:100%;
+    background-color:white;}
+
+#data{height: 270px;}
+
+
 #eventPageImg{width: 100%;}
 
 
@@ -28,5 +37,8 @@
     #eventInfoRow{height: 140px;}
     #imgCaption{display:none;}
     #eventInfo{display:none;}
+    #schedule{display:none;}
+
+
     
 }

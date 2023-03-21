@@ -48,12 +48,10 @@
                         <td>100.00</td>
                         <td>
                             <div class="d-inline-flex">
-                                <form>
                                     <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                    <button href="/admin/manageusers/deleteUser/<?php echo $performance->id; ?>" class="btn btn-danger ms-3"><i
-                                                class="fa-solid fa-trash"></i></button>
-                                </form>
+                                    <button onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')" class="btn btn-danger ms-3"><i
+                                                class="fa-solid fa-trash"></i> </button>
                             </div>
 
                         </td>
@@ -64,4 +62,20 @@
             </table>
         </div>
     </div>
+    <script>
+        function deletePerformanceClicked(performanceId) {
+            if (confirm("Are you sure you want to delete this performance?")) {
+                let form = document.createElement("form");
+                form.hidden = true;
+                let input = document.createElement("input");
+                input.setAttribute("name", "performanceId");
+                input.setAttribute("value", performanceId);
+                form.appendChild(input);
+                form.setAttribute("method", "POST");
+                form.setAttribute("action", "/admin/dance/performances");
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 </section>

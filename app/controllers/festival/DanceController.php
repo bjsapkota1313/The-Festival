@@ -28,11 +28,9 @@ class DanceController extends eventController
         $participatingArtists = $this->artistService->getAllArtistsParticipatingInEvent();
         $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getPerformances();
-        $timetable = $this->performanceService->groupPerformancesWithDate($artistPerformances);
+        $groupedPerformances = $this->performanceService->groupPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }
-
-
     public function artistDetails()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['artist'])) {

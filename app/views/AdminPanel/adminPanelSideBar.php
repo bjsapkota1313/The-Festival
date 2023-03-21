@@ -2,15 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Link to Bootstrap v5.2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <!-- Set viewport for responsiveness -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> <?= $title ?></title>
+    <title><?= $title ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -26,7 +24,6 @@
     <!-- Boxiocns CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <?php
     if (isset($pathToCss)) {
         ?>
@@ -61,7 +58,7 @@
             <ul class="sub-menu">
                 <li><a class="link_name" href="#">Category</a></li>
                 <li><a href="/admin/dance/artists">Artist</a></li>
-                <li><a href="/admin/dance/Performances">Artist Performances</a></li>
+                <li><a href="/admin/dance/Performances">Performances</a></li>
                 <li><a href="/admin/dance/venues">Venues</a></li>
             </ul>
         </li>
@@ -98,10 +95,10 @@
         <li>
             <a href="/admin/manageusers">
                 <i class="fa-sharp fa-solid fa-users"></i>
-               <span class="link_name">Manage User</span>
-            <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">Analytics</a></li>
-            </ul>
+                <span class="link_name">Manage User</span>
+                <ul class="sub-menu blank">
+                    <li><a class="link_name" href="#">Analytics</a></li>
+                </ul>
         </li>
         <li>
             <a href="#">

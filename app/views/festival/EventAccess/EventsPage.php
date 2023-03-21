@@ -1,3 +1,121 @@
+<?php function DisplayData($eventList, $day)
+{ ?>
+
+  <div id="schedule" class="border m-2 mt-5">
+
+    <p class="text-center display-5">
+      <?= $day->getEventDay() . " " . $day->getFormattedEventDate() ?>
+    </p>
+
+    <div class="grid text-center">
+      <?php
+      foreach ($eventList as $count => $row) {
+        ?>
+
+        <?php
+        if ($row['AvailableEvent']->getSingleEvent() == 'True') {
+
+          ?>
+          <div class="g-col-11 grid text-center">
+
+            <div class="border m-2 p-2 ">
+              <?= $row['AvailableEvent']->getEventHour() ?>
+            </div>
+
+            <?php
+            if ($row['AvailableEvent']->getEventTypeId() == 1) {
+
+              ?>
+              <div class="g-col-9 border m-2 p-2">
+                <?= $row['AvailableEvent']->getEventDetails() ?>
+
+              </div>
+              <div class="g-col-2 border m-2 p-2">
+                <?= $row['AvailableEvent']->getDeliveryPossibilities() ?>
+              </div>
+
+            <?php } else {
+              if ($row['ParticipatingArtist'] != 0) { ?>
+                <div class="g-col-11 border m-2 p-2">
+                  <?= $row['ParticipatingArtist'] ?>
+
+                </div>
+              <?php } else { ?>
+                <div class="g-col-11 border m-2 p-2">
+                  <?= $row['AvailableEvent']->getEventDetails() ?>
+
+                </div>
+
+              <?php } ?>
+
+            <?php } ?>
+
+
+          </div>
+
+        <?php } else { ?>
+          <div class="g-col-5 grid text-center">
+
+            <div class="border m-2 p-2">
+              <?= $row['AvailableEvent']->getEventHour() ?>
+            </div>
+
+            <?php
+            if ($row['AvailableEvent']->getEventTypeId() == 1) {
+
+              ?>
+              <div class="g-col-11 border m-2 p-2">
+                <?= $row['AvailableEvent']->getEventDetails() ?>
+
+              </div>
+              <div class="g-col-4 border m-2 p-2">
+                <?= $row['AvailableEvent']->getDeliveryPossibilities() ?>
+
+              </div>
+            <?php } else {
+              if ($row['ParticipatingArtist'] != 0) { ?>
+
+                <div class="g-col-11 border  m-2 p-2">
+                  <?= $row['ParticipatingArtist'] ?>
+
+                </div>
+
+              <?php } else { ?>
+                <div class="g-col-11 border m-2 p-2">
+                  <?= $row['AvailableEvent']->getEventDetails() ?>
+
+                </div>
+
+              <?php } ?>
+            <?php } ?>
+
+          </div>
+        <?php } ?>
+        <div class="g-col-1 m-auto">
+
+          <button type="button" class="btn btn-light m-1 mt-2 w-100" id="buyTicket"><img class="buyTicket w-100"
+              src="../image/addTicket.png" alt=""><span id="availableEventId" style="display:none">
+              <?php echo $row['AvailableEvent']->getEventId(); ?>
+            </span></button>
+        </div>
+
+        <div id="ticket" class="modal g-col-8 border p-2 grid text-center" style="display:none">
+          <div id="data" class="border m-5 d-flex flex-row">
+            <img class="eventPageImg g-col-2 w-25" src="../image/Festival/EventAccess/imgPlaceholder.png" alt="">
+            <p id="eventType" class="g-col-8 m-4">
+            </p>
+            <p id="dateTime"></p>
+          </div>
+        </div>
+      <?php } ?>
+    </div>
+
+  </div>
+
+
+<?php } ?>
+
+
 <main>
 
 
@@ -14,7 +132,9 @@
 
   <div class="px-4 my-5 text-center">
 
-    <p> <?= $paragraphs[0]->getText() ?> </p>
+    <p>
+      <?= $paragraphs[0]->getText() ?>
+    </p>
     <?php ?>
   </div>
 
@@ -24,105 +144,24 @@
     foreach ($paragraphs as $count => $paragraph) {
       if ($count > 0) {
         ?>
-        <div id="eventInfoRow" class="g-col-12  border d-flex flex-row"><img class="eventPageImg w-100"
+        <div id="eventInfoRow" class="g-col-12 border d-flex flex-row"><img class="eventPageImg w-50"
             src="../image/Festival/EventAccess/imgPlaceholder.png" alt="">
-          <p id="eventInfo" class="m-4"><?= $paragraph->getText() ?></p>
+          <p id="eventInfo" class="m-4">
+            <?= $paragraph->getText() ?>
+          </p>
         </div>
       <?php }
     } ?>
   </div>
 
-  <p class="text-center display-5">text placeholder</p>
-  <div class="container border m-4" id="schedule1">
-    <?php
-    foreach ($availableEventsList1 as $availableEvent) {
-      ?>
-      <div class="row">
-
-        <div class="col-2 border m-2">
-          <?= $availableEvent->getEventHour() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getEventName() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getDeliveryPossibilities() ?>
-
-        </div>
-      </div>
-    <?php } ?>
-  </div>
-
-
-  <p class="text-center display-5">text placeholder</p>
-  <div class="container border m-4" id="schedule2">
-    <?php
-    foreach ($availableEventsList2 as $availableEvent) {
-      ?>
-      <div class="row">
-        <div class="col-2 border m-2">
-          <?= $availableEvent->getEventHour() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getEventName() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getDeliveryPossibilities() ?>
-
-        </div>
-      </div>
-    <?php } ?>
-
-  </div>
-
-
-  <p class="text-center display-5">text placeholder</p>
-  <div class="container border m-4" id="schedule3">
-    <?php
-    foreach ($availableEventsList3 as $availableEvent) {
-      ?>
-
-      <div class="row">
-
-        <div class="col-2 border m-2">
-          <?= $availableEvent->getEventHour() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getEventName() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getDeliveryPossibilities() ?>
-
-        </div>
-      </div>
-    <?php } ?>
-
-  </div>
-
-
-
-  <p class="text-center display-5">text placeholder</p>
-  <div class="container border m-4" id="schedule4">
-    <?php
-    foreach ($availableEventsList4 as $availableEvent) {
-      ?>
-      <div class="row">
-
-        <div class="col-2 border m-2">
-          <?= $availableEvent->getEventHour() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getEventName() ?>
-        </div>
-        <div class="col border m-2">
-          <?= $availableEvent->getDeliveryPossibilities() ?>
-
-        </div>
-      </div>
-    <?php } ?>
-  </div>
+  <?php DisplayData($availableEventsList1, $firstEventsDay);
+  DisplayData($availableEventsList2, $secondEventsDay);
+  DisplayData($availableEventsList3, $thirdEventsDay);
+  DisplayData($availableEventsList4, $fourthEventsDay);
+  ?>
 
 </main>
 </body>
+<script src="/Javascripts/Festival/EventAccess/EventAccess.js"></script>
 
 </html>

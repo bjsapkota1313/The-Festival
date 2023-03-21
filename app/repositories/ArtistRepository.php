@@ -126,4 +126,51 @@ class ArtistRepository extends Repository
         }
         return $artists;
     }
+    
+    public function getArtistNameByArtistId($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT artistName FROM artist WHERE artistId=:artistId");
+            $stmt->bindParam(':artistId', $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            if ($result != 0){
+            return current($result);}
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+      private function checkArtistExistence($stmt): bool
+    {
+        try {
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
+            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
+            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
+            http_response_code(500);
+            exit();
+        }
+    }
+
+    public function  getArtistByIdWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT * From artist WHERE artistId LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+             if ($this->checkArtistExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;}
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 }
