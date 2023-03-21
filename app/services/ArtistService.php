@@ -33,4 +33,10 @@ class ArtistService
     {
         return $this->artistRepository->getArtistNameByArtistId($id);
     }
+    
+     public function  getArtistByIdWithUrl($id)
+    {
+        return $this->artistRepository->getArtistByIdWithUrl($id);
+    }
 }
+
