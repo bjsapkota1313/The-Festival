@@ -130,7 +130,7 @@ class AdminDanceController extends AdminPanelController
                 }
                 try {
                     $sanitizedInput['duration'] = $this->getDurationInMinutes($sanitizedInput['startTime'], $sanitizedInput['endTime']); // adding new key with value to array
-                    $dbResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $sanitizedInput);
+                    $dbResult = $this->performanceService->addPerformanceWithEventId($this->getDanceEvent()->getEventId(), $sanitizedInput);
                     if ($dbResult) {
                         header("location: /admin/dance/performances");
                         exit();
