@@ -75,7 +75,24 @@ class RestaurantRepository extends Repository
             echo $e;
         }
     }
-
+    public function getAllFoodTypes() {
+        try {
+            // we make a query to database, to find all restaurants.
+            $stmt = $this->connection->prepare("SELECT * FROM RestaurantType");
+            // execute the query.
+            $stmt->execute();
+            $foodTypeNames = array();
+            $results = $stmt->fetchAll();
+            foreach ($results as $row) {
+                // print_r($row);
+                $foodTypeName = $row['name'];
+                array_push($foodTypeNames, $foodTypeName);
+            }
+            return $foodTypeNames;
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
 
     public function getRestaurantByName(string $restaurantName)
     {
@@ -96,7 +113,25 @@ class RestaurantRepository extends Repository
             echo $e;
         }
     }
-
+    public function getRestaurantById(int $restaurantId)
+    {
+        try {
+            // we make a query to database, to find the page with the given title.
+            $stmt = $this->connection->prepare("SELECT * FROM Restaurant WHERE id = :id");
+            // to increase security, we use bindParam.
+            $stmt->bindParam(':id', $restaurantId);
+            // then execute the query.
+            $stmt->execute();
+            // if the number of records found with the given title is zero, then that title does not exist in the database.
+            if ($stmt->rowCount() == 0) {
+                return null;
+            }
+            $result = $stmt->fetch();
+            return $this->createRestaurantInstance($result);
+        } catch (PDOException|Exception $e) {
+            echo $e;
+        }
+    }
     public function createNewRestaurant($newRestaurant)
     {
         try {

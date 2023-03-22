@@ -1,35 +1,22 @@
 <?php
-require_once __DIR__ . '/EventController.php';
+require_once __DIR__ . '/AdminPanelController.php';
+require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
+require_once __DIR__ . '/../../services/restaurantService.php';
 require_once __DIR__ . '/../../models/user.php';
 require_once __DIR__ . '/../../models/restaurant.php';
-require_once __DIR__ . '/../../services/restaurantService.php';
 
-class YummyController extends eventController {
+class AdminYummyController extends AdminPanelController
+{
     private $restaurantService;
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->restaurantService = new RestaurantService();
     }
-
-    public function index(){
-        $this->displayViewFestival(null);
-    }
-
     private function filterRestaurants($restaurants, $foodTypesArr) {
         foreach($foodTypesArr as $fValue) {
             $fValue = trim($fValue);
             foreach($restaurants as $rKey => $restaurant) {
-                // print_r($rKey);
-                // print_r($restaurant);
-                // if it does not contain it, remove it
                 if (strpos(" ".$restaurant->getFoodTypes()." ", $fValue) == false) {
-                    // echo "removing ". $fValue . "from ". $restaurant->getFoodTypes();
-                    // print_r($restaurant);
-                    // echo $restaurant->getName() . " - ";
-                    // echo $restaurant->getFoodTypes(). " - ";
-                    // echo $fValue;
-                    // echo "---";
                     unset($restaurants[$rKey]);
                 }
             }
@@ -38,41 +25,67 @@ class YummyController extends eventController {
     }
 
     public function restaurant($query) {
-        // get all restaurants
-        $model = new stdClass;
-        $restaurants = $this->restaurantService->getRestaurants();
-        $model->restaurants = $restaurants;
-        $foodTypes = $this->restaurantService->getAllFoodTypes();
-        $model->foodTypes = $foodTypes;
-        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
-            
-            $sFT = $_POST["restaurantFoodTypesSearch"];
-            print_r($sFT);
-            $foodTypesArr = explode( ',', $sFT);
-            print_r($foodTypesArr);
-            $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
-            $model->restaurants = $restaurants;
-            // filter restaurants
-            // for each food type, remove the restaurants not having that type
+        if (!isset($_SESSION["loggedUser"])) {
+            // if user is not logged in, she cannot edit restaurants.
+            header("location: /home");
+            exit();
         }
-        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSelect"]) && $_POST["restaurantFoodTypesSelect"]!="") {
-            $sFT = $_POST["restaurantFoodTypesSelect"];
-            // print_r($sFT);
+
+        if (!unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+            // if user is not administrator, she cannot edit restaurants either
+            header("location: /home");
+            exit();
+        }
+        $title = 'Restaurants';
+        $this->displaySideBar($title);
+
+        $restaurants = $this->restaurantService->getRestaurants();
+        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
+            $sFT = $_POST["restaurantFoodTypesSearch"];
             $foodTypesArr = explode( ',', $sFT);
             // print_r($foodTypesArr);
             $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
-            $model->restaurants = $restaurants;
             // filter restaurants
             // for each food type, remove the restaurants not having that type
         }
+        if (empty($restaurants)) {
+            $errorMessage['restaurants'] = "No restaurants found";
+        }
+        require_once __DIR__ . '/../../views/AdminPanel/Yummy/restaurantsOverview.php';
+    }
 
-        
-        // print_r($restaurants);
-        // $c = count($restaurants);
-        // echo "Number of restaurants is {$c}";       
-        $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-        // require __DIR__ . '/../../views/festival/History/index.php';
-        $this->displayViewFestival($model);
+    public function editRestaurant($query) {
+        if (!isset($_SESSION["loggedUser"])) {
+            // if user is not logged in, she cannot edit restaurants.
+            header("location: /home");
+            exit();
+        }
+
+        if (!unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+            // if user is not administrator, she cannot edit restaurants either
+            header("location: /home");
+            exit();
+        }
+
+        $title = 'Edit Restaurant';
+        $this->displaySideBar($title);
+
+        // first, we check for title in the query.
+        parse_str($query, $parsedQuery);
+
+        // print_r($parsedQuery);
+
+        $restaurant = null;
+        if(isset($parsedQuery["id"])) {
+            $restaurant = $this->restaurantService->getRestaurantById($parsedQuery["id"]);
+            // print_r($restaurant);
+        }
+        else if(isset($parsedQuery["name"])) {
+            // echo $parsedQuery["name"];
+            $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
+            // print_r($restaurant);
+        }
+        require_once __DIR__ . '/../../views/AdminPanel/Yummy/editRestaurant.php';
     }
 
     private function deleteFestivalYummyImage($ImageName)
@@ -148,71 +161,24 @@ class YummyController extends eventController {
                 // handle restaurant card image
                 $restaurantCardPicture = $_FILES['cardRestaurantPicUpload'];
                 $imageName = $this->processUpdatingRestaurantCardImage($restaurantCardPicture, $_POST['restaurantID']);
-
-                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-
-                echo "existing restaurant updated!";
+                // Redirect browser
+                header("Location: /admin/yummy/restaurant");
+                exit;
             }
             else {
                 $createdRest = $this->restaurantService->createNewRestaurant($restaurant);
                 $restaurantCardPicture = $_FILES['cardRestaurantPicUpload'];
                 $imageName = $this->processUpdatingRestaurantCardImage($restaurantCardPicture, $createdRest->getId());
-
-                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-
-                echo "new restaurant added!";
+                // Redirect browser
+                header("Location: /admin/yummy/restaurant");
             }
-
-            // show the user result.
-            
-            // $this->displayView($_POST["tinyMCEform"]);
         }
         // if the user has clicked the delete button
         else if(isset($_POST["formDelete"])) {
             $this->restaurantService->deleteRestaurantById($_POST['restaurantID']);
-            echo "deleted restaurant with id " . $_POST['restaurantID'];   
+            echo "deleted restaurant with id " . $_POST['restaurantID'];
+            // Redirect browser
+            header("Location: /admin/yummy/restaurant");
         }
     }
-
-    public function editRestaurant($query) {
-        if (!isset($_SESSION["loggedUser"])) {
-            // if user is not logged in, she cannot edit restaurants.
-            header("location: /home");
-            exit();
-        }
-
-        if (!unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
-            // if user is not administrator, she cannot edit restaurants either
-            header("location: /home");
-            exit();
-        }
-        // first, we check for title in the query.
-        parse_str($query, $parsedQuery);
-        
-        if(isset($parsedQuery["name"])) {
-            // echo $parsedQuery["name"];
-            $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
-            // print_r($restaurant);
-            if($restaurant != null) {
-
-                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-
-                $this->displayViewFestival($restaurant);
-            }
-            else {
-                // page not found
-
-                $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-
-                $this->displayViewFestival(null);
-            }
-        }
-        else {
-
-            $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-
-            $this->displayViewFestival(null);
-        }
-    }
-
 }
