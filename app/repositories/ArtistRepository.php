@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/../models/DanceEvent/artist.php';
+require_once __DIR__ . '/../models/DanceEvent/Style.php';
 
 class ArtistRepository extends Repository
 {
@@ -100,8 +101,8 @@ class ArtistRepository extends Repository
     public function getArtistStylesByArtistID($artistId)
     {
         $query = "SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
-        $result=$this->executeQuery($query, array(':artistID' => $artistId));
-        return array_column($result,'styleName'); // making array of values of styles
+        $result = $this->executeQuery($query, array(':artistID' => $artistId));
+        return array_column($result, 'styleName'); // making array of values of styles
     }
 
     public function deleteArtistById($artistId)
@@ -113,6 +114,7 @@ class ArtistRepository extends Repository
         $result = $stmt->fetch();
 
     }
+
     public function getAllParticipatingArtistsInPerformance($performanceId): ?array
     {
         $query = "SELECT artistId FROM participatingArtist WHERE PerformanceId = :PerformanceId";
@@ -126,7 +128,7 @@ class ArtistRepository extends Repository
         }
         return $artists;
     }
-    
+
     public function getArtistNameByArtistId($id)
     {
         try {
@@ -134,15 +136,16 @@ class ArtistRepository extends Repository
             $stmt->bindParam(':artistId', $id);
             $stmt->execute();
             $result = $stmt->fetch();
-            if ($result != 0){
-            return current($result);}
-            
+            if ($result != 0) {
+                return current($result);
+            }
+
         } catch (PDOException $e) {
             echo $e;
         }
     }
-    
-      private function checkArtistExistence($stmt): bool
+
+    private function checkArtistExistence($stmt): bool
     {
         try {
             $stmt->execute();
@@ -158,19 +161,41 @@ class ArtistRepository extends Repository
         }
     }
 
-    public function  getArtistByIdWithUrl($id)
+    public function getArtistByIdWithUrl($id)
     {
         try {
-            
+
             $stmt = $this->connection->prepare("SELECT * From artist WHERE artistId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
-             if ($this->checkArtistExistence($stmt)) {
+            if ($this->checkArtistExistence($stmt)) {
                 $stmt->execute();
                 $result = $stmt->fetch();
-                return $result;}
-            
+                return $result;
+            }
+
         } catch (PDOException $e) {
             echo $e;
+        }
+    }
+
+    public function getAllStyles(): ?array
+    {
+        $styles = array();
+        $query = "SELECT styleId,styleName FROM style";
+        $result = $this->executeQuery($query);
+        if (empty($result)) {
+            return null; // null pointer exception
+        }
+        foreach ($result as $row) {
+            $styles[] = new Style($row['styleId'], $row['styleName']);
+        }
+        return $styles;
+    }
+    public function addArtist($data){
+        $query= "INSERT INTO artist (artistName,artistDescription,artistLogoId) VALUES (:artistName,:artistDescription,:artistLogoId)";
+        $result = $this->executeQuery($query, array(':artistName' => $data['artistName'], ':artistDescription' => $data['artistDescription'], ':artistLogoId' => $data['artistLogoId']), false,true);
+        if(!is_numeric($result)){
+            return false;
         }
     }
 }

@@ -30,7 +30,6 @@ class HomeController extends Controller
         $currentUserId = $this->currentUserId;
         $this->pageController->show("title=newtest", $currentUserId);
         $this->displayFooter();
-
     }
 
 }?>

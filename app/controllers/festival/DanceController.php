@@ -21,6 +21,7 @@ class DanceController extends eventController
 
     public function index()
     {
+        $this->displayNavBar('Dance',"/css/festival/Dance/IndexPage.css");
         $dancePage = $this->eventPageService->getEventPageByName('Dance/Intro');
         $bodyHead = $dancePage->getContent()->getBodyHead();
         $sectionText = $dancePage->getContent()->getSectionText();
