@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../services/restaurantService.php';
 require_once __DIR__ . '/../../models/user.php';
 require_once __DIR__ . '/../../models/restaurant.php';
 
+
 class AdminYummyController extends AdminPanelController
 {
     private $restaurantService;
@@ -52,6 +53,10 @@ class AdminYummyController extends AdminPanelController
             $errorMessage['restaurants'] = "No restaurants found";
         }
         require_once __DIR__ . '/../../views/AdminPanel/Yummy/restaurantsOverview.php';
+    }
+
+    public function createPDF($query) {
+        require_once __DIR__ . '/../../services/PDFService.php';
     }
 
     public function editRestaurant($query) {
