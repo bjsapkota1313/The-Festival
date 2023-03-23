@@ -1,10 +1,16 @@
 <?php
 // session_start()
-if(isset($model) && $model != null) {
-  $restaurants = $model;
+if(isset($model) && $model != null && isset($model->restaurants) && $model->restaurants != null) {
+  $restaurants = $model->restaurants;
 }
 else {
   $restaurants = null;
+}
+if(isset($model) && $model != null && isset($model->foodTypes) && $model->foodTypes != null) {
+  $foodTypes = $model->foodTypes;
+  // print_r($foodTypes);
+} else {
+  $foodTypes = null;
 }
 ?>
 
@@ -20,24 +26,19 @@ else {
 
   <body>
     <div class="restaurantCards container col-sm-12 col-md-9 col-lg-6">
-    <div class="addRestaurantDiv">
-        <?php
-        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
-        ?>
-        <a class="restaurantAddLink" href="/festival/Yummy/editRestaurant"> Add New Restaurant </a>
-        <?php
-        }
-        ?>
-    </div>
     <form action="/festival/Yummy/restaurant" method="POST">
       <div class="form-floating mb-3">
-        <input type="text"
-        class="form-control"
-        name="restaurantFoodTypesSearch"
-        id="restaurantFoodTypesSearch"
-        placeholder="Search Food Types. Separate by comma"
-        >
-        <label for="restaurantFoodTypesSearch">Food Types. Separate by comma.</label>
+        <select name="restaurantFoodTypesSelect" class="form-select" aria-label="Default select example">
+          <option value="All" selected>All</option>
+          <?php
+          if($foodTypes != null && count($foodTypes) > 0) {
+            foreach ($foodTypes as $foodType) {
+              include("foodTypeOptionCreator.php");
+            }
+          }
+          ?>
+        </select>
+        <label for="restaurantFoodTypesSelect">Food Types</label>
       </div>
       
       <div class="form-floating mb-3">

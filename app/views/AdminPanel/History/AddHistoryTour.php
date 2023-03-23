@@ -23,13 +23,13 @@
                                     <option value="english">English</option>
                                     <option value="dutch">Dutch</option>
                                     <option value="chinese">Chinese</option>
-<!--                                    <option value="custom">Custom</option>-->
+                                    <option value="custom">Custom</option>
                                 </select>
                             </div>
-<!--                            <div class="col-md-6">-->
-<!--                                <label class="control-label">Custom Language</label>-->
-<!--                                <input class="form-control" id="customLanguage" name="customLanguage" placeholder="Enter custom language" disabled>-->
-<!--                            </div>-->
+                            <div class="col-md-6">
+                                <label class="control-label">Custom Language</label>
+                                <input class="form-control" id="customLanguage" name="customLanguage" placeholder="Enter custom language" disabled>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -60,7 +60,7 @@
 </section>
 <script>
     // Enable the "Custom Language" input field when the "Custom" option is selected
-    const tourLanguageSelect = document.querySelector('#tourLanguage');
+    const tourLanguageSelect = document.querySelector('#newTourLanguage');
     const customLanguageInput = document.querySelector('#customLanguage');
 
     tourLanguageSelect.addEventListener('change', () => {
