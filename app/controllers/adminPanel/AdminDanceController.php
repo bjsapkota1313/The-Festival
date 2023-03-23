@@ -92,12 +92,17 @@ class AdminDanceController extends AdminPanelController
             } else if (is_string($validImages)) {
                 return $validImages;
             } else {
-                $dbResult = $this->artistService->addArtist($sanitizedInput, $validImages);
-                if ($dbResult) {
-                    header("location: /admin/dance/artists");
-                    exit();
-                } else {
-                    return "Error while adding the artist,Please try again";
+                try{
+                    $dbResult = $this->artistService->addArtist($sanitizedInput, $validImages);
+                    if ($dbResult) {
+                        header("location: /admin/dance/artists");
+                        exit();
+                    } else {
+                        return "Error while adding the artist,Please try again";
+                    }
+                }
+                catch (DatabaseQueryException | uploadFileFailedException $e){
+                    return $e->getMessage();
                 }
             }
         }
@@ -182,7 +187,7 @@ class AdminDanceController extends AdminPanelController
         $styles = '';
         if (is_array($artistStyles)) {
             foreach ($artistStyles as $artistStyle) {
-                $styles = $styles . $artistStyle . ' | ';
+                $styles = $styles . $artistStyle->getStyleName() . ' | ';
             }
             // Remove the last '|' character
             $styles = substr($styles, 0, -2);

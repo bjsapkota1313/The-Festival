@@ -180,8 +180,7 @@ abstract class Controller
     private function checkValidImageOrNot($image): bool
     {
         $imageFileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-            && $imageFileType != "gif") {
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
             return false;
         }
         return true;

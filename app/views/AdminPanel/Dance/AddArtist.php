@@ -22,7 +22,7 @@
                     <div class="mb-3">
                         <div class="logo-container">
                             <label class="form-label" for="artistLogo">Logo</label><br>
-                            <input type="file" name="artistLogo" alt="Artist Logo" accept=".jpg/.png">
+                            <input type="file" name="artistLogo" alt="Artist Logo" accept=".png, .jpg, .jpeg">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -35,7 +35,7 @@
                             <?php foreach ($styles as $style): ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="artistStyles[]"
-                                           id="style-<?= $style->getStyleId() ?>" value="<?= $style->getStyleId() ?>">
+                                           id="style-<?= $style->getStyleId() ?>" value="<?= $style->getStyleId() ?>" >
                                     <label class="form-check-label" for="style-<?= $style->getStyleId() ?>">
                                         <?= $style->getStyleName() ?>
                                     </label>
@@ -45,15 +45,15 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="portrait">Portrait</label><br>
-                        <input type="file" name="portrait" alt="Artist Portrait" accept=".jpg/.png/.jpeg">
+                        <input type="file" name="portrait" alt="Artist Portrait" accept=".png, .jpg, .jpeg">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="banner">Banner</label><br>
-                        <input type="file" name="banner" accept=".jpg/.png/.jpeg">
+                        <input type="file" name="banner" accept=".png, .jpg, .jpeg">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="portrait">Others</label><br>
-                        <input type="file" name="others[]" accept=".jpg/.png/.jpeg" multiple>
+                        <input type="file" name="others[]" accept=".png, .jpg, .jpeg" multiple>
                     </div>
                     <?php if (!empty($errorMessage['Submit'])): ?>
                         <div class="alert alert-danger" role="alert">

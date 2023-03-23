@@ -100,9 +100,16 @@ class ArtistRepository extends Repository
 
     public function getArtistStylesByArtistID($artistId)
     {
-        $query = "SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
+        $query = "SELECT style.styleId,style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
         $result = $this->executeQuery($query, array(':artistID' => $artistId));
-        return array_column($result, 'styleName'); // making array of values of styles
+        $styles = array();
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $styles[] = new Style($row['styleId'], $row['styleName']);
+            }
+            return $styles;
+        }
+        return null;
     }
 
     public function deleteArtistById($artistId)
@@ -191,11 +198,51 @@ class ArtistRepository extends Repository
         }
         return $styles;
     }
-    public function addArtist($data){
-        $query= "INSERT INTO artist (artistName,artistDescription,artistLogoId) VALUES (:artistName,:artistDescription,:artistLogoId)";
-        $result = $this->executeQuery($query, array(':artistName' => $data['artistName'], ':artistDescription' => $data['artistDescription'], ':artistLogoId' => $data['artistLogoId']), false,true);
-        if(!is_numeric($result)){
-            return false;
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    public function addArtist($data): bool
+    {
+        $query = "INSERT INTO artist (artistName,artistDescription,artistLogoId) VALUES (:artistName,:artistDescription,:artistLogoId)";
+        $artistID = $this->executeQuery($query, array(':artistName' => $data['artistName'], ':artistDescription' => $data['artistDescription'], ':artistLogoId' => $data['artistLogo']), false, true);
+        if (!is_numeric($artistID)) {
+            throw new DatabaseQueryException("Error while inserting artist");
         }
+        foreach ($data['artistStyles'] as $style) {
+            $this->insertArtistStyleWithArtistIdAndStyleId($artistID, $style);
+        }
+        foreach ($data['others'] as $key => $imageId) {
+           $this->insertArtistImageWithArtistIdAndImageId($artistID, $imageId, 'Other');
+        }
+       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['portrait'],'portrait');
+       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['banner'],'banner');
+
+        return true; // if something wrong it will throw me an error and will not reach here
     }
+
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    private function insertArtistImageWithArtistIdAndImageId($artistId, $imageId, $specification)
+    {
+        $query = "INSERT INTO artistImage (artistId,imageId,ImageSpecification) VALUES (:artistId,:imageId,:ImageSpecification)";
+        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':imageId' => $imageId, ':ImageSpecification' => $specification))){
+            // since it is an insert query so execute Query will return false if it was not inserted successFully
+            throw new DatabaseQueryException("Error while inserting artist image");
+        } // if it is false we have an error
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    private function insertArtistStyleWithArtistIdAndStyleId($artistId, $styleId){
+        $query = "INSERT INTO artistStyle (artistId,styleId) VALUES (:artistId,:styleId)";
+        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId))){
+            // since it is an insert query so execute Query will return false if it was not inserted successFully
+            throw new DatabaseQueryException("Error while inserting artist style");
+        } // if it is false we have an error
+    }
+
 }

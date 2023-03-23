@@ -1,16 +1,21 @@
 <?php
 require_once __DIR__ . '/../models/Exceptions/uploadFileFailedException.php';
+
 trait ImageManager
 {
-    function moveImageToSpecifiedDirectory($image, $directory): bool
+    /**
+     * @throws uploadFileFailedException
+     */
+    function moveImageToSpecifiedDirectory($image, $directory):void
     {
-        echo $image['tmp_name'];
-        return move_uploaded_file($image['tmp_name'], $directory);
+        if(!move_uploaded_file($image['tmp_name'], $directory)){
+            throw new uploadFileFailedException("File upload Failed");
+        }
     }
 
     function getUniqueImageNameByImageName($image): string
     {
-        $imageExtension = pathinfo($image, PATHINFO_EXTENSION);
+        $imageExtension = pathinfo($image['name'], PATHINFO_EXTENSION);
         return uniqid() . '.' . $imageExtension;
     }
 
@@ -19,12 +24,11 @@ trait ImageManager
      */
     function getImagesNameByMovingToDirectory($images, $pathToDir): array
     {
-        try{
+        try {
             $imageNames = [];
-            foreach ($images as $key=> $image){
-                echo $image;
-                $this->moveImageToSpecifiedDirectory($image,$pathToDir);
+            foreach ($images as $key => $image) {
                 $imageName = $this->getUniqueImageNameByImageName($image);
+                $this->moveImageToSpecifiedDirectory($image, $pathToDir.$imageName);
                 // Check if the key already exists in $imageNames
                 if (isset($imageNames[$key])) {
                     // If the key exists, append the new value to the existing value in the array
@@ -39,8 +43,7 @@ trait ImageManager
                 }
             }
             return $imageNames;
-        }
-        catch (Exception $exception){
+        } catch (Exception $exception) {
             throw new uploadFileFailedException($exception->getMessage());
         }
 

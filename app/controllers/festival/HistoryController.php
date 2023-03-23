@@ -14,10 +14,7 @@ class HistoryController extends EventController
 
     public function index()
     {
-        $eventPage = $this->eventPageService->getEventPageByName('History/Intro');
-        $bodyHead = $eventPage->getContent()->getBodyHead();
-        $sectionText = $eventPage->getContent()->getSectionText();
-        $paragraphs = $sectionText->getParagraphs();
+
         $allTourLocations = $this->historyService->getAllHistoryTourLocation();
         $this->displayNavBar("A stroll Through History", '/css/festival/history.css');
         $historyEvent = $this->eventService->getEventByName('A Stroll Through History');

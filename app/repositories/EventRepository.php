@@ -39,7 +39,6 @@ class EventRepository extends repository
 
     private function getAllEventsName()
     {
-
         try {
             $stmt = $this->connection->prepare("SELECT eventName FROM event");
             $stmt->execute();
@@ -134,7 +133,7 @@ class EventRepository extends repository
         if (empty($result)) {
             $query = "INSERT INTO timetable (time,eventDateId) VALUES (:time,:eventDateId)";
             $executedResult = $this->executeQuery($query, array(':time' => $time, ':eventDateId' => $eventDateId), false, true);
-            if (is_bool($executedResult)) { // if it is bools means that it was not inserted into the database
+            if (is_bool($executedResult)) { // if it is bool means that it was not inserted into the database
                 throw new DatabaseQueryException("Error while inserting time into database");
             }
             return $executedResult; // it is going to return us the id of the date that we just inserted
@@ -150,17 +149,44 @@ class EventRepository extends repository
         $eventDateId = $this->getEventDateIdByInsertingDate($date);
         return $this->getTimetableIDByInsertingTimeWithDateId($time, $eventDateId);
     }
-
-    /**
-     * @throws DatabaseQueryException
-     */
-    protected function insertImageAndGetId($imageName){
-        $query = "INSERT INTO image (imageName) VALUES (:imageName)";
-        $executedResult = $this->executeQuery($query, array(':imageName' => $imageName), false, true);
-        if (!is_numeric($executedResult)) { // if it is bools means that it was not inserted into the database
-            throw new DatabaseQueryException("Error while inserting image into database");
+    protected function getEventParagraphsByEventID($eventID){
+        $query="SELECT paragraph.paragraphId,paragraph.title, paragraph.text 
+                FROM paragraph 
+                JOIN eventparagraph ON paragraph.paragraphId = eventparagraph.paragraphId
+                WHERE eventId = :eventId";
+        $result = $this->executeQuery($query, array(':eventId' => $eventID));
+        if (!empty($result)) {
+            $paragraphs = [];
+            foreach ($result as $row) {
+                $paragraphs[] = new Paragraph($row['paragraphId'], $row['title'], $row['text']);
+            }
+            return $paragraphs;
         }
-        return $executedResult; // it is going to return us the id of the date that we just inserted
+        return null;
     }
-
+    protected function getEventImagesByEventID($eventID){
+        $query="SELECT image.imageName,eventimage.specification as imageSpecification
+                FROM image
+                JOIN eventimage ON eventimage.imageId = image.imageId
+                where eventimage.eventId = :eventId";
+        $result = $this->executeQuery($query, array(':eventId' => $eventID));
+        if (!empty($result)) {
+            return $this->getImagesWithKeyValue($result);
+        }
+        return null;
+    }
+    private function getImagesWithKeyValue($result): array
+    {
+        $images = array();
+        foreach ($result as $imageRow) {
+            $imageName = $imageRow['imageName'];
+            $imageSpec = $imageRow['imageSpecification'];
+            if (isset($images[$imageSpec])) { // storing images as key value pair in array
+                $images[$imageSpec][] = $imageName;
+            } else {
+                $images[$imageSpec] = array($imageName);
+            }
+        }
+        return $images;
+    }
 }
