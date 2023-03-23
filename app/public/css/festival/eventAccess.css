@@ -20,12 +20,12 @@
 }
 
 
-.modal:not(#data){background: rgba(255,255,255,0.5);}
+.modal:not(#data){background:rgba(134, 125, 125, 0.5);}
 
 #data, #eventPageImg{opacity:100%;
     background-color:white;}
 
-#data{height: 270px;}
+#data{height: 400px;}
 
 
 #eventPageImg{width: 100%;}
