@@ -11,6 +11,13 @@ body {
     height: 100px;
 }
 
+.roundImageRestaurantCardImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .restaurantContainer {
     display: flex;
     margin-top: 50px;

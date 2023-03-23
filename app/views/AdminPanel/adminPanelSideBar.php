@@ -81,15 +81,13 @@
             <div class="iocn-link">
                 <a href="#">
                     <i class="fa-solid fa-bowl-food"></i>
-                    <span class="link_name">Food</span>
+                    <span class="link_name">Yummy</span>
                 </a>
                 <i class='bx bxs-chevron-down arrow'></i>
             </div>
             <ul class="sub-menu">
                 <li><a class="link_name" href="#">Posts</a></li>
-                <li><a href="#">Web Design</a></li>
-                <li><a href="#">Login Form</a></li>
-                <li><a href="#">Card Design</a></li>
+                <li><a href="/admin/yummy/restaurant">Restaurants</a></li>
             </ul>
         </li>
         <li>

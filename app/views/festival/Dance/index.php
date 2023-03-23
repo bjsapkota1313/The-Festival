@@ -257,8 +257,8 @@
                             ?>
                             <div class="my-3 ps-3">
                                 <div class=" MyContainer position-relative ps-4 ">
-                                    <div class="container d-flex align-items-center justify-content-center">
-                                        <span><?= $performance->getDate()->format('H:i') ?></span>
+                                    <div class="container d-flex align-items-center justify-content-center" data-performance='<?php echo json_encode($performance); ?>'>
+                                        <span><?=$performance->getDate()->format('H:i')?></span>
                                         <div class="line flex-grow-1 mx-2"></div>
                                     </div>
                                     <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists()) ?></label>
@@ -305,3 +305,44 @@
 </div>
 <script src="/Javascripts/festival/Dance/Carousal.js" type="text/javascript"></script>
 </body>
+
+<script>
+    const containers = document.querySelectorAll('.MyContainer');
+
+    containers.forEach(container => {
+        const performance = JSON.parse(container.querySelector('.container').getAttribute('data-performance'));
+        const artists = performance.artists.join(', '); // use a different variable name to avoid confusion with the 'artist' variable
+        const time = performance.date;
+        const location = performance.venue;
+        let description = artists;
+        const label = container.querySelector('.container-fluid').textContent; // save the original label
+
+        // container.addEventListener('mouseover', () => {
+        //     container.style.backgroundColor = 'red';
+        //     description = `${artists} - ${time} - ${location}`;
+        //     container.querySelector('.container-fluid').textContent = description;
+        // });
+        container.addEventListener('mouseover', () => {
+            container.style.backgroundColor = 'red';
+
+            // check the type of each variable before including it in the template string
+            const artistString = Array.isArray(artists) ? artists.join(', ') : artists;
+            const timeString = typeof time === 'object' ? time.toString() : time;
+            const locationString = typeof location === 'object' ? location.name : location;
+
+            description = `${artistString} - ${timeString} - ${locationString}`;
+            container.querySelector('.container-fluid').textContent = description;
+        });
+
+        container.addEventListener('mouseout', () => {
+            container.style.backgroundColor = '';
+            container.querySelector('.container-fluid').textContent = label; // restore the original label
+            description = artists;
+        });
+    });
+</script>
+
+
+
+
+

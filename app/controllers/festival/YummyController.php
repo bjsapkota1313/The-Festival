@@ -39,21 +39,40 @@ class YummyController extends eventController {
 
     public function restaurant($query) {
         // get all restaurants
+        $model = new stdClass;
         $restaurants = $this->restaurantService->getRestaurants();
+        $model->restaurants = $restaurants;
+        $foodTypes = $this->restaurantService->getAllFoodTypes();
+        $model->foodTypes = $foodTypes;
         if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
+            
             $sFT = $_POST["restaurantFoodTypesSearch"];
+            print_r($sFT);
             $foodTypesArr = explode( ',', $sFT);
-            // print_r($foodTypesArr);
+            print_r($foodTypesArr);
             $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
+            $model->restaurants = $restaurants;
             // filter restaurants
             // for each food type, remove the restaurants not having that type
         }
+        if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSelect"]) && $_POST["restaurantFoodTypesSelect"]!="") {
+            $sFT = $_POST["restaurantFoodTypesSelect"];
+            // print_r($sFT);
+            $foodTypesArr = explode( ',', $sFT);
+            // print_r($foodTypesArr);
+            $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
+            $model->restaurants = $restaurants;
+            // filter restaurants
+            // for each food type, remove the restaurants not having that type
+        }
+
+        
         // print_r($restaurants);
         // $c = count($restaurants);
         // echo "Number of restaurants is {$c}";       
         $this->displayNavBar("Yummy",'/css/festival/yummy.css');
         // require __DIR__ . '/../../views/festival/History/index.php';
-        $this->displayViewFestival($restaurants);
+        $this->displayViewFestival($model);
     }
 
     private function deleteFestivalYummyImage($ImageName)
