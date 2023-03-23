@@ -49,7 +49,27 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
         } catch (PDOException $e) {
             echo $e;
         }
-
+    }
+    public function getHistoryTourById($historyTourId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT eventDate.date, language.name, timetable.time, historytour.eventId, historytour.historyTourId
+FROM eventdate
+INNER JOIN timetable ON eventdate.eventDateId = timetable.eventDateId
+INNER JOIN historytour ON historytour.timeTableId = timetable.timeTableId
+INNER JOIN language ON language.languageId = historytour.languageId
+WHERE historytour.historyTourId = :historyTourId;");
+            $stmt->bindParam(':historyTourId', $historyTourId);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetch();
+            if (!$result) {
+                return null; // history tour with the given ID was not found
+            }
+            return $this->createHistoryTourInstance($result);
+        } catch (PDOException $e) {
+            echo $e;
+        }
     }
 
     /**
@@ -355,6 +375,31 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
         $stmt->bindValue(':eventId', 1);
         $stmt->bindValue(':languageId', $languageId);
         $stmt->bindValue(':timeTableId', $timeTableId);
+        $stmt->execute();
+    }
+    public function deleteTest($selectedTourId){
+        $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
+        $stmt->bindValue(':historyTourId', $selectedTourId);
+        $stmt->execute();
+    }
+    public function getSelectedTourById($selectedTourId){
+        $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
+        $stmt->bindValue(':historyTourId', $selectedTourId);
+        $stmt->execute();
+    }
+    public function updateHistoryTourByTourId($selectedTourId, $updateHistoryTour){
+        $stmt = $this->connection->prepare("UPDATE historytour
+                                                    INNER JOIN timetable ON historytour.timeTableId = timetable.timeTableId
+                                                    INNER JOIN eventdate ON timetable.eventDateId = eventdate.eventDateId
+                                                    INNER JOIN language ON historytour.languageId = language.languageId
+                                                    SET eventdate.date = :date, language.name = :name, timetable.time = :time
+                                                    WHERE historytour.historyTourId = :historyTourId");
+
+        $stmt->bindValue(':date', $updateHistoryTour["updateTourDate"]);
+        $stmt->bindValue(':name', $updateHistoryTour["updateTourLanguage"]);
+        $stmt->bindValue(':time', $updateHistoryTour["updateTourTime"]);
+
+        $stmt->bindParam(':historyTourId', $selectedTourId);
         $stmt->execute();
     }
 

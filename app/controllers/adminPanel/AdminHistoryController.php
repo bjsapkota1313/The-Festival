@@ -38,9 +38,34 @@ class AdminHistoryController extends AdminPanelController
         if (empty($historyTours)) {
             $errorMessage['tourLocation'] = "No location found in system";
         }
+        if (isset($_POST['deleteHistoryTour'])) {
+            $selectedTourId = $_POST['deleteTourId'];
+            $this->historyService->deleteTest($selectedTourId);
+
+        } elseif (isset($_POST['updateHistoryTour'])) {
+            $selectedTourId = $_POST['updateTourId'];
+            $this->updateHistoryTourByTourId($selectedTourId);
+            // perform update action here
+        }
+
         require_once __DIR__ . '/../../views/AdminPanel/History/HistoryTourOverview.php';
     }
+    public function updateHistoryTourByTourId($selectedTourId){
+        $title = 'Update History Tour';
+        $this->displaySideBar($title);
 
+        $getSelectedTourById = $this->historyService->getHistoryTourById($selectedTourId);
+        if(isset($_POST['updateTourLocation'])){
+            $updateHistoryTour = array(
+                'updateTourLanguage' => htmlspecialchars($_POST['updateTourLanguage']),
+                'updateTourDate' => date('Y-m-d', strtotime($_POST['updateTourDate'])),
+                'updateTourTime' => date('H:i:s', strtotime($_POST['updateTourTime'])),
+            );
+            $this->historyService->updateHistoryTourByTourId(37,$updateHistoryTour);
+        }
+
+        require_once __DIR__ . '/../../views/AdminPanel/History/UpdateHistoryTour.php';
+    }
     public function addHistoryTourLocation()
     {
         $title = 'Add Tour Location';
@@ -68,29 +93,14 @@ class AdminHistoryController extends AdminPanelController
 //    {
 //        $title = 'Add History Tour';
 //        $this->displaySideBar($title);
-////        if (isset($_POST['addNewHistoryTour'])) {
-//////            $this->insertNewHistoryTour();
-////            $eventDate = DateTime::createFromFormat('Y-m-d', $_POST['newTourDate'])->format('Y-m-d');
-////            $eventDateId = $this->historyService->checkEventDateExistence($eventDate);
-////            if($eventDateId){
-////                echo $eventDateId;
-////            }
-////            else{
-////                echo "fuck bigay";
-////            }
-////        }
+//
 //        if (isset($_POST['addNewHistoryTour'])) {
-////            $this->insertNewHistoryTour();
-//            $tourLanguage = $_POST['newTourLanguage'];
-////            $eventDate = DateTime::createFromFormat('Y-m-d', $_POST['newTourDate'])->format('Y-m-d');
-//            $languageId = $this->historyService->checkLanguageExistence($tourLanguage);
-//            if($languageId){
-//                echo $languageId;
-//            }
-//            else{
-//                echo "fuck bigay";
-//            }
+//            $eventDate = DateTime::createFromFormat('Y-m-d', $_POST['newTourDate'])->format('Y-m-d');
+//            $language = $_POST['newTourLanguage'];
+//            $timeTable = $_POST['newTourTime'];
+//            $this->historyService->newTourData($eventDate,$language,$timeTable);
 //        }
+//
 //        require_once __DIR__ . '/../../views/AdminPanel/History/AddHistoryTour.php';
 //    }
     public function addHistoryTour()
@@ -103,52 +113,18 @@ class AdminHistoryController extends AdminPanelController
             $language = $_POST['newTourLanguage'];
             $timeTable = $_POST['newTourTime'];
 
-            // Check if event date exists
-            $eventDateId = $this->historyService->checkEventDateExistence($eventDate);
-            if(!$eventDateId){
-                // Event date does not exist, insert new data and get the new ID
-                $this->historyService->insertNewEventDate($eventDate);
-                $eventDateId = $this->historyService->checkEventDateExistence($eventDate);
+            // Check if custom language is selected
+            if ($language == 'custom') {
+                $customLanguage = $_POST['customLanguage'];
+                $language = $customLanguage;
             }
 
-            $newTourTimeTableID = $this->historyService->checkTourTimeTableExistence($eventDateId,$timeTable);
-            if(!$newTourTimeTableID){
-                // Event date does not exist, insert new data and get the new ID
-                $this->historyService->insertNewTimeTable($eventDateId,$timeTable);
-                $newTourTimeTableID = $this->historyService->checkTourTimeTableExistence($eventDateId,$timeTable);
-            }
-            echo $newTourTimeTableID;
-
-            // Check if language exists
-            $languageId = $this->historyService->checkLanguageExistence($language);
-            if(!$languageId){
-                // Language does not exist, insert new data and get the new ID
-                $this->historyService->insertNewLanguage($language);
-                $languageId = $this->historyService->checkLanguageExistence($language);
-            }
-            // Insert new history tour using the IDs obtained
-            $this->historyService->insertNewTourTest($languageId, $newTourTimeTableID);
+            $this->historyService->newTourData($eventDate, $language, $timeTable);
         }
 
         require_once __DIR__ . '/../../views/AdminPanel/History/AddHistoryTour.php';
     }
 
-    function insertNewHistoryTour()
-    {
-        // File has been successfully uploaded and moved to the desired folder
-        $newHistoryTour = array(
-            'tourStreetName' => htmlspecialchars($_POST['tourStreetName']),
-            'tourCountry' => htmlspecialchars($_POST['tourCountry']),
-            'tourStreetNumber' => htmlspecialchars($_POST['tourStreetNumber']),
-            'tourPostCode' => htmlspecialchars($_POST['tourPostCode']),
-            'tourCity' => htmlspecialchars($_POST['tourCity']),
-        );
-        $this->historyService->insertNewHistoryTour($newHistoryTour);
-    }
-}
-//        $tourLocations = $this->historyService->getAllHistoryTourLocation();
 
-//        $allTourLocations = $this->historyService->getAllHistoryTourLocation();
-//        $allLocations = $this->eventService->getAllLocations();
-//        $performanceSessions = $this->performanceService->getAllPerformanceSessions();
-//        $errorMessage = $this->addPerformanceSubmitted();
+
+}

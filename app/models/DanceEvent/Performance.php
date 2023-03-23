@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/../Location.php';
 require_once __DIR__.'/PerformanceSession.php';
-class Performance
+class Performance implements JsonSerializable
 {
     private int $performanceId;
     private array $artists;
@@ -9,6 +9,16 @@ class Performance
     private Location $venue;
     private int $duration;
     private PerformanceSession $session;
+
+    public function jsonSerialize() : mixed
+    {
+        return [
+            'artists' => $this->artists,
+            'date' => $this->date->format('Y-m-d'),
+            'venue' => $this->venue
+        ];
+    }
+
     public function __construct()
     {
         $this->artists= array();
