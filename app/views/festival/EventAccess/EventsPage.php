@@ -99,12 +99,39 @@
             </span></button>
         </div>
 
-        <div id="ticket" class="modal g-col-8 border p-2 grid text-center" style="display:none">
-          <div id="data" class="border m-5 d-flex flex-row">
-            <img class="eventPageImg g-col-2 w-25" src="../image/Festival/EventAccess/imgPlaceholder.png" alt="">
-            <p id="eventType" class="g-col-8 m-4">
-            </p>
-            <p id="dateTime"></p>
+
+        <div id="ticketData" class="modal" style="display:none">
+          <div id="ticket" class="p-2 grid text-center">
+
+            <div id="data" class="g-col-10 my-5 d-flex flex-row">
+
+              <img class="eventPageImg g-col-2 w-25" src="../image/Festival/EventAccess/imgPlaceholder.png" alt="">
+              <div class="d-flex flex-column m-4" id="textData">
+                <p class="display-5" id="eventType" class="g-col-8 m-4">
+                </p>
+                <p><span id="day"></span>&nbsp;<span id="dateTime"></span> </p>
+
+                <div class="d-flex flex-row" id="translationOptions" style="display:none">
+                  <label for="translationOptionsList" id="chooseTranslationOption">Choose language:</label>
+                </div>
+
+                <label for="ticketType" id="chooseTicketType">Select ticket type:</label>
+
+                <select id="ticketTypes" class="form-select">
+                  <option value="single">Single</option>
+                  <option value="nonSingle">Non-Single</option>
+                </select>
+
+                <div class="btn-group" id="ticketOptionsControls">
+
+                  <button type="button" class="btn btn-light " id="addToShoppingBasket"> Add to basket</button>
+                  <button type="button" class="btn btn-light " data-dismiss="modal" id="cancelAddingNewTicket">
+                    Cancel</button>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
       <?php } ?>
