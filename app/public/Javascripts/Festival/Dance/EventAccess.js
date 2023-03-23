@@ -113,6 +113,7 @@ function updateStyleForTicketTextDataSections(){
 }
 
 function displayTicketOptions(availableEventData){
+    $("#translationOptions").empty();
     $('#translationOptions').show();
     $('#chooseTranslationOption').show();
      var translationOptions = availableEventData[8];
@@ -128,6 +129,13 @@ function closeModalWithTicketOptions(title) {
     $('#cancelAddingNewTicket').click(function () {
        $('#ticketData').hide();
     });
+}
+
+
+function removeTranslationOptions() {
+
+       $('#chooseTranslationOption').hide();
+       $('#translationOptions').empty();   
 }
 
 
@@ -171,6 +179,9 @@ function retrieveAvailableEventData() {
                 
                 if (eventTypeId == 1){
                    displayTicketOptions(jsonStr);
+                }
+                 else if (eventTypeId == 2){
+                    removeTranslationOptions();
                 }
 
                 $('#ticketData').show();
