@@ -33,6 +33,8 @@ class DanceEventRepository extends EventRepository
             $danceEvent->setEventId($dbRow['eventId']);
             $danceEvent->setEventName($dbRow['eventName']);
             $danceEvent->setPerformances($this->performanceService->getPerformancesByEventId($dbRow['eventId']));
+            $danceEvent->setEventParagraphs($this->getEventParagraphsByEventID($dbRow['eventId']));
+            $danceEvent->setEventImages($this->getEventImagesByEventId($dbRow['eventId']));
             return $danceEvent;
         } catch (Exception $e) {
             echo "Error while creating dance event instance: " . $e->getMessage();

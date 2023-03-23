@@ -17,7 +17,9 @@ class HomeController extends Controller
     {
         parent::__construct();
         $this->userService = new UserService();
-        $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
+        if(isset($_SESSION["loggedUser"])){
+            $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
+        }
         $this->pageController = new PageController();
 
     }
@@ -28,7 +30,6 @@ class HomeController extends Controller
         $currentUserId = $this->currentUserId;
         $this->pageController->show("title=newtest", $currentUserId);
         $this->displayFooter();
-
     }
 
 }?>

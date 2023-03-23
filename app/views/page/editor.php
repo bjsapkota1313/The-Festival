@@ -42,7 +42,7 @@ else {
     <form action="/page/editorSubmitted" method="POST">
       <div class="form-floating mb-3">
         <textarea id="mytextarea" name="tinyMCEform">
-          <?php 
+          <?php
           // if the user is creating a new page, show the following message
           if($page == null) echo "Create your new page.";
           else {

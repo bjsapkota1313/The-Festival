@@ -1,62 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Dance!!</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="/css/festival/Dance/IndexPage.css" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <meta name="description" content="">
-    <meta name="author" content="">
-</head>
 <body>
 <div class="compartment-1 d-flex align-items-end">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-6 overflow-hidden p-0">
-                <img src="<?php echo $this->getImageFullPath($dancePage->getContent()->getBodyHead()->getImage()) ?>"
+                <img src="<?= $this->getImageFullPath($danceEvent->getEventImages()['banner'][0]) ?>"
                      class="img-fluid h-100 position-absolute top-0 start-0" alt="Cover Image">
                 <span class="position-absolute bottom-0 start-0 mb-3 d-flex align-items-center"
                       style="z-index: 99; padding-left: 20px;">
-          <h2 class="text-white fw-bold mb-0 ps-3 festivalFont"><?= $bodyHead->getH1()?></h2>
-          <h5 class="text-white fw-bold mb-0 ms-3 danceFont"> <?= $bodyHead->getH2()?></h5>
+          <h2 class="text-white fw-bold mb-0 ps-3 festivalFont">Festival</h2>
+          <h5 class="text-white fw-bold mb-0 ms-3 danceFont"> <?= $danceEvent->getEventName() ?></h5>
         </span>
             </div>
         </div>
     </div>
 </div>
 <div class="px-4 my-5 text-center">
-    <?php foreach($paragraphs as $paragraph){ ?>
-
-    <h4 style="font-weight: 600"><?=$paragraph->getTitle() ?></h4>
+    <?php if(!empty($danceEvent->getEventParagraphs()[0])): ?>
+    <h4 style="font-weight: 600"><?= $danceEvent->getEventParagraphs()[0]->getTitle() ?></h4>
     <div class="col-lg-10 mx-auto">
-        <p class="lead mb-4"><?=$paragraph->getText() ?> </p>
+        <p class="lead mb-4"><?= $danceEvent->getEventParagraphs()[0]->getText() ?> </p>
     </div>
-    <?php } ?>
+    <?php endif; ?>
 </div>
 <div class="is-layout-flow wp-block-group bs-carousel-incr">
     <h2 class="text-center" style="font-weight: bold">CHOOSE YOUR FAVOURITE ARTIST </h2>
     <div class="wp-block-group__inner-container">
         <div id="carouselExampleControls" class="carousel" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <?php foreach($participatingArtists as $artist){ ?>
+                <?php foreach ($participatingArtists as $artist) { ?>
                     <div class="carousel-item">
                         <div class="container-hover">
                             <div class="container text-center">
                                 <div class="img-wrapper align-center pb-3">
                                     <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>"
-                                         class="border hover-zoom" id="hoverArtist" style="border-radius:50%;height: 409px;width: 409px">
+                                         class="border hover-zoom" id="hoverArtist"
+                                         style="border-radius:50%;height: 409px;width: 409px">
                                 </div>
                                 <div>
                                     <h4 class="card-title pb-3"><?= $artist->getArtistName() ?></h4>
                                     <form method="GET" action="/festival/dance/artistDetails">
-                                        <button class="text-center" id="btnArtist" name="artist" value="<?= $artist->getArtistId() ?>">Artist</button>
+                                        <button class="text-center" id="btnArtist" name="artist"
+                                                value="<?= $artist->getArtistId() ?>">Artist
+                                        </button>
                                     </form>
                                 </div>
                             </div>
@@ -105,7 +90,7 @@
         <div class="container-fluid ps-5">
             <span class="align-left ps-5"><button class="button" data-bs-toggle="collapse"
                                                   data-bs-target="#FilterArtist" style="height:48px;!important; "><i
-                    class="fa-solid fa-bars"></i>  Filter</button></span>
+                            class="fa-solid fa-bars"></i>  Filter</button></span>
         </div>
         <div class="collapse" id="FilterArtist">
             <div class="container d-flex justify-content-center align-items-center" id="filterContainer"
@@ -265,41 +250,58 @@
         </div>
         <div class=" container-fluid  pt-5 ps-5">
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                <?php foreach ($groupedPerformances as $date => $specificDatePerformances) {?>
+                <?php foreach ($groupedPerformances as $date => $specificDatePerformances) { ?>
                     <div class="col">
-                        <button class="lblButton w-100" disabled><?=$date?></button>
+                        <button class="lblButton w-100" disabled><?= $date ?></button>
                         <?php foreach ($specificDatePerformances as $performance) {
-                        ?>
+                            ?>
                             <div class="my-3 ps-3">
                                 <div class=" MyContainer position-relative ps-4 ">
                                     <div class="container d-flex align-items-center justify-content-center" data-performance='<?php echo json_encode($performance); ?>'>
                                         <span><?=$performance->getDate()->format('H:i')?></span>
                                         <div class="line flex-grow-1 mx-2"></div>
                                     </div>
-                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists())?></label>
+                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists()) ?></label>
                                 </div>
                             </div>
-                        <?php }?>
+                        <?php } ?>
                     </div>
-                <?php }?>
+                <?php } ?>
             </div>
         </div>
     </div>
 </div>
 <div class="container-fluid pt-5">
-    <div class="px-4 my-3 text-center">
-        <div class="col-lg-10 mx-auto">
-            <p class="lead mb-4" style="color: #CD3600; font-weight: bold; font-size:36px; ">The capacity of the Club
-                sessions is very limited. Availability for All-Access pas holders can not be guaranteed due to safety
-                regulations</p>
+    <?php if (!empty($danceEvent->getEventParagraphs()[1])) {
+        ?>
+        <div class="px-4 my-3 text-center">
+            <div class="col-lg-10 mx-auto">
+                <?php if (!empty($danceEvent->getEventParagraphs()[1]->getTitle())) {
+                    ?>
+                    <h5><?= $danceEvent->getEventParagraphs()[1]->getTitle() ?></h5>
+                <?php } ?>
+                <?php if (!empty($danceEvent->getEventParagraphs()[1]->getText())) {
+                    ?>
+                    <p class="lead mb-4"
+                       style="color: #CD3600; font-weight: bold; font-size:36px; "><?= $danceEvent->getEventParagraphs()[1]->getText() ?></p>
+                <?php } ?>
+            </div>
         </div>
-    </div>
-    <div class="px-3 my-3 text-center">
-        <div class="col-lg-10 mx-auto">
-            <p class="lead mb-4" style="color: #CD3600; font-weight: bold; font-size:36px; ">Tiësto World is a special
-                session spanning his career’s work. There will also be some special guests</p>
+    <?php } ?>
+    <?php if (!empty($danceEvent->getEventParagraphs()[2])) {
+        ?>
+        <div class="px-3 my-3 text-center">
+            <div class="col-lg-10 mx-auto"><?php if (!empty($danceEvent->getEventParagraphs()[2]->getTitle())) {
+                    ?>
+                    <h5><?= $danceEvent->getEventParagraphs()[2]->getTitle() ?></h5>
+                <?php } ?>
+                <?php if (!empty($danceEvent->getEventParagraphs()[2]->getText())) { ?>
+                    <p class="lead mb-4"
+                       style="color: #CD3600; font-weight: bold; font-size:36px; "><?= $danceEvent->getEventParagraphs()[2]->getText() ?></p>
+                <?php } ?>
+            </div>
         </div>
-    </div>
+    <?php } ?>
 </div>
 <script src="/Javascripts/festival/Dance/Carousal.js" type="text/javascript"></script>
 </body>

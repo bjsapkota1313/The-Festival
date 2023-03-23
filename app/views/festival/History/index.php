@@ -1,21 +1,23 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($bodyHead->getImage()) ?>')">
+<div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($historyEvent->getEventImages()['banner'][0]) ?>')">
     <span class="position-absolute bottom-0 start-0 mb-3 ps-3 d-flex align-items-center"
           style="z-index: 99; padding-left: 20px;">
-                  <h5 class="text-white fw-bold mb-0"><?= $bodyHead->getH2() ?></h5>
-          <h2 class="text-white fw-bold mb-0 ms-3"> <?= $bodyHead->getH1() ?></h2>
+          <h2 class="text-white fw-bold mb-0 ms-3"> <?= $historyEvent->getEventName() ?></h2>
         </span>
 </div>
-<h1 class="historyHeader"><?= $eventPage->getContent()->getH2() ?></h1>
+<h1 class="historyHeader"><?= $historyEvent->getEventName() ?></h1>
 <div class="historyContainer">
+    <?php if(!empty($historyEvent->getEventParagraphs())):
+    ?>
     <div class="historyInformation">
         <?php
-        foreach ($paragraphs as $paragraph) {
+        foreach ($historyEvent->getEventParagraphs() as $paragraph) {
             ?>
             <h2><?= $paragraph->getTitle() ?></h2>
             <p><?= nl2br($paragraph->getText()) ?></p><br>
         <?php } ?>
     </div>
+    <?php endif; ?>
     <div class="historyWalkingRoute">
     <span class="fw-bold fs-4">
     Location information

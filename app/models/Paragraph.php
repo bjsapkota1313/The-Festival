@@ -3,37 +3,35 @@
 class Paragraph
 {
     private int $paragraphId;
-    private string $title;
+    private ?string $title;
     private string $text;
 
     /**
-     * @return int
-     */
-    public function getParagraphId(): int
-    {
-        return $this->paragraphId;
-    }
-
-    /**
      * @param int $paragraphId
+     * @param string|null $title
+     * @param string $text
      */
-    public function setParagraphId(int $paragraphId): void
+
+    public function __construct(int $paragraphId, ?string $title, string $text)
     {
         $this->paragraphId = $paragraphId;
+        $this->title = $title;
+        $this->text = $text;
     }
 
+
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @param string|null $title
      */
-    public function setTitle(string $title): void
+    public function setTitle(?string $title): void
     {
         $this->title = $title;
     }
@@ -53,4 +51,21 @@ class Paragraph
     {
         $this->text = $text;
     }
+
+    /**
+     * @return int
+     */
+    public function getParagraphId(): int
+    {
+        return $this->paragraphId;
+    }
+
+    /**
+     * @param int $paragraphId
+     */
+    public function setParagraphId(int $paragraphId): void
+    {
+        $this->paragraphId = $paragraphId;
+    }
+
 }

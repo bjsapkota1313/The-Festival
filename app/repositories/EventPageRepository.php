@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../Models/EventPage.php';
 require_once __DIR__ . '/../Models/Content.php';
 require_once __DIR__ . '/../Models/SectionText.php';
-require_once __DIR__ . '/../Models/Paragraph.php';
 require_once __DIR__ . '/../Models/BodyHead.php';
 require_once __DIR__ . '/repository.php';
 
@@ -128,7 +127,12 @@ class EventPageRepository extends Repository
             if ($stmt->rowCount() == 0){
                 return null;
             }
-            return $stmt->fetchAll(PDO::FETCH_CLASS, 'Paragraph');
+            $result= $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $paragraphs = array();
+            foreach ($result as $row){
+               $paragraphs[]=new Paragraph($row['paragraphId'],$row['title'],$row['text']); // just made a paragraph constructor
+            }
+            return $paragraphs;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

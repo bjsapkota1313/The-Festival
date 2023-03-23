@@ -21,13 +21,13 @@ class DanceController extends eventController
 
     public function index()
     {
-        $dancePage = $this->eventPageService->getEventPageByName('Dance/Intro');
-        $bodyHead = $dancePage->getContent()->getBodyHead();
-        $sectionText = $dancePage->getContent()->getSectionText();
-        $paragraphs = $sectionText->getParagraphs();
+        $this->displayNavBar('Dance',"/css/festival/Dance/IndexPage.css");
         $participatingArtists = $this->artistService->getAllArtistsParticipatingInEvent();
         $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getPerformances();
+        if(empty($artistPerformances)){
+
+        }//TODO :Check when it is null
         $groupedPerformances = $this->performanceService->groupPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }

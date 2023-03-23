@@ -15,6 +15,11 @@ class RestaurantService
         $repository = new RestaurantRepository();
         return $repository->getRestaurantByName($restaurantName);
     }
+    public function getRestaurantById(int $restaurantId)
+    {
+        $repository = new RestaurantRepository();
+        return $repository->getRestaurantById($restaurantId);
+    }
 
     public function getRestaurants()
     {
@@ -22,7 +27,10 @@ class RestaurantService
         return $repository->getRestaurants();
     }
 
-
+    public function getAllFoodTypes() {
+        $repository = new RestaurantRepository();
+        return $repository->getAllFoodTypes();
+    }
 
     public function createNewRestaurant($newRestaurant)
     {

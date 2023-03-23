@@ -35,20 +35,24 @@ class AdminDanceController extends AdminPanelController
         $title = 'Venues';
         $this->displaySideBar($title);
         $venues = $this->eventService->getAllLocations();
-        if(empty($venues)) {
+        if (empty($venues)) {
             $errorMessage['venues'] = "No Venues found in system";
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/VenuesOverview.php';
     }
-    public function addVenue(){
+
+    public function addVenue()
+    {
         $title = 'Add Venue';
         $errorMessage = $this->addVenueSubmitted();
         $this->displaySideBar($title);
         require_once __DIR__ . '/../../views/AdminPanel/Dance/AddVenue.php';
     }
-    private function addVenueSubmitted(){
+
+    private function addVenueSubmitted()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddVenue'])) {
-            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddVenue','houseNumberAdditional']);
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddVenue', 'houseNumberAdditional']);
             // house number Additional is optional and button is of course
             if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
                 return $sanitizedInput;
@@ -66,24 +70,39 @@ class AdminDanceController extends AdminPanelController
 
     public function addArtist()
     {
+        $errorMessage = array();
         $title = 'Add Artist';
+        $errorMessage['Submit'] = $this->addArtistSubmitted();
         $this->displaySideBar($title);
-        $errorMessage = $this->addArtistSubmitted();
+        $styles = $this->artistService->getAllStyles();
+        if (empty($styles)) {
+            $errorMessage['styles'] = "No styles found in system";
+        }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/AddArtist.php';
 
     }
-    private function addArtistSubmitted(){
-        if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['AddArtist'])){
-            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST,['AddArtist','artistImage']);
-            if(is_string($sanitizedInput)){ // check if the controller sends some error message or not
+
+    private function addArtistSubmitted()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddArtist'])) {
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtist'], ['artistStyles']);
+            $validImages = $this->processImagesWithFiles($_FILES, ['others']);
+            if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
                 return $sanitizedInput;
-            }else{
-                $dbResult = $this->artistService->addArtist($sanitizedInput);
-                if($dbResult){
-                    header("location: /admin/dance/artists");
-                    exit();
-                }else{
-                    return "Error while adding the artist";
+            } else if (is_string($validImages)) {
+                return $validImages;
+            } else {
+                try{
+                    $dbResult = $this->artistService->addArtist($sanitizedInput, $validImages);
+                    if ($dbResult) {
+                        header("location: /admin/dance/artists");
+                        exit();
+                    } else {
+                        return "Error while adding the artist,Please try again";
+                    }
+                }
+                catch (DatabaseQueryException | uploadFileFailedException $e){
+                    return $e->getMessage();
                 }
             }
         }
@@ -100,9 +119,11 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
-    private function deletePerformance(){
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' ) {
-            $id= $this->sanitizeInput($_POST['performanceId']);
+
+    private function deletePerformance()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $this->sanitizeInput($_POST['performanceId']);
             $dbResult = $this->performanceService->deletePerformanceById($id);
         }
     }
@@ -130,7 +151,7 @@ class AdminDanceController extends AdminPanelController
                 }
                 try {
                     $sanitizedInput['duration'] = $this->getDurationInMinutes($sanitizedInput['startTime'], $sanitizedInput['endTime']); // adding new key with value to array
-                    $dbResult = $this->performanceService->addPerformanceWithEventId($this->event->getEventId(), $sanitizedInput);
+                    $dbResult = $this->performanceService->addPerformanceWithEventId($this->getDanceEvent()->getEventId(), $sanitizedInput);
                     if ($dbResult) {
                         header("location: /admin/dance/performances");
                         exit();
@@ -166,7 +187,7 @@ class AdminDanceController extends AdminPanelController
         $styles = '';
         if (is_array($artistStyles)) {
             foreach ($artistStyles as $artistStyle) {
-                $styles = $styles . $artistStyle . ' | ';
+                $styles = $styles . $artistStyle->getStyleName() . ' | ';
             }
             // Remove the last '|' character
             $styles = substr($styles, 0, -2);
@@ -186,5 +207,4 @@ class AdminDanceController extends AdminPanelController
         $duration = $startTime->diff($endTime);
         return $duration->format('%h') * 60 + $duration->format('%i');
     }
-
 }

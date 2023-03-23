@@ -61,13 +61,4 @@
         alt="Cover Image"
         >
     </div>
-    <div>
-        <?php
-        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
-        ?>
-        <a class="restaurantUpdateLink" href="/festival/Yummy/editRestaurant?name=<?= $restaurant->getName() ?>"> Update </a>
-        <?php
-        }
-        ?>
-    </div>
 </div>
