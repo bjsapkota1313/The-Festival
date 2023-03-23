@@ -111,8 +111,8 @@
                 </p>
                 <p><span id="day"></span>&nbsp;<span id="dateTime"></span> </p>
 
+                <label for="translationOptionsList" id="chooseTranslationOption">Choose language:</label>
                 <div class="d-flex flex-row" id="translationOptions" style="display:none">
-                  <label for="translationOptionsList" id="chooseTranslationOption">Choose language:</label>
                 </div>
 
                 <label for="ticketType" id="chooseTicketType">Select ticket type:</label>
