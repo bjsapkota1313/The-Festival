@@ -108,7 +108,7 @@ class PerformanceRepository extends EventRepository
         $timetableID = $this->getTimetableIdByDateAndTime($data['performanceDate'], $data['startTime']);
         $parameters = array(':eventId' => $eventId, ':venueId' => $data['Venue'], ':timetableId' => $timetableID, ':sessionId' => $data['performanceSession'], ':duration' => $data['duration']);
         $performanceID = $this->executeQuery($query, $parameters, false, true);
-        if (!$performanceID) {
+        if (!is_numeric($performanceID)) {
             throw new DatabaseQueryException("Error while inserting performance in Database");
         }
         foreach ($data['artists'] as $artistId) {

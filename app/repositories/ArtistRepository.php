@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/repository.php';
 require_once __DIR__ . '/../models/DanceEvent/artist.php';
+require_once __DIR__ . '/../models/DanceEvent/Style.php';
 
 class ArtistRepository extends Repository
 {
@@ -99,9 +100,16 @@ class ArtistRepository extends Repository
 
     public function getArtistStylesByArtistID($artistId)
     {
-        $query = "SELECT style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
-        $result=$this->executeQuery($query, array(':artistID' => $artistId));
-        return array_column($result,'styleName'); // making array of values of styles
+        $query = "SELECT style.styleId,style.styleName FROM artistStyle JOIN style ON artistStyle.styleId = style.styleId WHERE artistStyle.artistId = :artistID";
+        $result = $this->executeQuery($query, array(':artistID' => $artistId));
+        $styles = array();
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $styles[] = new Style($row['styleId'], $row['styleName']);
+            }
+            return $styles;
+        }
+        return null;
     }
 
     public function deleteArtistById($artistId)
@@ -113,6 +121,7 @@ class ArtistRepository extends Repository
         $result = $stmt->fetch();
 
     }
+
     public function getAllParticipatingArtistsInPerformance($performanceId): ?array
     {
         $query = "SELECT artistId FROM participatingArtist WHERE PerformanceId = :PerformanceId";
@@ -126,7 +135,7 @@ class ArtistRepository extends Repository
         }
         return $artists;
     }
-    
+
     public function getArtistNameByArtistId($id)
     {
         try {
@@ -134,15 +143,16 @@ class ArtistRepository extends Repository
             $stmt->bindParam(':artistId', $id);
             $stmt->execute();
             $result = $stmt->fetch();
-            if ($result != 0){
-            return current($result);}
-            
+            if ($result != 0) {
+                return current($result);
+            }
+
         } catch (PDOException $e) {
             echo $e;
         }
     }
-    
-      private function checkArtistExistence($stmt): bool
+
+    private function checkArtistExistence($stmt): bool
     {
         try {
             $stmt->execute();
@@ -158,19 +168,81 @@ class ArtistRepository extends Repository
         }
     }
 
-    public function  getArtistByIdWithUrl($id)
+    public function getArtistByIdWithUrl($id)
     {
         try {
-            
+
             $stmt = $this->connection->prepare("SELECT * From artist WHERE artistId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
-             if ($this->checkArtistExistence($stmt)) {
+            if ($this->checkArtistExistence($stmt)) {
                 $stmt->execute();
                 $result = $stmt->fetch();
-                return $result;}
-            
+                return $result;
+            }
+
         } catch (PDOException $e) {
             echo $e;
         }
     }
+
+    public function getAllStyles(): ?array
+    {
+        $styles = array();
+        $query = "SELECT styleId,styleName FROM style";
+        $result = $this->executeQuery($query);
+        if (empty($result)) {
+            return null; // null pointer exception
+        }
+        foreach ($result as $row) {
+            $styles[] = new Style($row['styleId'], $row['styleName']);
+        }
+        return $styles;
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    public function addArtist($data): bool
+    {
+        $query = "INSERT INTO artist (artistName,artistDescription,artistLogoId) VALUES (:artistName,:artistDescription,:artistLogoId)";
+        $artistID = $this->executeQuery($query, array(':artistName' => $data['artistName'], ':artistDescription' => $data['artistDescription'], ':artistLogoId' => $data['artistLogo']), false, true);
+        if (!is_numeric($artistID)) {
+            throw new DatabaseQueryException("Error while inserting artist");
+        }
+        foreach ($data['artistStyles'] as $style) {
+            $this->insertArtistStyleWithArtistIdAndStyleId($artistID, $style);
+        }
+        foreach ($data['others'] as $key => $imageId) {
+           $this->insertArtistImageWithArtistIdAndImageId($artistID, $imageId, 'Other');
+        }
+       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['portrait'],'portrait');
+       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['banner'],'banner');
+
+        return true; // if something wrong it will throw me an error and will not reach here
+    }
+
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    private function insertArtistImageWithArtistIdAndImageId($artistId, $imageId, $specification)
+    {
+        $query = "INSERT INTO artistImage (artistId,imageId,ImageSpecification) VALUES (:artistId,:imageId,:ImageSpecification)";
+        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':imageId' => $imageId, ':ImageSpecification' => $specification))){
+            // since it is an insert query so execute Query will return false if it was not inserted successFully
+            throw new DatabaseQueryException("Error while inserting artist image");
+        } // if it is false we have an error
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    private function insertArtistStyleWithArtistIdAndStyleId($artistId, $styleId){
+        $query = "INSERT INTO artistStyle (artistId,styleId) VALUES (:artistId,:styleId)";
+        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId))){
+            // since it is an insert query so execute Query will return false if it was not inserted successFully
+            throw new DatabaseQueryException("Error while inserting artist style");
+        } // if it is false we have an error
+    }
+
 }

@@ -13,7 +13,8 @@ class EventService
     {
         return $this->eventRepository->getEventByName($name);
     }
-    public function getAllLocations(){
+    public function getAllLocations()
+    {
         return $this->eventRepository->getAllLocations();
     }
     public function getParagraphByEventId($eventId){

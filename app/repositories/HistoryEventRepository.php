@@ -20,11 +20,19 @@ class HistoryEventRepository extends EventRepository
 
     private function createHistoryEventInstance($dbRow)
     {
-        $danceEvent = new HistoryEvent();
-        $danceEvent->setEventId($dbRow['eventId']);
-        $danceEvent->setEventName($dbRow['eventName']);
-        $danceEvent->setHistoryTours($this->getToursByEventId($dbRow['eventId']));
-        return $danceEvent;
+        try{
+            $danceEvent = new HistoryEvent();
+            $danceEvent->setEventId($dbRow['eventId']);
+            $danceEvent->setEventName($dbRow['eventName']);
+            $danceEvent->setHistoryTours($this->getToursByEventId($dbRow['eventId']));
+            $danceEvent->setEventParagraphs($this->getEventParagraphsByEventId($dbRow['eventId']));
+            $danceEvent->setEventImages($this->getEventImagesByEventId($dbRow['eventId']));
+            return $danceEvent;
+        }
+        catch (Exception $e){
+            echo $e;
+        }
+
     }
 
     public function getToursByEventId($eventId)
