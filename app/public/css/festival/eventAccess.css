@@ -37,8 +37,9 @@
     #eventInfoRow{height: 140px;}
     #imgCaption{display:none;}
     #eventInfo{display:none;}
-    #schedule{display:none;}
+    #schedule{display:none;}    
+}
 
-
-    
+@media (max-width: 1200px) {
+    #data{height: 500px;}
 }
