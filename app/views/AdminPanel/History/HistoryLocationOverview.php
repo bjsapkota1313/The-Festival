@@ -8,7 +8,7 @@
     </div>
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-md-between">
-            <h4 class="pb-2" >Tour Location Overview</h4>
+            <h4 class="pb-2">Tour Location Overview</h4>
             <a class="btn btn-primary" href="/admin/dance/addArtist">Add New Bigay</a>
         </div>
         <div class="table-responsive-sm">
@@ -43,28 +43,29 @@
                             <td><?= $tourLocation->getTourLocation()->getLocationName(); ?></td>
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getStreetName(); ?></td>
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getHouseNumber(); ?></td>
-                            <td><?php  if(is_null($tourLocation->getTourLocation()->getAddress()->getHouseNumberAdditional())) :
+                            <td><?php if (is_null($tourLocation->getTourLocation()->getAddress()->getHouseNumberAdditional())) :
                                     echo "N/A";
                                 else: echo $tourLocation->getTourLocation()->getAddress()->getHouseNumberAdditional();
-                                endif;?>
-
+                                endif; ?>
                             </td>
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getPostCode(); ?></td>
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getCity(); ?></td>
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getCountry(); ?></td>
                             <td>
                                 <div class="d-inline-flex">
-                                    <form>
-                                        <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
-                                                class="fa-solid fa-file-pen"></i></button>
+                                    <form method="POST">
+                                        <input type="hidden" name="tourId"
+                                               value="<?= $tourLocation->getHistoryTourLocationId() ?>">
+                                        <button name="deleteHistoryTour" class="btn btn-primary"><i
+                                                    class="fa-solid fa-file-pen"></i></button>
                                         <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i
-                                                class="fa-solid fa-trash"></i></button>
+                                                    class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                <?php endif;?>
+                <?php endif; ?>
                 </tbody>
             </table>
         </div>

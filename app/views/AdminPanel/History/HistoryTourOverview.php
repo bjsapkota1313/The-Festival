@@ -8,7 +8,7 @@
     </div>
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-md-between">
-            <h4 class="pb-2" >Tour Location Overview</h4>
+            <h4 class="pb-2">Tour Location Overview</h4>
             <a class="btn btn-primary" href="/admin/dance/addArtist">Add New Bigay</a>
         </div>
         <div class="table-responsive-sm">
@@ -41,20 +41,25 @@
                             <td><?= $historyTour->getTourDate()->format('Y-m-d'); ?></td>
                             <td><?= $historyTour->getTime()->format('H:i:s'); ?></td>
                             <td><?= $historyTour->getDuration(); ?></td>
-
                             <td>
                                 <div class="d-inline-flex">
-                                    <form>
-                                        <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
-                                                class="fa-solid fa-file-pen"></i></button>
-                                        <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i
-                                                class="fa-solid fa-trash"></i></button>
+                                    <form method="POST">
+                                        <input type="hidden" name="deleteTourId" value="<?= $historyTour->getHistoryTourId() ?>">
+                                        <button type="submit" name="deleteHistoryTour" class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>
+
+                                        <input type="hidden" name="updateTourId" value="<?= $historyTour->getHistoryTourId() ?>">
+                                        <button type="submit" name="updateHistoryTour" class="btn btn-primary"><i class="fa-solid fa-file-pen"></i></button>
+
+                                        <!--                                        <input type="hidden" name="tourId"-->
+<!--                                               value="--><?//= $historyTour->getHistoryTourId() ?><!--">-->
+<!--                                        <button name="updateHistoryTour" class="btn btn-primary"><i class="fa-solid fa-file-pen"></i></button>-->
+<!--                                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-trash"></i></button>-->
                                     </form>
                                 </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
-                <?php endif;?>
+                <?php endif; ?>
                 </tbody>
             </table>
         </div>

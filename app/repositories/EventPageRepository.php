@@ -42,6 +42,7 @@ class EventPageRepository extends Repository
         }
     }
 
+
     private function getContent($contentId)
     {
         try {
@@ -131,5 +132,40 @@ class EventPageRepository extends Repository
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+    }
+
+
+    public function getParagraphByEventId($eventId){
+        try {
+            $stmt = $this->connection->prepare("SELECT paragraph.title, paragraph.text 
+                                                    FROM paragraph 
+                                                    JOIN eventparagraph ON paragraph.paragraphId = eventparagraph.paragraphId
+                                                    WHERE eventId = :eventId;");
+            $stmt->bindParam(':eventId', $eventId);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $paragraphs = array();
+            foreach ($results as $result) {
+                $paragraphs[] = $this->createParagraph($result);
+            }
+
+            return $paragraphs;
+
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+    private function createParagraph($result): Paragraph
+    { // create content object by reading from database
+        try{
+            $paragraph = new Paragraph();
+            $paragraph->setTitle($result['title']);
+            $paragraph->setText($result['text']);
+
+            return $paragraph;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
     }
 }
