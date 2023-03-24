@@ -86,13 +86,15 @@ function formatDate(dateData){
 }
 
 
-function setTranslationOptionsForAvailableEvent(translationOptions){
-   translationOptionsList = translationOptions.split(',');
-   translationOptionsList = new Set(translationOptionsList);
-
-   translationOptionsList.forEach((option)=> { 
-    $('#translationOptions').append('&nbsp;<button id="option" class="btn btn-primary text-white">' + option +'</button>');}
-   );
+function setTranslationOptionsForAvailableEvent(translationOptions) {
+    translationOptionsList = translationOptions.split(',');
+    translationOptionsList = new Set(translationOptionsList);
+    var counter = 0;
+    translationOptionsList.forEach((option) => {
+        counter++;
+        $('#translationOptions').append('&nbsp;<button id="option" class="option' + counter + ' btn btn-primary text-white"  value="' + option + '">' + option + '</button><span id="optionId" style="display:none"></span>');
+    }
+    );
 
 }
 
@@ -102,6 +104,7 @@ function setOrderOfTicketTextDataSections(){
     $('#ticketTypes').css('order', '3');
     $('#ticketOptionsControls').css('order', '4');
 }
+
 
 function updateStyleForTicketTextDataSections(){
 
@@ -139,58 +142,171 @@ function removeTranslationOptions() {
 }
 
 
+
+function retrievePreviousTicketId() {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/Tickets/retrievePreviousTicketId",
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+
+
+
+let update = (newlist, value) => {
+    newlist.push(value);
+};
+
+
+
+function retrieveTranslationOptionId() {
+    $(".option1").on('click', function () {
+        $("#optionId").text('1');
+
+    });
+    $(".option2").on('click', function () {
+        $("#optionId").text('2');
+
+    });
+
+}
+
+
+function retrieveLanguageSelected(value) {
+
+    var listItems = document.querySelector('#translationOptions').querySelectorAll("*");
+    var options = new Array();
+
+
+    let foo = (newList, value) => update(newList, value);
+
+    if (value == 1) {
+        listItems[0].addEventListener("click", foo(options, listItems[0].attributes[2].value));
+    }
+
+    else if (value == 2) {
+
+        listItems[1].addEventListener("click", foo(options, listItems[2].attributes[2].value));
+    }
+
+    else if (value == 3) {
+
+        listItems[2].addEventListener("click", foo(options, listItems[4].attributes[2].value));
+    }
+
+    return options[0];
+}
+
+
+
+function retrieveTicketType() {
+
+    return $('#ticketTypes option:selected').val();
+}
+
+
+function createTicketInstance(availableEventId, languageSelected, ticketType, orderId) {
+    var ticketData = {};
+    var previousTicketId = retrievePreviousTicketId();
+    ticketData.ticketId = ++previousTicketId;
+    ticketData.availableEventId = availableEventId;
+    ticketData.ticketOptions = ticketType + ";" + languageSelected;
+    ticketData.orderId = orderId;
+
+    return ticketData;
+}
+
+
+
+function addTicketToCart(availableEventId, translationOptionId) {
+
+    $("#addToShoppingBasket").on('click', function (event) {
+        var translationOptionId = parseInt($("#optionId").text(), 10);
+        var languageSelected = retrieveLanguageSelected(translationOptionId);
+        var ticketType = retrieveTicketType();
+        var TicketData = createTicketInstance(availableEventId, ticketType, languageSelected, 1);
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/api/Tickets/addTicket",
+            data: TicketData,
+            success: function () {
+            }
+        });
+
+    });
+}
+
+
+
+
 function retrieveAvailableEventData() {
 
     let btns = document.querySelectorAll('.buyTicket');
 
     btns.forEach((btn) => {
-        
-        btn.addEventListener('click', function(event){
 
-        var id = parseInt($(this).parent().find('#availableEventId').text());
+        btn.addEventListener('click', function (event) {
 
-           $.ajax({
-            url: "http://localhost/api/AvailableEvents/retrieveAvailableEventData?id=" + id,
-            type: "GET",
-            dataType: "JSON",
-            success: function (jsonStr) {
+            var availableEventId = parseInt($(this).parent().find('#availableEventId').text());
 
-                var id = jsonStr[0];
-                var participatingArtists = retrieveParticipatingArtistsData(id);
-                var eventTypeId = jsonStr[2];
-                var eventDetails = null;
-                 if(participatingArtists == false && (eventTypeId == 1 || eventTypeId == 2)){
-                    eventDetails = jsonStr[1];
-                 }
-                 else {
-                    var participatingArtistId = jsonStr[5];
-                    eventDetails = retrieveArtistById(participatingArtistId)[1];
-                 }
+            $.ajax({
+                url: "http://localhost/api/AvailableEvents/retrieveAvailableEventData?id=" + availableEventId,
+                type: "GET",
+                dataType: "JSON",
+                success: function (jsonStr) {
+                    var participatingArtists = retrieveParticipatingArtistsData(availableEventId);
+                    var eventTypeId = jsonStr[2];
+                    var eventDetails = null;
+                    if (participatingArtists == false && (eventTypeId == 1 || eventTypeId == 2)) {
+                        eventDetails = jsonStr[1];
+                    }
+                    else {
+                        var participatingArtistId = jsonStr[5];
+                        eventDetails = retrieveArtistById(participatingArtistId)[1];
+                    }
 
-                 var eventName = retrieveEventNameByEventTypeId(eventTypeId);
-                 var dateStr = getEventDateById(jsonStr[6])[1];
-                 var dateData = new Date(dateStr);
-                 var dayName = retrieveDayFromDate(dateData);
-                 var dateStrFormatted = formatDate(dateData);
+                    var eventName = retrieveEventNameByEventTypeId(eventTypeId);
+                    var dateStr = getEventDateById(jsonStr[6])[1];
+                    var dateData = new Date(dateStr);
+                    var dayName = retrieveDayFromDate(dateData);
+                    var dateStrFormatted = formatDate(dateData);
 
-                $("#eventType").text(eventName);
-                $("#day").text(dayName);
-                $("#dateTime").text(dateStrFormatted);
-                
-                if (eventTypeId == 1){
-                   displayTicketOptions(jsonStr);
+                    $("#eventType").text(eventName);
+                    $("#day").text(dayName);
+                    $("#dateTime").text(dateStrFormatted);
+
+                    if (eventTypeId == 1) {
+                        displayTicketOptions(jsonStr);
+                    }
+                    else if (eventTypeId == 2) {
+                        removeTranslationOptions();
+                    }
+
+                    $('#ticketData').show();
+
+                    retrieveTranslationOptionId();
+                    addTicketToCart(availableEventId);
+
+
+
                 }
-                 else if (eventTypeId == 2){
-                    removeTranslationOptions();
-                }
-
-                $('#ticketData').show();
-
-
-            }
+            });
         });
     });
-});
+
+
+
 
 
 }
