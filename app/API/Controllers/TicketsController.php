@@ -25,6 +25,18 @@ class TicketsController extends ApiController
             echo $e->getMessage();
         }
     }
+    
+    
+    
+    public function addTicket()
+    {
+        try {
+            $this->ticketService->addTicket($_POST['ticketId'], $_POST['availableEventId'], $_POST['ticketOptions'], $_POST['orderId'], ); //$ticketData[0], $ticketData[1], $ticketData[2], $ticketData[3]);
+
+        } catch (InvalidArgumentException | Exception $e) {
+            http_response_code(500);
+        }
+    }
 
 
 
