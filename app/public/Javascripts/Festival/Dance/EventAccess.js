@@ -6,7 +6,7 @@ function retrieveArtistById($id) {
     var res; 
 
     $.ajax({
-        url: "http://localhost/api/Artists/retrieveArtistData?id=" + $id,
+        url: "http://localhost/api/AvailableEvents/retrieveArtistData?id=" + $id,
         type: "GET",
         dataType: "JSON",
         async: false,
