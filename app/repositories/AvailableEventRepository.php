@@ -32,7 +32,7 @@ class AvailableEventRepository extends repository
 
 
 
-  private function checkAvailableEventExistence($stmt): bool
+  private function checkAvailableEventDataExistence($stmt): bool
     {
         try {
             $stmt->execute();
@@ -55,7 +55,7 @@ class AvailableEventRepository extends repository
             
             $stmt = $this->connection->prepare("SELECT * From availableevent WHERE eventId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
-             if ($this->checkAvailableEventExistence($stmt)) {
+             if ($this->checkAvailableEventDataExistence($stmt)) {
                 $stmt->execute();
                 $result = $stmt->fetch();
                 return $result;}
@@ -71,7 +71,7 @@ class AvailableEventRepository extends repository
             
             $stmt = $this->connection->prepare("SELECT * From availableevent WHERE eventId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
-             if ($this->checkAvailableEventExistence($stmt)) {
+             if ($this->checkAvailableEventDataExistence($stmt)) {
                 $stmt->execute();
                 $result = $stmt->fetch();
                 //echo $result[5];
@@ -93,7 +93,7 @@ class AvailableEventRepository extends repository
             
             $stmt = $this->connection->prepare("SELECT eventName From event WHERE eventId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
-             if ($this->checkAvailableEventExistence($stmt)) {
+             if ($this->checkAvailableEventDataExistence($stmt)) {
                 $stmt->execute();
                 $result = $stmt->fetch();
                 return $result[0];
@@ -105,4 +105,37 @@ class AvailableEventRepository extends repository
         }
     }
 
+    public function getParticipatingArtistNameByArtistId($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT artistName FROM artist WHERE artistId=:artistId");
+            $stmt->bindParam(':artistId', $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+            if ($result != 0){
+            return current($result);}
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    
+    
+    public function  getParticipatingArtistByIdWithUrl($id)
+    {
+        try {
+            
+            $stmt = $this->connection->prepare("SELECT * From artist WHERE artistId LIKE :id");
+            $stmt->bindValue(':id', "%$id%");
+             if ($this->checkAvailableEventDataExistence($stmt)) {
+                $stmt->execute();
+                $result = $stmt->fetch();
+                return $result;}
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+
 }
+
