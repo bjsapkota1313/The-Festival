@@ -1,14 +1,14 @@
 <?php
-require __DIR__ . '/../../Services/artistService.php';
+require_once __DIR__ . '/../../Services/availableEventService.php';
 require __DIR__ . '/ApiController.php';
 
 class ArtistsController extends ApiController
 {
-    private $artistService;
+    private $availableEventService;
 
     public function __construct()
     {
-        $this->artistService = new ArtistService();
+        $this->availableEventService = new AvailableEventService();
     }
 
     public function retrieveArtistData(){
@@ -18,7 +18,7 @@ class ArtistsController extends ApiController
 
             if (!empty($_GET['id'])) {
                 $id = htmlspecialchars($_GET['id']);
-                $artist = $this->artistService->getArtistByIdWithUrl($id);
+                $artist = $this->availableEventService->getParticipatingArtistByIdWithUrl($id);
             }
             echo Json_encode($artist);
         }
