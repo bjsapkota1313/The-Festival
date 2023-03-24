@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../repositories/AvailableEventRepository.php';
-require_once __DIR__ . '/ArtistService.php';
 
 
 class AvailableEventService
