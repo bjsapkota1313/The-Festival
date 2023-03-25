@@ -26,6 +26,24 @@ class ShoppingBasketsController extends ApiController
             echo $e->getMessage();
         }
     }
+    
+    
+      public function retrievePreviousShoppingBasketId()
+    {
+        try {
+            $this->sendHeaders();
+            $shoppingBasketId = NULL;
+
+            $shoppingBasketId = $this->shoppingBasketService->retrieveIdOfPreviousShoppingBasket();
+
+            echo Json_encode($shoppingBasketId);
+        } catch (InvalidArgumentException | Exception $e) {
+            http_response_code(500); // sending bad request error to APi request if something goes wrong
+            echo $e->getMessage();
+        }
+    }
+    
+    
 
 
     public function checkExistenceOfBasketForUser()
