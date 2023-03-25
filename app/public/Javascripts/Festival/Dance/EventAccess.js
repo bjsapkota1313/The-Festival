@@ -250,7 +250,7 @@ function createOrderInstance() {
     var orderData = {};
     var previousOrderId = retrievePreviousOrderId();
     orderData.orderId = ++previousOrderId;
-    orderData.userId = $("#userId").text()
+    orderData.userId = $("#userId").text();
     orderData.orderDate = new Date(Date.now()).toLocaleString();
     orderData.billId = 1;
 
