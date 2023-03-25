@@ -188,20 +188,20 @@ function retrieveLanguageSelected(value) {
     var options = new Array();
 
 
-    let foo = (newList, value) => update(newList, value);
+    let selectedOption = (newList, value) => update(newList, value);
 
     if (value == 1) {
-        listItems[0].addEventListener("click", foo(options, listItems[0].attributes[2].value));
+        selectedOption(options, listItems[0].attributes[2].value);
     }
 
     else if (value == 2) {
 
-        listItems[1].addEventListener("click", foo(options, listItems[2].attributes[2].value));
+        selectedOption(options, listItems[2].attributes[2].value);
     }
 
     else if (value == 3) {
 
-        listItems[2].addEventListener("click", foo(options, listItems[4].attributes[2].value));
+        selectedOption("click", foo(options, listItems[4].attributes[2].value));
     }
 
     return options[0];
@@ -228,13 +228,40 @@ function createTicketInstance(availableEventId, languageSelected, ticketType, or
 
 
 
+function createOrderInstance() {
+    var orderData = {};
+    var previousOrderId = retrievePreviousOrderId();
+    orderData.orderId = ++previousOrderId;
+    orderData.userId = $("#userId").text()
+    orderData.orderDate = new Date(Date.now()).toLocaleString();
+    orderData.billId = 1;
+
+    return orderData;
+}
+
+
+
+function addOrder(orderData) {
+    
+        $.ajax({
+            type: "POST",
+            url: "http://localhost/api/ShopOrders/addOrder",
+            data: orderData,
+            success: function () {
+            }
+        });
+}
+
+
 function addTicketToCart(availableEventId, translationOptionId) {
 
     $("#addToShoppingBasket").on('click', function (event) {
         var translationOptionId = parseInt($("#optionId").text(), 10);
         var languageSelected = retrieveLanguageSelected(translationOptionId);
         var ticketType = retrieveTicketType();
-        var TicketData = createTicketInstance(availableEventId, ticketType, languageSelected, 1);
+        var orderData = createOrderInstance();
+        addOrder(orderData);
+        var TicketData = createTicketInstance(availableEventId, ticketType, languageSelected, orderData.orderId);
 
         $.ajax({
             type: "POST",
