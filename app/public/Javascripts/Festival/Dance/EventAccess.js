@@ -404,7 +404,8 @@ function addTicketToCart(availableEventId, translationOptionId) {
             addOrder(orderData);
 
         }
-        
+        var TicketData = createTicketInstance(availableEventId, ticketType, languageSelected, orderData.billId);
+
         $.ajax({
             type: "POST",
             url: "http://localhost/api/Tickets/addTicket",
