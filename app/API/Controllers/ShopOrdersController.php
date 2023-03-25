@@ -27,17 +27,18 @@ class ShopOrdersController extends ApiController
     }
     
     
+        
+    public function addOrder()
+    {
+        try {
+            $this->shopOrderService->addOrder($_POST['orderId'], $_POST['userId'], $_POST['orderDate'], $_POST['billId']); 
+
+        } catch (InvalidArgumentException | Exception $e) {
+            http_response_code(500);
+        }
+    }
     
-    // public function addOrder()
-    // {
-    //     try {
-    //         $this->shopOrderService->addOrder($_POST['orderId'], $_POST['userId'], $_POST['orderDate'], $_POST['billId']); 
-
-    //     } catch (InvalidArgumentException | Exception $e) {
-    //         http_response_code(500);
-    //     }
-    // }
-
+    
 }
 
 
