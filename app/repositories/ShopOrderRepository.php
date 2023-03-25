@@ -84,7 +84,7 @@ class ShopOrderRepository extends repository
 
     public function addOrder($orderId, $userId, $orderDate, $billId)
     {
-        $stmt = $this->connection->prepare("INSERT INTO order(orderId, userId, orderDate, billId)VALUES(:orderId, :userId, :orderDate, :billId)");
+        $stmt = $this->connection->prepare("INSERT INTO shoporder(orderId, userId, orderDate, billId)VALUES(:orderId, :userId, :orderDate, :billId)");
         $stmt->bindParam(':orderId', $orderId);
         $stmt->bindParam(':userId', $userId);
         $stmt->bindParam(':orderDate', $orderDate);
