@@ -61,7 +61,7 @@ class ShoppingBasketRepository extends Repository
             $shoppingBasketsList = $this->getAll();
             $userService = new UserService();
             $currentUser = $userService->getUserById($userId);
-            $currentUserId = current($currentUser)->getId();
+            $currentUserId = $currentUser->getId();
             foreach ($shoppingBasketsList as $item) {
                 if ($item->getUserId() == $currentUserId) {
                     $shoppingBasketExists = true;
