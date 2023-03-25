@@ -145,6 +145,7 @@
 
 <main>
 
+  <span id="userId" style="display:none"><?php echo $currentUserId; ?></span>
 
   <img src="<?php echo $this->getImageFullPath($bodyHead->getImage()); ?>" alt="Cover Image" id="eventPageImg">
   <div class="carousel-caption" id="imgCaption">
