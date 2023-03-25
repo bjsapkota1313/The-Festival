@@ -294,7 +294,7 @@ function retrieveLanguageSelected(value) {
 
     else if (value == 3) {
 
-        selectedOption("click", foo(options, listItems[4].attributes[2].value));
+        selectedOption(options, listItems[4].attributes[2].value);
     }
 
     return options[0];
