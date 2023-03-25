@@ -180,6 +180,81 @@ function retrievePreviousOrderId() {
 }
 
 
+function retrievePreviousShoppingBasket() {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/ShoppingBaskets/retrievePreviousShoppingBasket",
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+
+
+
+function retrievePreviousShoppingBasketId() {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/ShoppingBaskets/retrievePreviousShoppingBasket",
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+
+
+function retrieveBasketOfUser(userId) {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/ShoppingBaskets/retrieveBasketOfUser?id=" + userId,
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+function checkExistenceOfShoppingBasketForUser(userId) {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/ShoppingBaskets/checkExistenceOfBasketForUser?id=" + userId,
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+
+
 
 let update = (newlist, value) => {
     newlist.push(value);
@@ -259,6 +334,31 @@ function createOrderInstance() {
 
 
 
+function createShoppingBasketInstance() {
+    var shoppingBasketData = {};
+    var previousShoppingBasketId = retrievePreviousShoppingBasketId();
+    shoppingBasketData.shoppingBasketId = ++previousShoppingBasketId;
+    shoppingBasketData.userId = $("#userId").text();
+    shoppingBasketData.billId = 1;
+
+    return shoppingBasketData;
+}
+
+
+function addShoppingBasket(shoppingBasketData) {
+    
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/api/ShoppingBaskets/addShoppingBasket",
+        data: shoppingBasketData,
+        success: function () {
+            alert('addedShoppingBasket');
+        }
+    });
+}
+
+
+
 function addOrder(orderData) {
     
         $.ajax({
@@ -271,16 +371,40 @@ function addOrder(orderData) {
 }
 
 
+function addShoppingBasket(shoppingBasketData) {
+    
+    $.ajax({
+        type: "POST",
+        url: "http://localhost/api/ShoppingBaskets/addShoppingBasket",
+        data: shoppingBasketData,
+        success: function () {
+        }
+    });
+}
+
+
 function addTicketToCart(availableEventId, translationOptionId) {
 
     $("#addToShoppingBasket").on('click', function (event) {
         var translationOptionId = parseInt($("#optionId").text(), 10);
         var languageSelected = retrieveLanguageSelected(translationOptionId);
         var ticketType = retrieveTicketType();
+        var userId = $("#userId").text();
         var orderData = createOrderInstance();
-        addOrder(orderData);
-        var TicketData = createTicketInstance(availableEventId, ticketType, languageSelected, orderData.orderId);
+        var shoppingBasketExists = checkExistenceOfShoppingBasketForUser(userId);
+        if (shoppingBasketExists == false){
+            var shoppingBasketData = createShoppingBasketInstance();
+            addShoppingBasket(shoppingBasketData);
+            addOrder(orderData);
+        }
+        
+        else {
+            var previousShoppingBasket = retrievePreviousShoppingBasket();
+            orderData.billId = previousShoppingBasket.billId;
+            addOrder(orderData);
 
+        }
+        
         $.ajax({
             type: "POST",
             url: "http://localhost/api/Tickets/addTicket",
