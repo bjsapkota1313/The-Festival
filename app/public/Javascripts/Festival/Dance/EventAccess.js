@@ -162,6 +162,24 @@ function retrievePreviousTicketId() {
 
 
 
+function retrievePreviousOrderId() {
+
+    var res;
+
+    $.ajax({
+        url: "http://localhost/api/ShopOrders/retrievePreviousOrderId",
+        type: "GET",
+        dataType: "JSON",
+        async: false,
+        success: function (jsonStr) {
+            res = jsonStr;
+
+        }
+    });
+    return res;
+}
+
+
 
 let update = (newlist, value) => {
     newlist.push(value);
