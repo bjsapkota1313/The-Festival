@@ -205,7 +205,7 @@ function retrievePreviousShoppingBasketId() {
     var res;
 
     $.ajax({
-        url: "http://localhost/api/ShoppingBaskets/retrievePreviousShoppingBasket",
+        url: "http://localhost/api/ShoppingBaskets/retrievePreviousShoppingBasketId",
         type: "GET",
         dataType: "JSON",
         async: false,
