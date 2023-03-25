@@ -399,8 +399,8 @@ function addTicketToCart(availableEventId, translationOptionId) {
         }
         
         else {
-            var previousShoppingBasket = retrievePreviousShoppingBasket();
-            orderData.billId = previousShoppingBasket.billId;
+            var basketOfUser = retrieveBasketOfUser();
+            orderData.billId = basketOfUser.billId;
             addOrder(orderData);
 
         }
