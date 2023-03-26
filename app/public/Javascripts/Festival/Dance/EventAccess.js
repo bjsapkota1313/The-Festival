@@ -399,7 +399,7 @@ function addTicketToCart(availableEventId, translationOptionId) {
         }
         
         else {
-            var basketOfUser = retrieveBasketOfUser();
+            var basketOfUser = retrieveBasketOfUser(userId);
             orderData.billId = basketOfUser.billId;
             addOrder(orderData);
 
