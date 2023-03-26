@@ -6,9 +6,9 @@ trait ImageManager
     /**
      * @throws uploadFileFailedException
      */
-    function moveImageToSpecifiedDirectory($image, $directory):void
+    function moveImageToSpecifiedDirectory($image, $directory): void
     {
-        if(!move_uploaded_file($image['tmp_name'], $directory)){
+        if (!move_uploaded_file($image['tmp_name'], $directory)) {
             throw new uploadFileFailedException("File upload Failed");
         }
     }
@@ -28,7 +28,7 @@ trait ImageManager
             $imageNames = [];
             foreach ($images as $key => $image) {
                 $imageName = $this->getUniqueImageNameByImageName($image);
-                $this->moveImageToSpecifiedDirectory($image, $pathToDir.$imageName);
+                $this->moveImageToSpecifiedDirectory($image, $pathToDir . $imageName);
                 // Check if the key already exists in $imageNames
                 if (isset($imageNames[$key])) {
                     // If the key exists, append the new value to the existing value in the array
@@ -47,6 +47,30 @@ trait ImageManager
             throw new uploadFileFailedException($exception->getMessage());
         }
 
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    function deleteImageFromDirectory($imagePath): void
+    {
+        if (file_exists($imagePath)) {
+            if (!unlink($imagePath)) {
+                throw new uploadFileFailedException("File deletion Failed:");
+            }
+        } else {
+            throw new uploadFileFailedException("File deletion Failed: File does not exist");
+        }
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    function deleteImagesFromDirectory($images, $directory): void
+    {
+        foreach ($images as $imageName) {
+            $this->deleteImageFromDirectory($directory . $imageName);
+        }
     }
 
 }

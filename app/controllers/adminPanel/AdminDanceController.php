@@ -110,8 +110,9 @@ class AdminDanceController extends AdminPanelController
 
     public function performances()
     {
+        $title = 'Performances';
         $errorMessage = array();
-        $this->displaySideBar('Performances');
+        $this->displaySideBar($title);
         $this->deletePerformance();
         $artistPerformances = $this->getDanceEvent()->getPerformances();
         if (empty($artistPerformances)) {
@@ -145,9 +146,9 @@ class AdminDanceController extends AdminPanelController
             $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtistPerformance'], ['artists']);
             if (is_string($sanitizedInput)) {
                 return $sanitizedInput;
-            } else {
+            } else { //TODO:check if the venue or artist is already added to the event
                 if ($this->checkDateIsInPast('' . $sanitizedInput['performanceDate'] . ' ' . $sanitizedInput['startTime'])) {
-                    return "Entered Date and Time is in the Past";
+                    return "Entered Date and Time is in the past";
                 }
                 try {
                     $sanitizedInput['duration'] = $this->getDurationInMinutes($sanitizedInput['startTime'], $sanitizedInput['endTime']); // adding new key with value to array

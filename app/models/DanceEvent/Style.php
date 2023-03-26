@@ -1,6 +1,6 @@
 <?php
 
-class Style
+class Style implements JsonSerializable
 {
     private int $styleId;
     private string $styleName;
@@ -45,5 +45,10 @@ class Style
     public function setStyleName(string $styleName): void
     {
         $this->styleName = $styleName;
+    }
+
+    public function jsonSerialize() :mixed
+    {
+       return get_object_vars($this);
     }
 }

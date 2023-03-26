@@ -10,6 +10,7 @@ class ArtistService
 
     private $artistRepository;
     private $imageService;
+    private $imageuploadDirectory = __DIR__ . "/../public/image/Festival/Dance/";
 
     public function __construct()
     {
@@ -63,10 +64,13 @@ class ArtistService
      */
     public function addArtist($data, $images): bool
     {
-        $directory = __DIR__ . "/../public/image/Festival/Dance/";
-        $newImagesNamesOthers['others'] = $this->getImagesNameByMovingToDirectory($images['others'], $directory);
+        // checking if the artist already exists in the database or not
+        if($this->artistRepository->artistExistenceInDatabase($data['artistName'],$data['artistDescription'])){
+            throw new DatabaseQueryException("Artist With same name and description already exists");
+        }
+        $newImagesNamesOthers['others'] = $this->getImagesNameByMovingToDirectory($images['others'], $this->imageuploadDirectory);
         unset($images['others']); // removing others array images after updating
-        $newImagesNames = $this->getImagesNameByMovingToDirectory($images, $directory);
+        $newImagesNames = $this->getImagesNameByMovingToDirectory($images, $this->imageuploadDirectory);
         $allImagesNames = array_merge($newImagesNames, $newImagesNamesOthers); // merging  arrays
         $imagesWithId = $this->insertImagesreturnID($allImagesNames);
         return $this->artistRepository->addArtist(array_merge($data, $imagesWithId));
@@ -89,6 +93,26 @@ class ArtistService
             }
         }
         return $imagesID;
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    public function deleteArist($artistID): bool
+    {
+        $this->deleteArtistImagesByArtistId($artistID);
+        return $this->artistRepository->deleteArtist($artistID);
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    private function deleteArtistImagesByArtistId($artistId): void
+    {
+        $artistImages = $this->artistRepository->getAllImagesNameByArtistId($artistId);
+        if(!empty($artistImages)){
+            $this->deleteImagesFromDirectory($artistImages, $this->imageuploadDirectory);
+        }// if file cannot delete then it will throw exception
     }
 }
 

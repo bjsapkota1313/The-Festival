@@ -2,7 +2,7 @@
     <div class="container pb-3 pt-5">
         <div class="row">
             <div class="col-md-12">
-                <h1>Artist Performances</h1>
+                <h1><?= $title ?></h1>
             </div>
         </div>
     </div>
@@ -10,7 +10,7 @@
         <div class="d-flex flex-column flex-md-row justify-content-md-between">
             <div class="float-start"></div>
             <div class="container-fluid float-end text-end">
-                <a class="btn btn-primary" href= "/admin/dance/addPerformance" >Add new Performance</a>
+                <a class="btn btn-primary" href="/admin/dance/addPerformance">Add new Performance</a>
             </div>
         </div>
     </div>
@@ -36,27 +36,28 @@
                         <strong>Error:</strong> <?= $errorMessage['artistPerformances'] ?>
                     </div>
                 <?php else:
-                 foreach ($artistPerformances as $performance) { ?>
-                    <tr>
-                        <td><?= $performance->getPerformanceId() ?></td>
-                        <td><?= $performance->getDate()->format('Y-m-d') ?></td>
-                        <td><?= $performance->getDate()->format('H:i') ?></td>
-                        <td><?= $performance->getEndDateTime()->format('H:i') ?></td>
-                        <td><?= $performance->getVenue()->getLocationName() ?></td>
-                        <td><?= $this->formatArtistName($performance->getArtists()) ?></td>
-                        <td><?= $performance->getSession()->getSessionName() ?></td>
-                        <td>100.00</td>
-                        <td>
-                            <div class="d-inline-flex">
+                    foreach ($artistPerformances as $performance) { ?>
+                        <tr>
+                            <td><?= $performance->getPerformanceId() ?></td>
+                            <td><?= $performance->getDate()->format('Y-m-d') ?></td>
+                            <td><?= $performance->getDate()->format('H:i') ?></td>
+                            <td><?= $performance->getEndDateTime()->format('H:i') ?></td>
+                            <td><?= $performance->getVenue()->getLocationName() ?></td>
+                            <td><?= $this->formatArtistName($performance->getArtists()) ?></td>
+                            <td><?= $performance->getSession()->getSessionName() ?></td>
+                            <td>100.00</td>
+                            <td>
+                                <div class="d-inline-flex">
                                     <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                    <button onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')" class="btn btn-danger ms-3"><i
-                                                class="fa-solid fa-trash"></i> </button>
-                            </div>
+                                    <button onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')"
+                                            class="btn btn-danger ms-3"><i
+                                                class="fa-solid fa-trash"></i></button>
+                                </div>
 
-                        </td>
-                    </tr>
-                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 <?php endif; ?>
                 </tbody>
             </table>

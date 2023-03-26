@@ -13,15 +13,12 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
-    <meta name="description" content="">
-    <meta name="author" content="">
     <script type="text/javascript"
             src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script>
     <script src="http://code.jquery.com/jquery-migrate-1.1.1.js"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/Admin/AdminPanelSideBar.css">
-    <!-- Boxiocns CDN Link -->
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
@@ -132,13 +129,10 @@
             </ul>
         </li>
         <li>
-            <a href="#">
-                <i class='bx bx-history'></i>
-                <span class="link_name">History</span>
+            <a href="/admin/ApiManagement">
+                <i class="fa-solid fa-key"></i>
+                <span class="link_name">API Management</span>
             </a>
-            <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">History</a></li>
-            </ul>
         </li>
         <li>
             <a href="#">
@@ -155,8 +149,8 @@
                     <img src="https://i.ibb.co/7bQQYkX/avatar.png" alt="profileImg">
                 </div>
                 <div class="name-job">
-                    <div class="profile_name">Prem Shahi</div>
-                    <div class="job">Web Desginer</div>
+                    <div class="profile_name">Bijay</div>
+                    <div class="job">Adminstrator</div>
                 </div>
                 <i class='bx bx-log-out'></i>
             </div>

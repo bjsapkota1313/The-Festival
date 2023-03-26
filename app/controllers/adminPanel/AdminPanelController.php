@@ -36,7 +36,7 @@ require_once __DIR__.'/../../services/EventService.php';
             }
      }
 
-     protected function getImageFullPath($imageName): string // overwritting this Method
+     protected function getImageFullPath($imageName): string // overwritting this Method from controller class
      {
          $directory = strtolower(substr(get_class($this), 5, -10));
          return "/image/Festival/$directory/".$imageName;

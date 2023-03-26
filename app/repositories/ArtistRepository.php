@@ -213,10 +213,10 @@ class ArtistRepository extends Repository
             $this->insertArtistStyleWithArtistIdAndStyleId($artistID, $style);
         }
         foreach ($data['others'] as $key => $imageId) {
-           $this->insertArtistImageWithArtistIdAndImageId($artistID, $imageId, 'Other');
+            $this->insertArtistImageWithArtistIdAndImageId($artistID, $imageId, 'Other');
         }
-       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['portrait'],'portrait');
-       $this->insertArtistImageWithArtistIdAndImageId($artistID,$data['banner'],'banner');
+        $this->insertArtistImageWithArtistIdAndImageId($artistID, $data['portrait'], 'portrait');
+        $this->insertArtistImageWithArtistIdAndImageId($artistID, $data['banner'], 'banner');
 
         return true; // if something wrong it will throw me an error and will not reach here
     }
@@ -228,7 +228,7 @@ class ArtistRepository extends Repository
     private function insertArtistImageWithArtistIdAndImageId($artistId, $imageId, $specification)
     {
         $query = "INSERT INTO artistImage (artistId,imageId,ImageSpecification) VALUES (:artistId,:imageId,:ImageSpecification)";
-        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':imageId' => $imageId, ':ImageSpecification' => $specification))){
+        if (!$this->executeQuery($query, array(':artistId' => $artistId, ':imageId' => $imageId, ':ImageSpecification' => $specification))) {
             // since it is an insert query so execute Query will return false if it was not inserted successFully
             throw new DatabaseQueryException("Error while inserting artist image");
         } // if it is false we have an error
@@ -237,12 +237,51 @@ class ArtistRepository extends Repository
     /**
      * @throws DatabaseQueryException
      */
-    private function insertArtistStyleWithArtistIdAndStyleId($artistId, $styleId){
+    private function insertArtistStyleWithArtistIdAndStyleId($artistId, $styleId)
+    {
         $query = "INSERT INTO artistStyle (artistId,styleId) VALUES (:artistId,:styleId)";
-        if(!$this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId))){
+        if (!$this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId))) {
             // since it is an insert query so execute Query will return false if it was not inserted successFully
             throw new DatabaseQueryException("Error while inserting artist style");
         } // if it is false we have an error
+    }
+
+    public function artistExistenceInDatabase($artistName, $artistDescription): bool
+    {
+        $query = "SELECT artistId   FROM artist WHERE artistName = :artistName AND artistDescription = :artistDescription";
+        $result = $this->executeQuery($query, array(':artistName' => $artistName, ':artistDescription' => $artistDescription)); // it is difficult to have same name and have same description of the artist
+        if (empty($result)) {
+            return true; // if there is no result then it means that the artist does not exist in the database
+        }
+        return false;
+    }
+    public function deleteArtist($artistId): bool
+    {
+        $query = "DELETE FROM artist WHERE artistId = :artistId";
+        return $this->executeQuery($query, array(':artistId' => $artistId)); // it is going to return since it is a delete query
+    }
+
+    public function getAllImagesNameByArtistId($artistId): ?array
+    {
+        $query = "SELECT ImageName FROM (
+                        SELECT LogoImage.ImageName AS ImageName FROM artist
+                        JOIN image AS LogoImage ON artist.artistLogoId = LogoImage.imageId
+                        WHERE artist.artistId = :artistId
+                        UNION
+                        SELECT image.ImageName AS ImageName FROM artist
+                        JOIN artistImage ON artist.artistId = artistImage.artistId
+                        JOIN image ON artistImage.imageId = image.imageId
+                        WHERE artist.artistId = :artistId
+                        ) AS ImageNames";
+        $result = $this->executeQuery($query, array(':artistId' => $artistId));
+        if (empty($result)) {
+            return null;
+        }
+        $images = array();
+        foreach ($result as $row) {
+            $images[] = $row['ImageName'];
+        }
+        return $images;
     }
 
 }

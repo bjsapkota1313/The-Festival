@@ -1,6 +1,6 @@
 <?php
 
-class Artist
+class Artist implements JsonSerializable
 {
     private int  $artistId;
     private string $artistName;
@@ -113,4 +113,11 @@ class Artist
     }
 
 
+    public function jsonSerialize() :mixed
+    {
+        return [
+            'artistName' => $this->artistName,
+            'artistStyles' => $this->artistStyles
+        ];
+    }
 }

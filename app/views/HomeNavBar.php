@@ -72,10 +72,12 @@
                             <li id="manageUsersLink"><a class="dropdown-item" href="/manageUsers">Manage users</a></li>
                         </ul>
                     </li>
-
                 </ul>
             </div>
         </div>
     </nav>
  <script src="/Javascripts/NavBar.js"></script>
 </header>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-641c8a1ae095e8f8"></script>
+
+
