@@ -371,17 +371,6 @@ function addOrder(orderData) {
 }
 
 
-function addShoppingBasket(shoppingBasketData) {
-    
-    $.ajax({
-        type: "POST",
-        url: "http://localhost/api/ShoppingBaskets/addShoppingBasket",
-        data: shoppingBasketData,
-        success: function () {
-        }
-    });
-}
-
 
 function addTicketToCart(availableEventId, translationOptionId) {
 
