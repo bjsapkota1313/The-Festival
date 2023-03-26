@@ -13,5 +13,5 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <script src="/javascript/app.js"></script>
-    <link href="/views/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/css/loginStyle.css" rel="stylesheet" type="text/css">
 </head>

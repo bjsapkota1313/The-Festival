@@ -2,12 +2,16 @@
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__. '/../../services/AvailableEventService.php';
 require_once __DIR__. '/../../services/EventDateService.php';
+require_once __DIR__ . '/../../services/userService.php';
+
 
 
 class EventAccessController extends eventController
 {
     private $availableEventService;
     private $eventDateService;
+    private $userService;
+    private $currentUserId;
 
 
     public function __construct()
@@ -15,11 +19,15 @@ class EventAccessController extends eventController
         parent::__construct();
         $this->availableEventService = new AvailableEventService();
         $this->eventDateService = new EventDateService();
+        if(isset($_SESSION["loggedUser"])){
+        $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
+        }
 
     }
 
     public function index()
     {
+        $currentUserId = $this->currentUserId;
         $this->displayNavBar("EventAccess",'/css/festival/eventAccess.css');
 
         $eventAccesPage = $this->eventPageService->getEventPageByName('EventAccess');

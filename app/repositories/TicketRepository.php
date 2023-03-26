@@ -83,10 +83,10 @@ class TicketRepository extends repository
 
 
 
-    public function addTicket($id, $availableEventId, $ticketOptions, $orderId)
+  public function addTicket($id, $availableEventId, $ticketOptions, $orderId)
     {
-        $stmt = $this->connection->prepare("INSERT INTO ticket(id, availableEventId, ticketOptions, orderId)VALUES(:id, :availableEventId, :ticketOptions, :orderId)");
-        $stmt->bindParam(':id', $id);
+        $stmt = $this->connection->prepare("INSERT INTO ticket(ticketId, availableEventId, ticketOptions, orderId)VALUES(:ticketId, :availableEventId, :ticketOptions, :orderId)");
+        $stmt->bindParam(':ticketId', $id);
         $stmt->bindParam(':availableEventId', $availableEventId);
         $stmt->bindParam(':ticketOptions', $ticketOptions);
         $stmt->bindParam(':orderId', $orderId);
