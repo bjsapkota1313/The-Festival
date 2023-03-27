@@ -58,6 +58,7 @@ class LoginController extends Controller
                 // if the user exists in the database, log it in.
                 // to show the user is logged in, we set the loggeUser value in $_SESSION dictionary. Then, we redirect to home.
                 $_SESSION['loggedUser']=$user;
+                $_SESSION['userId'] = $user->getId();
 
                 header("location: /home");
             }

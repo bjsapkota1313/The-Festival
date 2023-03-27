@@ -3,11 +3,11 @@ require_once __DIR__ . '/../repositories/EventRepository.php';
 class EventService
 {
     private $eventRepository;
-    private $eventPageRepository;
+//    private $eventPageRepository;
     public function __construct()
     {
         $this->eventRepository = new EventRepository();
-        $this->eventPageRepository = new EventPageRepository();
+//        $this->eventPageRepository = new EventPageRepository();
     }
     public function getEventByName($name)
     {
@@ -17,7 +17,7 @@ class EventService
     {
         return $this->eventRepository->getAllLocations();
     }
-    public function getParagraphByEventId($eventId){
-        return $this->eventPageRepository->getParagraphByEventId($eventId);
-    }
+//    public function getParagraphByEventId($eventId){
+//        return $this->eventPageRepository->getParagraphByEventId($eventId);
+//    }
 }
