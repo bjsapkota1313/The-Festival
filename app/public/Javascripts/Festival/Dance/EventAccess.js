@@ -1,6 +1,5 @@
 
 
-
 function retrieveArtistById($id) {
 
     var res; 
@@ -148,7 +147,7 @@ function retrievePreviousTicketId() {
     var res;
 
     $.ajax({
-        url: "http://localhost/api/Tickets/retrievePreviousTicketId",
+        url: "http://localhost/api/OrderTickets/retrievePreviousTicketId",
         type: "GET",
         dataType: "JSON",
         async: false,
@@ -311,7 +310,7 @@ function retrieveTicketType() {
 function createTicketInstance(availableEventId, languageSelected, ticketType, orderId) {
     var ticketData = {};
     var previousTicketId = retrievePreviousTicketId();
-    ticketData.ticketId = ++previousTicketId;
+    ticketData.orderTicketId = ++previousTicketId;
     ticketData.availableEventId = availableEventId;
     ticketData.ticketOptions = ticketType + ";" + languageSelected;
     ticketData.orderId = orderId;
@@ -352,7 +351,6 @@ function addShoppingBasket(shoppingBasketData) {
         url: "http://localhost/api/ShoppingBaskets/addShoppingBasket",
         data: shoppingBasketData,
         success: function () {
-            alert('addedShoppingBasket');
         }
     });
 }
@@ -385,6 +383,7 @@ function addTicketToCart(availableEventId, translationOptionId) {
             var shoppingBasketData = createShoppingBasketInstance();
             addShoppingBasket(shoppingBasketData);
             addOrder(orderData);
+            alert('new test added order');
         }
         
         else {
@@ -397,7 +396,7 @@ function addTicketToCart(availableEventId, translationOptionId) {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost/api/Tickets/addTicket",
+            url: "http://localhost/api/OrderTickets/addTicket",
             data: TicketData,
             success: function () {
             }
