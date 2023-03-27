@@ -14,5 +14,11 @@ class ImageService
     public function insertImageAndGetId($imageName){
         return$this->imageRepository->insertImageAndGetId($imageName);
     }
+    
+    public function getImageById($id)
+    {
+        return $this->imageRepository->getImageById($id);
+
+    }
 
 }
