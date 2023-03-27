@@ -13,5 +13,35 @@ class ImageRepository extends Repository
         }
         return $executedResult; // it is going to return us the id of the date that we just inserted
     }
+    
+    
+    private function checkImageExistence($stmt): bool
+    {
+        try {
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
+            exit();
+        }
+    }
+    
+    
+    public function getImageById($id)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT imageName from image WHERE imageId=:imageId");
+            $stmt->bindParam(':imageId', $id);
+
+            $stmt->execute();
+            $result = $stmt->fetch();
+            return current($result);
+            
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 
 }
