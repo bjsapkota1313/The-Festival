@@ -3,6 +3,7 @@ require_once __DIR__ . '/EventController.php';
 require_once __DIR__. '/../../services/AvailableEventService.php';
 require_once __DIR__. '/../../services/EventDateService.php';
 require_once __DIR__ . '/../../services/userService.php';
+require_once __DIR__ . '/../../services/eventImageService.php';
 
 
 
@@ -10,6 +11,7 @@ class EventAccessController extends eventController
 {
     private $availableEventService;
     private $eventDateService;
+    private $eventImageService;
     private $userService;
     private $currentUserId;
 
@@ -19,6 +21,8 @@ class EventAccessController extends eventController
         parent::__construct();
         $this->availableEventService = new AvailableEventService();
         $this->eventDateService = new EventDateService();
+        $this->eventImageService = new EventImageService();
+
         if(isset($_SESSION["loggedUser"])){
         $this->currentUserId = unserialize(serialize($_SESSION["loggedUser"]))->getId();
         }
@@ -35,8 +39,12 @@ class EventAccessController extends eventController
         $sectionText =  $eventAccesPage->getContent()->getSectionText();
         $paragraphs = $sectionText->getParagraphs();
         $availableHistoryEvents = $this->availableEventService->getAvailableHistoryEvents();
-        //$availableConcertEvents = $this->availableEventService->getAvailableMusicEvents();
-        $availableMusicEvents = $this->availableEventService->getAvailableMusicEventsData();
+        $availableMusicEvents = $this->availableEventService->getAvailableMusicEventsData();         
+        $danceEventImageData = $this->eventImageService->getEventImagePath(2, 'other');
+        $historyEventImageData= $this->eventImageService->getEventImagePath(1, 'other');
+        $foodEventImageData = $this->eventImageService->getEventImagePath(3, 'other');
+
+
 
         $firstEventsDay = $this->eventDateService->getEventDateById(1);
         $secondEventsDay = $this->eventDateService->getEventDateById(2);
