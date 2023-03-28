@@ -36,7 +36,6 @@ class EventDateRepository extends repository
     public function getEventDateByIdWithUrl($id)
     {
         try {
-            
             $stmt = $this->connection->prepare("SELECT eventDateId, date FROM eventdate WHERE eventDateId LIKE :id");
             $stmt->bindValue(':id', "%$id%");
              if ($this->checkEventDateExistence($stmt)) {
@@ -49,6 +48,4 @@ class EventDateRepository extends repository
             echo $e;
         }
     }
-
-
 }

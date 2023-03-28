@@ -114,5 +114,9 @@ class ArtistService
             $this->deleteImagesFromDirectory($artistImages, $this->imageuploadDirectory);
         }// if file cannot delete then it will throw exception
     }
+    public function isArtistAvailableAtTime($artistId,$date,$time): bool
+    {
+        return $this->artistRepository->isArtistAvailableAtTime($artistId,$date,$time);
+    }
 }
 

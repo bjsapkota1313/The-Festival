@@ -255,6 +255,7 @@ class ArtistRepository extends Repository
         }
         return false;
     }
+
     public function deleteArtist($artistId): bool
     {
         $query = "DELETE FROM artist WHERE artistId = :artistId";
@@ -284,4 +285,21 @@ class ArtistRepository extends Repository
         return $images;
     }
 
+    public function isArtistAvailableAtTime($artistId, $date, $time):bool
+    {
+        $query = "SELECT performance.performanceId
+                  FROM participatingartist
+                  JOIN performance on participatingartist.performanceId = performance.performanceId
+                  JOIN timetable on performance.timeTableId = timeTable.timeTableId
+                  Join eventDate on timeTable.eventDateId = eventDate.eventDateId
+                  WHERE participatingartist.artistId = :artistId AND eventDate.date = :date AND
+                  :startTime <= DATE_ADD(timetable.time, INTERVAL performance.duration MINUTE)";
+        $parameters = array(':artistId' => $artistId, ':date' => $date, ':startTime' => $time);
+        $result = $this->executeQuery($query, $parameters);
+        echo print_r($result);
+        if (empty($result)) {
+            return true;
+        }
+        return false;
+    }
 }

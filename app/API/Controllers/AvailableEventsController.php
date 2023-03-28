@@ -2,7 +2,6 @@
 require __DIR__ . '/../../Services/eventDateService.php';
 require __DIR__ . '/../../Services/availableEventService.php';
 require __DIR__ . '/ApiController.php';
-
 class AvailableEventsController extends ApiController
 {
     private $eventDateService;

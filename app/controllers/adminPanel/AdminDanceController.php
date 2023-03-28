@@ -3,8 +3,8 @@ require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
-
-
+require_once __DIR__ . '/../../models/Exceptions/NotAvailableException.php';
+require_once __DIR__ . '/../../models/Exceptions/InternalErrorException.php';
 class AdminDanceController extends AdminPanelController
 {
     private $artistService;
@@ -52,17 +52,25 @@ class AdminDanceController extends AdminPanelController
     private function addVenueSubmitted()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['AddVenue'])) {
-            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddVenue', 'houseNumberAdditional']);
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddVenue', 'houseNumberAdditional']); // additional house number can be empty
             // house number Additional is optional and button is of course
             if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
                 return $sanitizedInput;
             } else {
-                $dbResult = $this->eventService->addLocation($sanitizedInput); //TODO: check if this is correct
-                if ($dbResult) {
-                    header("location: /admin/dance/venues");
-                    exit();
-                } else {
-                    return "Error while adding the venue";
+                if(!$this->checkPostCodeValid($sanitizedInput['postCode'])){
+                    return "THe entered Post Code is not valid {$sanitizedInput['postCode']}";
+                }
+                try{
+                    $dbResult = $this->eventService->addLocation($sanitizedInput);
+                    if ($dbResult) {
+                        header("location: /admin/dance/venues");
+                        exit();
+                    } else {
+                        return "Error while adding the venue,Please try again";
+                    }
+                }
+                catch (DatabaseQueryException $e){
+                    return $e->getMessage();
                 }
             }
         }
@@ -159,7 +167,7 @@ class AdminDanceController extends AdminPanelController
                     } else {
                         return "Error while adding the performance";
                     }
-                } catch (DatabaseQueryException $e) {
+                } catch (DatabaseQueryException |InternalErrorException | NotAvailableException $e) {
                     return $e->getMessage(); // will return the error message that got while adding the performance
                 } catch (Exception $e) {
                     return "Something went wrong, Please try again";
@@ -207,5 +215,14 @@ class AdminDanceController extends AdminPanelController
         $endTime = new DateTime($endTime);
         $duration = $startTime->diff($endTime);
         return $duration->format('%h') * 60 + $duration->format('%i');
+
+    }
+    private function checkPostCodeValid($postCode): bool
+    {
+        $postCode = $this->sanitizeInput($postCode);
+        if (preg_match('/^[0-9]{4}[a-zA-Z]{2}$/', $postCode)) {
+           return true;
+        }
+        return false;
     }
 }
