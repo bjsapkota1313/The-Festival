@@ -17,12 +17,12 @@
                     <div class="mb-3">
                         <label class="form-label" for="startTime">Start Time</label>
                         <input type="time" name="startTime" id="startTime" class="form-control"
-                               onchange="updateDuration()">
+                               oninput="updateDuration()">
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="endTime">End Time</label>
                         <input type="time" name="endTime" id="endTime" class="form-control"
-                               onchange="updateDuration()"/>
+                               oninput="updateDuration()"/>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="duration">Duration</label>

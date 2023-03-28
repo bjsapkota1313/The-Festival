@@ -35,7 +35,7 @@
                             <?php foreach ($styles as $style): ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="artistStyles[]"
-                                           id="style-<?= $style->getStyleId() ?>" value="<?= $style->getStyleId() ?>" >
+                                           id="style-<?= $style->getStyleId() ?>" value="<?= $style->getStyleId() ?>">
                                     <label class="form-check-label" for="style-<?= $style->getStyleId() ?>">
                                         <?= $style->getStyleName() ?>
                                     </label>
@@ -52,7 +52,7 @@
                         <input type="file" name="banner" accept=".png, .jpg, .jpeg">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="portrait">Others</label><br>
+                        <label class="form-label" for="portrait">Others <span style="font-size: 12px;">(At Least  3 files)</span></label><br>
                         <input type="file" name="others[]" accept=".png, .jpg, .jpeg" multiple>
                     </div>
                     <?php if (!empty($errorMessage['Submit'])): ?>
@@ -71,14 +71,9 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mb-3">
-
-                    </div>
                 </form>
             </div>
         </div>
-
-    </div>
     </div>
 </section>
 <script>

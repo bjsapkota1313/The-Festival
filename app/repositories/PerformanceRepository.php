@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../models/DanceEvent/Performance.php';
 require_once __DIR__ . '/../models/DanceEvent/PerformanceSession.php';
+require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../services/ArtistService.php';
 require_once __DIR__ . '/../models/Exceptions/DatabaseQueryException.php';
 
@@ -125,11 +125,34 @@ class PerformanceRepository extends EventRepository
         $parameters = array(':artistId' => $artistId, ':performanceId' => $performanceId);
         return $this->executeQuery($query, $parameters); // it returns bool value
     }
+
     public function deletePerformance($performanceId)
     {
         $query = "DELETE FROM Performance WHERE performanceId = :performanceId";
         $parameters = array(':performanceId' => $performanceId);
         return $this->executeQuery($query, $parameters);
+    }
+
+    public function isLocationAvailableAtTime($locationId, $date, $time): bool
+    {
+        $query = "SELECT performance.performanceId
+                  FROM performance
+                  JOIN timetable on performance.timeTableId = timeTable.timeTableId
+                  JOIN eventDate on timeTable.eventDateId = eventDate.eventDateId
+                  WHERE performance.venueId = :locationId AND eventDate.date = :date AND
+                  :startTime <= DATE_ADD(timetable.time, INTERVAL performance.duration MINUTE)";
+        $parameters = array(':locationId' => $locationId, ':date' => $date, ':startTime' => $time);
+        $result = $this->executeQuery($query, $parameters);
+
+        if (empty($result)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getVenueById($locationId): ?Location
+    {
+        return $this->getLocationById($locationId);
     }
 
 
