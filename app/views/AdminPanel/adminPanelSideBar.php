@@ -46,9 +46,9 @@
             </ul>
         </li>
         <li>
-            <a href="/page/editor?title=newtest">
+            <a href="/admin/homepage/edithomepage" >
                 <i class='bx bx-grid-alt'></i>
-                <span class="link_name">Edit Home Pge</span>
+                <span class="link_name">Edit Home Page</span>
             </a>
         </li>
         <li>

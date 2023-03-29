@@ -1,13 +1,3 @@
-<?php
-// session_start()
-if(isset($model) && $model != null) {
-  $page = $model;
-}
-else {
-  $page = null;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,10 +15,12 @@ else {
   </head>
 
   <body>
+  <section class="home-section">
+    <div class="container pb-3 pt-3">
   <div class="row g-0">
             <div class="container">
                 <div class="row d-flex justify-content-center">
-                    <div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
+                    <div class="col-10 mx-auto">
     <?php
     if($page == null) {
       echo "<h1>Create a new page with TinyCME editor</h1>";
@@ -102,5 +94,8 @@ else {
     </div>
     </div>
     </div>
+          </div>  
+          </section>
+
   </body>
 </html>

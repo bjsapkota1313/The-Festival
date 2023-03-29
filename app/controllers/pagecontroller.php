@@ -12,7 +12,6 @@ class PageController extends Controller
     {
         $this->pageService = new PageService();
     }
-
     public function editor($query) {
         // first, we check for title in the query.
         parse_str($query, $parsedQuery);
@@ -61,7 +60,6 @@ class PageController extends Controller
             echo "deleted page with id " . $_POST['pageID'];   
         }
     }
-
     public function show($query) {
         // echo $query;
         // parse_str turns the query string into a dictionary
