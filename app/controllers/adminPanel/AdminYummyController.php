@@ -10,7 +10,7 @@ class AdminYummyController extends AdminPanelController
 {
     private $restaurantService;
     public function __construct() {
-        parent::__construct();
+        // parent::__construct();
         $this->restaurantService = new RestaurantService();
     }
     private function filterRestaurants($restaurants, $foodTypesArr) {

@@ -1,8 +1,6 @@
 <?php
-require __DIR__ . '/../../Services/userService.php';
-require __DIR__ . '/ApiController.php';
-
-//TODO: Make REST API Principles
+require_once __DIR__ . '/../../Services/userService.php';
+require_once __DIR__ . '/ApiController.php';
 class UsersController extends ApiController
 {
     private $userService;

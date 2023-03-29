@@ -76,8 +76,9 @@ class EventRepository extends repository
     private function getAddressById($addressId)
     {
         try {
-            $query = "SELECT address.addressId, address.postCode, address.streetName, address.houseNumber, address.houseNumberAdditional, address.city, address.country
-                                                    FROM address WHERE address.addressId = :addressId";
+            $query = "SELECT address.addressId, address.postCode, address.streetName, address.houseNumber, address.houseNumberAdditional,
+                       address.city, address.country
+                        FROM address WHERE address.addressId = :addressId";
             $stmt = $this->connection->prepare($query);
             $stmt->bindParam(':addressId', $addressId);
             $stmt->execute();
@@ -149,8 +150,10 @@ class EventRepository extends repository
         $eventDateId = $this->getEventDateIdByInsertingDate($date);
         return $this->getTimetableIDByInsertingTimeWithDateId($time, $eventDateId);
     }
-    protected function getEventParagraphsByEventID($eventID){
-        $query="SELECT paragraph.paragraphId,paragraph.title, paragraph.text 
+
+    protected function getEventParagraphsByEventID($eventID)
+    {
+        $query = "SELECT paragraph.paragraphId,paragraph.title, paragraph.text 
                 FROM paragraph 
                 JOIN eventparagraph ON paragraph.paragraphId = eventparagraph.paragraphId
                 WHERE eventId = :eventId";
@@ -164,8 +167,10 @@ class EventRepository extends repository
         }
         return null;
     }
-    protected function getEventImagesByEventID($eventID){
-        $query="SELECT image.imageName,eventimage.specification as imageSpecification
+
+    protected function getEventImagesByEventID($eventID)
+    {
+        $query = "SELECT image.imageName,eventimage.specification as imageSpecification
                 FROM image
                 JOIN eventimage ON eventimage.imageId = image.imageId
                 where eventimage.eventId = :eventId";
@@ -175,6 +180,7 @@ class EventRepository extends repository
         }
         return null;
     }
+
     private function getImagesWithKeyValue($result): array
     {
         $images = array();
@@ -189,4 +195,73 @@ class EventRepository extends repository
         }
         return $images;
     }
+
+    public function getLocationIdByAddressId($addressId)
+    {
+        $query = "SELECT locationId FROM location WHERE addressId = :addressId";
+        $result = $this->executeQuery($query, array(':addressId' => $addressId), false);
+        if (!empty($result)) {
+            return $result['locationId'];
+        }
+        return null;
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    public function getOrCreateAddressId($postcode, $streetName, $houseNumber, $city, $country, $houseNumberAdditional = null)
+    {
+        $query = "SELECT addressId FROM address WHERE postCode = :postCode AND streetName = :streetName AND houseNumber = :houseNumber  
+                                AND city = :city AND country = :country";
+        $params = array(':postCode' => $postcode, ':streetName' => $streetName, ':houseNumber' => $houseNumber,
+            ':city' => $city, ':country' => $country);
+        if (!empty($houseNumberAdditional)) {
+            $query .= " AND houseNumberAdditional = :houseNumberAdditional";
+            $params[':houseNumberAdditional'] = $houseNumberAdditional;
+        }
+        $result = $this->executeQuery($query, $params,false);
+        if (empty($result)) {
+            return $this->insertAddressAndGetId($postcode, $streetName, $houseNumber, $city, $country, $houseNumberAdditional);
+        }
+        return $result['addressId'];
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+
+    protected function insertAddressAndGetId($postcode, $streetName, $houseNumber, $city, $country, $houseNumberAdditional = null)
+    {
+        $query = "INSERT INTO address (postCode,streetName,houseNumber,city,country) VALUES (:postCode,:streetName,:houseNumber,:city,:country)";
+        $parameters = array(':postCode' => $postcode, ':streetName' => $streetName, ':houseNumber' => $houseNumber, ':city' => $city, ':country' =>
+            $country);
+        if (!empty($houseNumberAdditional)) {
+            $query = "INSERT INTO address (postCode,streetName,houseNumber,houseNumberAdditional,city,country) 
+                          VALUES (:postCode,:streetName,:houseNumber,:houseNumberAdditional,:city,:country)";
+            $parameters[':houseNumberAdditional'] = $houseNumberAdditional;
+        }
+        $executedResult = $this->executeQuery($query, $parameters, false, true);
+        if (is_numeric($executedResult)) {
+            return $executedResult; // it is going to return us the id of the date that we just inserted
+        }
+        throw new DatabaseQueryException("Error while inserting address into database"); // if nothing is returned means something went wrong
+    }
+
+    public function addLocation($locationName, $addressId)
+    {
+        $query = "INSERT INTO location (locationName,addressId) VALUES (:locationName,:addressId)";
+        return $this->executeQuery($query, array(':locationName' => $locationName, ':addressId' => $addressId));
+        // since it is an insert query it will return us bool if it was inserted or not
+    }
+    public function checkLocationExistence($locationName): bool
+    {
+        $query = "SELECT locationId FROM location WHERE locationName = :locationName"; // since location should be Unique According to db design
+        $result = $this->executeQuery($query, array(':locationName' => $locationName) );
+        if (empty($result)) {
+            return false;
+        }
+        return true;
+    }
+
+
 }

@@ -96,18 +96,15 @@ abstract class Controller
             if (empty($value) && !in_array($key, $excludedKeys)) {
                 return "Please enter a value for the field " . $key;
             }
-
-            if (!in_array($key, $excludedKeys)) {
-                $sanitizedInputArray[$key] = $value;
-                if (is_array($value)) {
-                    $newValue = [];
-                    foreach ($value as $subKey => $subValue) {
-                        $newValue[$subKey] = $this->sanitizeInput($subValue);
-                    }
-                    $sanitizedInputArray[$key] = $newValue;
-                } else {
-                    $sanitizedInputArray[$key] = $this->sanitizeInput($value);
+            $sanitizedInputArray[$key] = $value;
+            if (is_array($value)) {
+                $newValue = [];
+                foreach ($value as $subKey => $subValue) {
+                    $newValue[$subKey] = $this->sanitizeInput($subValue);
                 }
+                $sanitizedInputArray[$key] = $newValue;
+            } else {
+                $sanitizedInputArray[$key] = $this->sanitizeInput($value);
             }
         }
         return $sanitizedInputArray;
@@ -124,31 +121,15 @@ abstract class Controller
         return $missingCheckBoxFields;
     }
 
-    protected function validateAndFilteredImages($images): array|string
-    {
-        $validImages = [];
-        foreach ($images as $key => $image) {
-            $imageFileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-            $check = getimagesize($image['tmp_name']);
-
-            if (array_key_exists($key, $validImages)) {
-                $validImages[$key][] = $image;
-            } else {
-                $validImages[$key] = [$image];
-            }
-        }
-        return true;
-    }
-
     protected function processImagesWithFiles($images, array $multipleImages = []): array|string
     {
         $processedImages = [];
         foreach ($images as $key => $image) {
-           if($image['error'] == UPLOAD_ERR_NO_FILE) {
-               return "please upload an Image for  : " . $key;
-           }
+            if ($image['error'] == UPLOAD_ERR_NO_FILE) {
+                return "please upload an Image for  : " . $key;
+            }
             if (in_array($key, $multipleImages)) {
-                if($image['error'][0] == UPLOAD_ERR_NO_FILE) { // atLeast one picture needs to be uploaded
+                if ($image['error'][0] == UPLOAD_ERR_NO_FILE) { // atLeast one picture needs to be uploaded
                     return "Please upload images for : " . $key;
                 }
                 foreach ($image['tmp_name'] as $subKey => $tmpName) {
@@ -165,8 +146,7 @@ abstract class Controller
                         return "Please upload a valid image for : " . $key;
                     }
                 }
-            }
-            else{
+            } else {
                 if ($this->checkValidImageOrNot($image)) {
                     $processedImages[$key] = $image;
                 } else {

@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../models/DanceEvent/DanceEvent.php';
-require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../services/ArtistService.php';
 require_once __DIR__. '/../services/PerformanceService.php';
+require_once __DIR__ . '/EventRepository.php';
 
 class DanceEventRepository extends EventRepository
 {
@@ -40,12 +40,4 @@ class DanceEventRepository extends EventRepository
             echo "Error while creating dance event instance: " . $e->getMessage();
         }
     }
-
-
-
-
-
-
-
-
 }

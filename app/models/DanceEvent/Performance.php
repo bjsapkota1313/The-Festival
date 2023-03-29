@@ -15,7 +15,8 @@ class Performance implements JsonSerializable
         return [
             'artists' => $this->artists,
             'date' => $this->date->format('Y-m-d'),
-            'venue' => $this->venue
+            'venue' => $this->venue->getLocationName(),
+            'session' => $this->session->getSessionName()
         ];
     }
 

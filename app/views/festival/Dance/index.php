@@ -248,7 +248,7 @@
                 </div>
             </div>
         </div>
-        <div class=" container-fluid  pt-5 ps-5">
+        <div class=" container-fluid  pt-5 ps-5" id="performanceContainer">
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <?php foreach ($groupedPerformances as $date => $specificDatePerformances) { ?>
                     <div class="col">
@@ -307,26 +307,25 @@
 </body>
 
 <script>
+
     const containers = document.querySelectorAll('.MyContainer');
 
     containers.forEach(container => {
-        const performance = JSON.parse(container.querySelector('.container').getAttribute('data-performance'));
-        const artists = performance.artists.join(', '); // use a different variable name to avoid confusion with the 'artist' variable
+        let data = container.querySelector('.container').getAttribute('data-performance');
+        const performance = JSON.parse(data);
+
+        const artists = performance.artists // use a different variable name to avoid confusion with the 'artist' variable
+        console.log(artists);
         const time = performance.date;
         const location = performance.venue;
         let description = artists;
         const label = container.querySelector('.container-fluid').textContent; // save the original label
 
-        // container.addEventListener('mouseover', () => {
-        //     container.style.backgroundColor = 'red';
-        //     description = `${artists} - ${time} - ${location}`;
-        //     container.querySelector('.container-fluid').textContent = description;
-        // });
         container.addEventListener('mouseover', () => {
             container.style.backgroundColor = 'red';
 
             // check the type of each variable before including it in the template string
-            const artistString = Array.isArray(artists) ? artists.join(', ') : artists;
+            const artistString = getArtistName(performance.artists);
             const timeString = typeof time === 'object' ? time.toString() : time;
             const locationString = typeof location === 'object' ? location.name : location;
 
@@ -340,6 +339,18 @@
             description = artists;
         });
     });
+
+
+    function getArtistName(artists){
+        // if(artists)
+        let artistName='';
+        if(artists.length === 1)
+            return artists[0].artistName;
+        for (let i = 0; i < artists.length; i++) {
+            artistName +='|'+ artists[i].artistName;
+        }
+        return artistName;
+    }
 </script>
 
 

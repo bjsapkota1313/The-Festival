@@ -1,11 +1,16 @@
-  body {
-        background-color: white;
-      }
+body {
+    background-color: white;
+}
 
 
-    #navbarMain { padding-left:5%;
-    padding-right:10%;}
+#navbarMain {
+    padding-left: 5%;
+    padding-right: 10%;
+    font-size: 10px; !important;
+}
 
 
-    li:hover {background-color:white;}
+li:hover {
+    background-color: white;
+}
 

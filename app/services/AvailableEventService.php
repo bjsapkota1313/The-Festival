@@ -1,18 +1,14 @@
 <?php
 require_once __DIR__ . '/../repositories/AvailableEventRepository.php';
-require_once __DIR__ . '/ArtistService.php';
 
 
 class AvailableEventService
 {
     private $availableEventRepository;
 
-    private $artistService;
-
     public function __construct()
     {
         $this->availableEventRepository = new AvailableEventRepository();
-        $this->artistService = new ArtistService();
 
     }
     public function getAvailableHistoryEvents()
@@ -41,6 +37,19 @@ class AvailableEventService
     public function getEventNameByEventTypeIdWithUrl($id){
         return $this->availableEventRepository->getEventNameByEventTypeIdWithUrl($id);
     }
+    
+    
+    
+    public function getParticipatingArtistNameByArtistId($id)
+    {
+        return $this->availableEventRepository->getParticipatingArtistNameByArtistId($id);
+    }
+    
+     public function  getParticipatingArtistByIdWithUrl($id)
+    {
+        return $this->availableEventRepository->getParticipatingArtistByIdWithUrl($id);
+    }
+
 
     public function getAvailableMusicEventsData()
     {
@@ -48,7 +57,7 @@ class AvailableEventService
         $availableEvents = $this->getAvailableMusicEvents();
         foreach ($availableEvents as $availableEvent) {
             $participatingArtistId = $availableEvent->getParticipatingArtistId();
-            $participatingArtist = $this->artistService->getArtistNameByArtistId($participatingArtistId);
+            $participatingArtist = $this->availableEventRepository->getParticipatingArtistNameByArtistId($participatingArtistId);
 
             array_push($newList, array('AvailableEvent' => $availableEvent, 'ParticipatingArtist' => $participatingArtist));
 

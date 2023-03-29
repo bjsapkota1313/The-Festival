@@ -14,7 +14,7 @@ require_once __DIR__ . '/../header2.php';
                     <div class="col-sm-12 col-md-6 col-lg-4 mx-auto">
                         <h3 class="login-heading mb-4">Welcome To Haarlem Festival</h3>
                         <!-- Sign In Form -->
-                        <form action="/login" method="POST">
+                        <form class="sign-in-form" action="/login" method="POST">
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" name="username" id="floatingInput" placeholder="Username">
                                 <label for="floatingInput">Usernam</label>
@@ -24,7 +24,7 @@ require_once __DIR__ . '/../header2.php';
                                 <label for="floatingPassword">Password</label>
                             </div>
                             <div class="d-grid">
-                                <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" name="signInSubmit" type="submit">Sign in</button>
+                                <button class="sign-in-btn btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" name="signInSubmit" type="submit">Sign in</button>
                             </div>
                             <div class="form-floating mb-3">
                                 <label>
@@ -33,6 +33,11 @@ require_once __DIR__ . '/../header2.php';
                                     if(isset($model) && $model!=null) echo $model
                                     ?>
                                 </label>
+                            </div>
+                        </form>
+                        <form class="register-form" action="/login/register" method="POST">
+                            <div class="d-grid">
+                                <button class="register-btn btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" name="registerSubmit" type="submit">Create Account</button>
                             </div>
                         </form>
                     </div>
