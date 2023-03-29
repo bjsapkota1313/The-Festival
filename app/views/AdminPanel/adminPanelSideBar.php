@@ -46,6 +46,12 @@
             </ul>
         </li>
         <li>
+            <a href="/page/editor?title=newtest">
+                <i class='bx bx-grid-alt'></i>
+                <span class="link_name">Edit Home Pge</span>
+            </a>
+        </li>
+        <li>
             <div class="iocn-link">
                 <a href="#">
                     <i class="fa-solid fa-music"></i> <span class="link_name">Dance</span>
