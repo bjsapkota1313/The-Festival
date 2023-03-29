@@ -45,7 +45,6 @@ class YummyController extends eventController {
         $foodTypes = $this->restaurantService->getAllFoodTypes();
         $model->foodTypes = $foodTypes;
         if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
-            
             $sFT = $_POST["restaurantFoodTypesSearch"];
             print_r($sFT);
             $foodTypesArr = explode( ',', $sFT);
@@ -65,7 +64,6 @@ class YummyController extends eventController {
             // filter restaurants
             // for each food type, remove the restaurants not having that type
         }
-
         
         // print_r($restaurants);
         // $c = count($restaurants);
@@ -188,7 +186,7 @@ class YummyController extends eventController {
         }
         // first, we check for title in the query.
         parse_str($query, $parsedQuery);
-        
+
         if(isset($parsedQuery["name"])) {
             // echo $parsedQuery["name"];
             $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
@@ -214,5 +212,18 @@ class YummyController extends eventController {
             $this->displayViewFestival(null);
         }
     }
-
+    public function bookTicket() {
+        if (!isset($_SESSION["loggedUser"])) {
+            // if user is not logged in, she cannot edit restaurants.
+            header("location: /home");
+            exit();
+        }
+        if(isset($_POST["formBookReservationSubmit"]) && isset($_POST["restaurantID"])) {
+            echo $_POST["restaurantID"];
+        }
+        else {
+            header("location: /home");
+            exit();
+        }
+    }
 }
