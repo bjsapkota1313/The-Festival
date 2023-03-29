@@ -68,7 +68,7 @@ class ShoppingCartRepository extends EventRepository
     }
     public function getAllOrdersByUserId($userId) {
         try {
-            $stmt = $this->connection->prepare("SELECT orderitem.quantity, testticket.ticket_type, testticket.price
+            $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, testticket.ticket_type, testticket.price
                                             FROM orderitem
                                             JOIN testticket ON testticket.id = orderitem.ticket_id
                                             JOIN `order` ON `order`.orderId = orderitem.order_id
@@ -90,12 +90,69 @@ class ShoppingCartRepository extends EventRepository
     private function createOrderItemObject($row)
     {
         $orderItem = new OrderItem();
+        $orderItem->setOrderItemId($row['orderItemId']);
         $orderItem->setQuantity($row['quantity']);
         $orderItem->setTicketType($row['ticket_type']);
         $orderItem->setPrice($row['price']);
         return $orderItem;
     }
+    public function getOrderItemIdByTicketId($ticketId){
+        try {
+            $stmt = $this->connection->prepare("SELECT orderItemId FROM orderitem WHERE ticket_id = :ticket_id;");
+            $stmt->bindValue(':ticket_id', $ticketId);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['orderItemId'];
 
+        } catch (PDOException $e) {
+            // Handle the exception here
+            // For example, you could log the error message and return null
+            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+            return null;
+        }
+    }
+    public function updateOrderItemByTicketId($ticketId, $quantity){
+        try {
+            $stmt = $this->connection->prepare("UPDATE orderItem SET quantity = quantity + :quantity WHERE ticket_id = :ticketId");
+            $stmt->bindParam(':quantity', $quantity);
+            $stmt->bindParam(':ticketId', $ticketId);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // Handle the error
+            echo "Error updating order item: " . $e->getMessage();
+        }
+    }
+    public function updateQuantity($orderItemId, $quantity) {
+        try {
+            $stmt = $this->connection->prepare("UPDATE orderitem SET quantity = :quantity WHERE orderItemId = :orderItemId");
+            $stmt->bindParam(':quantity', $quantity);
+            $stmt->bindParam(':orderItemId', $orderItemId);
 
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            // Handle any exceptions or errors that occurred during the update
+            error_log("Error updating quantity: " . $e->getMessage());
+            return false;
+        }
+    }
+    public function deleteOrderItem($orderItemId) {
+        try {
+            // Prepare the SQL query
+            $stmt = $this->connection->prepare('DELETE FROM orderitem WHERE orderItemId = :orderItemId');
+
+            // Bind the parameters
+            $stmt->bindParam(':orderItemId', $orderItemId);
+
+            // Execute the query
+            $stmt->execute();
+
+        }
+        catch(PDOException $e) {
+            // Handle the exception here
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 
 }

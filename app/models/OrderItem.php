@@ -1,9 +1,27 @@
 <?php
 
 class OrderItem {
+    private $orderItemId;
     private $quantity;
     private $ticketType;
     private $price;
+
+    /**
+     * @return mixed
+     */
+    public function getOrderItemId()
+    {
+        return $this->orderItemId;
+    }
+
+    /**
+     * @param mixed $orderItemId
+     */
+    public function setOrderItemId($orderItemId): void
+    {
+        $this->orderItemId = $orderItemId;
+    }
+
 
     /**
      * @return mixed

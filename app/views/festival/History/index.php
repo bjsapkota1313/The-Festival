@@ -136,7 +136,6 @@
 <!--    }-->
 <!--</script>-->
 
-
 <script> //working code with extra info on hovering container
     const tourContainers = document.querySelectorAll('.tourContainer');
 
@@ -211,6 +210,7 @@
         return dayOfWeek;
     }
 </script>
+
 
 
 

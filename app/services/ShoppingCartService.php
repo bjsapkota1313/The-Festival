@@ -36,4 +36,22 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getAllOrdersByUserId($userId);
 
     }
+
+    public function getOrderItemIdByTicketId($ticketId)
+    {
+        return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId);
+
+    }
+
+    public function updateOrderItemByTicketId($ticketId, $quantity)
+    {
+        return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
+    }
+    public function updateQuantity($itemId,$quantity){
+        return $this->shoppingCartRepository->updateQuantity($itemId, $quantity);
+    }
+    public function deleteOrderItem($orderItemId){
+        return $this->shoppingCartRepository->deleteOrderItem($orderItemId);
+
+    }
 }

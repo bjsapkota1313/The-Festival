@@ -32,6 +32,7 @@
                 <div class="card card-registration card-registration-2" style="border-radius: 15px;">
                     <div class="card-body p-0">
                         <div class="row g-0">
+
                             <div class="col-lg-8">
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
@@ -39,54 +40,65 @@
                                         <h6 class="mb-0 text-muted">3 items</h6>
                                     </div>
                                     <hr class="my-4">
-                                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                                        <div class="col-md-2 col-lg-2 col-xl-2">
-                                            <img
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img5.webp"
-                                                class="img-fluid rounded-3" alt="Cotton T-shirt">
-                                        </div>
-                                        <?php foreach ($allItemsInShoppingCarts as $allItemsInShoppingCart) {
+                                    <?php foreach ($allItemsInShoppingCarts as $allItemsInShoppingCart) {
                                         ?>
-                                        <div class="col-md-3 col-lg-3 col-xl-3">
-                                            <h6 class="text-muted"><?= $allItemsInShoppingCart->getTicketType()?></h6>
-                                        </div>
-                                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                            <button class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
+                                        <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                <img
+                                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img5.webp"
+                                                        class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                            </div>
+                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                <h6 class="text-muted"><?= $allItemsInShoppingCart->getTicketType() ?></h6>
+                                            </div>
+                                            <!--                                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">-->
+                                            <!--                                            <button class="btn btn-decreaseQuantity px-2"-->
+                                            <!--                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-->
+                                            <!--                                                <i class="fas fa-minus"></i>-->
+                                            <!--                                            </button>-->
+                                            <!--                                            <input id="form1" min="0" name="quantity" value="-->
+                                            <? //=$allItemsInShoppingCart->getQuantity()?><!--" type="number"-->
+                                            <!--                                                   class="form-control form-control-sm" />-->
+                                            <!--                                            <button class="btn btn-increaseQuantity px-2"-->
+                                            <!--                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">-->
+                                            <!--                                                <i class="fas fa-plus"></i>-->
+                                            <!--                                            </button>-->
+                                            <!--                                        </div>-->
+                                            <div id="orderItemContainer<?= $allItemsInShoppingCart->getOrderItemId() ?>" class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                                <button class="btn btn-decreaseQuantity px-2" onclick="updateQuantity('<?= $allItemsInShoppingCart->getOrderItemId() ?>', document.getElementById('quantityForm<?= $allItemsInShoppingCart->getOrderItemId() ?>').value - 1)">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input id="quantityForm<?= $allItemsInShoppingCart->getOrderItemId() ?>" min="0" name="quantity" value="<?= $allItemsInShoppingCart->getQuantity() ?>" type="number" class="form-control form-control-sm" data-itemid="<?= $allItemsInShoppingCart->getOrderItemId() ?>"/>
+                                                <button class="btn btn-increaseQuantity px-2" onclick="updateQuantity('<?= $allItemsInShoppingCart->getOrderItemId() ?>', parseInt(document.getElementById('quantityForm<?= $allItemsInShoppingCart->getOrderItemId() ?>').value) + 1)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
 
-                                            <input id="form1" min="0" name="quantity" value="1" type="number"
-                                                   class="form-control form-control-sm" />
+                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                <h6 class="mb-0"><?= $allItemsInShoppingCart->getPrice() ?></h6>
+                                            </div>
+                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                            </div>
+                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                <h6 class="mb-0"><?= $allItemsInShoppingCart->getQuantity() ?></h6>
+                                            </div>
+                                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                            </div>
+                                        </div>
 
-                                            <button class="btn btn-link px-2"
-                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                            <h6 class="mb-0"><?=$allItemsInShoppingCart->getPrice()?></h6>
-                                        </div>
-                                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                            <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                                        </div>
-                                        <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                            <h6 class="mb-0"><?=$allItemsInShoppingCart->getQuantity()?></h6>
-                                        </div>
-                                        <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                            <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                                        </div>
-                                    </div>
+                                        <hr class="my-4">
                                     <?php } ?>
-
-                                    <hr class="my-4">
 
                                     <div class="pt-5">
                                         <h6 class="mb-0"><a href="#!" class="text-body"><i
-                                                    class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
+                                                        class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a>
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-4 bg-grey">
                                 <div class="p-5">
                                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
@@ -112,7 +124,8 @@
 
                                     <div class="mb-5">
                                         <div class="form-outline">
-                                            <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
+                                            <input type="text" id="form3Examplea2"
+                                                   class="form-control form-control-lg"/>
                                             <label class="form-label" for="form3Examplea2">Enter your code</label>
                                         </div>
                                     </div>
@@ -125,7 +138,8 @@
                                     </div>
 
                                     <button type="button" class="btn btn-dark btn-block btn-lg"
-                                            data-mdb-ripple-color="dark">Register</button>
+                                            data-mdb-ripple-color="dark">Register
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -135,6 +149,7 @@
         </div>
     </div>
 </section>
+
 <style>
     @media (min-width: 1025px) {
         .h-custom {
@@ -171,3 +186,155 @@
         }
     }
 </style>
+
+<!--<script>-->
+<!--    function updateQuantity(itemId, quantity) {-->
+<!--        // Get the input element-->
+<!--        var inputElement = document.getElementById('quantityForm');-->
+<!---->
+<!--        // Get the item ID from the data-itemid attribute-->
+<!--        var itemId = inputElement.getAttribute('data-itemid');-->
+<!---->
+<!--        // Make an AJAX call to the server-->
+<!--        var xhr = new XMLHttpRequest();-->
+<!--        xhr.open('POST', 'localhost/festival/history/shoppingcart?controller=HistoryController&action=updateQuantity');-->
+<!--        // xhr.open('POST', 'shoppingCart.php?controller=HistoryController&action=updateQuantity');-->
+<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
+<!--        xhr.onload = function () {-->
+<!--            if (xhr.status === 200) {-->
+<!--                console.log('Quantity updated successfully!');-->
+<!--            } else {-->
+<!--                console.log('Error updating quantity!');-->
+<!--            }-->
+<!--        };-->
+<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
+<!--    }-->
+<!---->
+<!--</script>-->
+
+
+
+<!--<script>-->
+<!--    function updateQuantity(itemId, quantity) {-->
+<!--        console.log(itemId);-->
+<!--        console.log(quantity);-->
+<!--        // Make an AJAX call to the server-->
+<!--        var xhr = new XMLHttpRequest();-->
+<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
+<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
+<!--        xhr.onload = function() {-->
+<!--            if (xhr.status === 200) {-->
+<!--                console.log('Quantity updated successfully!');-->
+<!--            }-->
+<!--            else {-->
+<!--                console.log('Error updating quantity!');-->
+<!--            }-->
+<!--        };-->
+<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    function updateQuantity(itemId, quantity) {-->
+<!--        console.log(itemId);-->
+<!--        console.log(quantity);-->
+<!--        // Make an AJAX call to the server-->
+<!--        var xhr = new XMLHttpRequest();-->
+<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
+<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
+<!--        xhr.onload = function() {-->
+<!--            if (xhr.status === 200) {-->
+<!--                console.log('Quantity updated successfully!');-->
+<!--                // Update the quantity value in the input field-->
+<!--                var quantityInput = document.getElementById('quantityForm' + itemId);-->
+<!--                quantityInput.value = quantity;-->
+<!--            }-->
+<!--            else {-->
+<!--                console.log('Error updating quantity!');-->
+<!--            }-->
+<!--        };-->
+<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script>--> working code
+<!--    function updateQuantity(itemId, quantity) {-->
+<!--        console.log(itemId);-->
+<!--        console.log(quantity);-->
+<!---->
+<!--        // Make sure the quantity is not less than zero-->
+<!--        if (quantity < 0) {-->
+<!--            quantity = 0;-->
+<!--        }-->
+<!---->
+<!--        // Make an AJAX call to the server-->
+<!--        var xhr = new XMLHttpRequest();-->
+<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
+<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
+<!--        xhr.onload = function() {-->
+<!--            if (xhr.status === 200) {-->
+<!--                console.log('Quantity updated successfully!');-->
+<!--                // Update the quantity value in the input field-->
+<!--                var quantityInput = document.getElementById('quantityForm' + itemId);-->
+<!--                quantityInput.value = quantity;-->
+<!--            }-->
+<!--            else {-->
+<!--                console.log('Error updating quantity!');-->
+<!--            }-->
+<!--        };-->
+<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
+<!--    }-->
+<!--</script>-->
+
+<script>
+    function updateQuantity(itemId, quantity) {
+        console.log(quantity);
+
+        // Make sure the quantity is not less than zero
+        if (quantity < 0) {
+            quantity = 0;
+        }
+
+        // Check if the new quantity is zero
+        if (quantity === 0) {
+            // Send a request to delete the item from the shopping cart
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost/festival/history/deleteOrderItem');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Item deleted successfully!');
+                    // Remove the item from the DOM
+                    var itemContainer = document.getElementById('orderItemContainer' + itemId);
+                    console.log(itemId);
+                    console.log(itemContainer);
+                    itemContainer.parentNode.removeChild(itemContainer);
+                }
+                else {
+                    console.log('Error deleting item!');
+                }
+            };
+            xhr.send('orderItemId=' + itemId);
+        }
+        else {
+            // Send a request to update the quantity of the item in the shopping cart
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://localhost/festival/history/updateQuantity');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    console.log('Quantity updated successfully!');
+                    // Update the quantity value in the input field
+                    var quantityInput = document.getElementById('quantityForm' + itemId);
+                    quantityInput.value = quantity;
+                }
+                else {
+                    console.log('Error updating quantity!');
+                }
+            };
+            xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);
+        }
+    }
+
+</script>
+
