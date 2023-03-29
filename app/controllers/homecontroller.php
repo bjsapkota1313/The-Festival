@@ -27,9 +27,12 @@ class HomeController extends Controller
     public function index()
     {
         $this->displayNavBar("HomePage",'/css/homePageStyle.css');
+
+        if (isset($_SESSION["loggedUser"]) && unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+            require_once __DIR__ . '/../views/home/editHomeSection.php';
+        }
         $currentUserId = $this->currentUserId;
         $this->pageController->show("title=newtest", $currentUserId);
         $this->displayFooter();
     }
-
 }?>

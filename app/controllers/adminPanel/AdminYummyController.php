@@ -186,4 +186,5 @@ class AdminYummyController extends AdminPanelController
             header("Location: /admin/yummy/restaurant");
         }
     }
+
 }
