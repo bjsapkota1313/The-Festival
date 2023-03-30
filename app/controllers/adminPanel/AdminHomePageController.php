@@ -1,9 +1,14 @@
 <?php
-require_once __DIR__ . '/controller.php';
-require_once __DIR__ . '/../services/pageService.php';
-require_once __DIR__ . '/../models/page.php';
+require_once __DIR__ . '/AdminPanelController.php';
+require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
+require_once __DIR__ . '/../../services/restaurantService.php';
+require_once __DIR__ . '/../../models/user.php';
+require_once __DIR__ . '/../../models/restaurant.php';
+require_once __DIR__ . '/../controller.php';
+require_once __DIR__ . '/../../services/pageService.php';
+require_once __DIR__ . '/../../models/page.php';
 
-class PageController extends Controller
+class AdminHomePageController extends AdminPanelController
 {
     private $pageService;
 
@@ -89,4 +94,28 @@ class PageController extends Controller
             echo "title should be set";
         }
     }
+
+
+    public function editHomePage($query) {
+        if (!isset($_SESSION["loggedUser"])) {
+            // if user is not logged in, she cannot edit restaurants.
+            header("location: /home");
+            exit();
+        }
+        if (!unserialize(serialize($_SESSION["loggedUser"]))->getRole() == Roles::Administrator()) {
+            // if user is not administrator, she cannot edit restaurants either
+            header("location: /home");
+            exit();
+        }
+
+        $title = 'Edit Home Page';
+        $pageName = "newtest";
+        $this->displaySideBar($title);
+
+        // first, we check for title in the query.
+        $page = null;
+        $page = $this->pageService->getPageByTitle($pageName);
+        require_once __DIR__ . '/../../views/AdminPanel/HomePage/editHomePage.php';
+    }
+
 }

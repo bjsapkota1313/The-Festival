@@ -3,6 +3,7 @@
 {
     protected int $accessPassId;
     protected int $eventId;
+    protected string $eventDate;
     protected string $accessPassType;
     protected int $price;
 
@@ -43,6 +44,25 @@
         $this->eventId = $eventId;
     }
 
+   
+ /**
+     * @return string
+     */
+    public function getEventDate(): string
+    {
+        return $this->eventDate;
+    }
+
+    /**
+     * @param string $eventDate
+     */
+    public function setEventDate(string $eventDate): void
+    {
+        $this->eventDate = $eventDate;
+    }
+
+
+    
    
  /**
      * @return string
