@@ -212,6 +212,7 @@ class YummyController extends eventController {
             $this->displayViewFestival(null);
         }
     }
+
     public function bookTicket() {
         if (!isset($_SESSION["loggedUser"])) {
             // if user is not logged in, she cannot edit restaurants.
