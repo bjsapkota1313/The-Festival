@@ -45,9 +45,9 @@ class ApiKeyRepository extends Repository
     {
         $query = "SELECT apikey.apiKeyId FROM apikey WHERE apikey.UsedBy = :usedBy and apikey.purpose = :purpose";
         $result = $this->executeQuery($query, [':usedBy' => $usedBy, ':purpose' => $purpose]);
-        if (!empty($result)) {
-            return true;
+        if (empty($result)) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

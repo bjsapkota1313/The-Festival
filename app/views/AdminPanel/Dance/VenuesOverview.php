@@ -56,7 +56,7 @@
                                     <form>
                                         <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                        <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i
+                                        <button  class="btn btn-danger ms-3" onclick="deleteButtonClicked('<?= $venue->getLocationId()?>')"><i
                                                 class="fa-solid fa-trash"></i></button>
                                     </form>
                                 </div>
@@ -70,3 +70,5 @@
         </div>
     </div>
 </section>
+<script src="/Javascripts/CustomDialogueBox.js" type="text/javascript"></script>
+<script src="/Javascripts/AdminPanel/Dance/VenuesOverview.js" type="text/javascript"></script>

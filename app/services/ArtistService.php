@@ -97,11 +97,16 @@ class ArtistService
 
     /**
      * @throws uploadFileFailedException
+     * @throws DatabaseQueryException
      */
     public function deleteArist($artistID): bool
     {
+        if($this->artistRepository->isArtistParticipating($artistID)){
+            throw new DatabaseQueryException("Artist is participating in event so cannot be deleted");
+        }
         $this->deleteArtistImagesByArtistId($artistID);
-        return $this->artistRepository->deleteArtist($artistID);
+       // return $this->artistRepository->deleteArtist($artistID);
+        return true;
     }
 
     /**

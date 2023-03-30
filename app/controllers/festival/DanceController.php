@@ -26,8 +26,8 @@ class DanceController extends eventController
         $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getPerformances();
         if(empty($artistPerformances)){
-
-        }//TODO :Check when it is null
+            $this->display404PageNotFound(); // every artisst should have at least one performance
+        }
         $groupedPerformances = $this->performanceService->groupPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }
@@ -41,6 +41,7 @@ class DanceController extends eventController
                 if (empty($selectedArtist)) {
                     $this->display404PageNotFound();
                 }
+                $this->displayNavBar($selectedArtist->getArtistName());
                 try {
                     $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistId, 6);
                     if (empty($artistAlbums)) {

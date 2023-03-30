@@ -3,7 +3,8 @@ require_once __DIR__ . '/ApiController.php';
 require_once __DIR__ . '/../../services/DanceEventService.php';
 require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
-
+require_once __DIR__ . '/../../models/Exceptions/uploadFileFailedException.php';
+require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 class DanceApiController extends ApiController
 {
     private $performanceService;
@@ -23,7 +24,7 @@ class DanceApiController extends ApiController
         try {
             if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
                 $this->sendHeaders();
-                echo 'fuck';
+                echo "Fuck";
 //                $performanceId = htmlspecialchars($_GET['id']);
 //                $this->performanceService->deletePerformanceById($performanceId);
             }
@@ -39,20 +40,54 @@ class DanceApiController extends ApiController
      */
     public function artists()
     {
-        //TDDO: add try catch
+        //ToDO: add try catch
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
+            $responseData = array(
+                "success" => false,
+                "message" => "Something went wrong while processing your delete request"
+            );
             $this->sendHeaders();
-            $artistId = htmlspecialchars($_GET['id']);
-            $this->artistService->deleteArist($artistId);
+            try {
+                if($this->artistService->deleteArist(htmlspecialchars($_GET['id']))){
+                    $responseData = array(
+                        "success" => true,
+                        "message" => ""
+                    );
+                }
+            } catch (DatabaseQueryException|uploadFileFailedException $e) {
+                $responseData = array(
+                    "success" => false,
+                    "message" => $e->getMessage());
+            }
+            echo json_encode($responseData);
         }
     }
+
 
     public function venues()
     { //TODO: add delete method
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
+            $responseData = array(
+                "success" => false,
+                "message" => "Something went wrong while processing your delete request for venue"
+            );
             $this->sendHeaders();
-            $venueId = htmlspecialchars($_GET['id']);
-            $this->danceEventService->deleteVenue($venueId);
+            try{
+                if($this->danceEventService->deleteVenue(htmlspecialchars($_GET['id'])))
+                {
+                    $responseData = array(
+                        "success" => true,
+                        "message" => ""
+                    );
+                }
+            }
+            catch (DatabaseQueryException $e)
+            {
+                $responseData = array(
+                    "success" => false,
+                    "message" => $e->getMessage());
+            }
+            echo json_encode($responseData);
         }
     }
 }

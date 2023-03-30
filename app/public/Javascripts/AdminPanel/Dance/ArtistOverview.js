@@ -1,11 +1,10 @@
-async function deletePerformanceClicked(performanceId) {
+async function deleteButtonClicked(artistId) {
     if (await displayModalForDelete()) {
-        deletePerformance(performanceId);
+        deleteArtistRequest(artistId);
     }
 }
-
-function deletePerformance(performanceId) {
-    fetch('http://localhost/api/danceApi/performances?id=' + performanceId, {
+function deleteArtistRequest(artistId) {
+    fetch('http://localhost/api/danceApi/artists?id=' + artistId, {
         method: 'DELETE'
     }).then(response => {
         response.json().then(data => {
@@ -17,4 +16,3 @@ function deletePerformance(performanceId) {
         });
     });
 }
-

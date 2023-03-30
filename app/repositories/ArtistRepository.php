@@ -302,4 +302,13 @@ class ArtistRepository extends Repository
         }
         return false;
     }
+    public function isArtistParticipating($artistId): bool
+    {
+        $query = "SELECT artistId FROM participatingartist WHERE artistId = :artistId";
+        $result = $this->executeQuery($query,[':artistId'=>$artistId]);
+        if (empty($result)) {
+            return false;
+        }
+        return true;
+    }
 }

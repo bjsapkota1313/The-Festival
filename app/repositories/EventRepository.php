@@ -262,6 +262,10 @@ class EventRepository extends repository
         }
         return true;
     }
-
+    protected function deleteLocation($locationId) :bool
+    {
+        $query = "DELETE FROM location WHERE locationId = :locationId";
+        return $this->executeQuery($query, array(':locationId' => $locationId)); // since it is an delete query it will return us bool if it was deleted or not
+    }
 
 }

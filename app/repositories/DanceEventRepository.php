@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../models/DanceEvent/DanceEvent.php';
 require_once __DIR__ . '/../services/ArtistService.php';
-require_once __DIR__. '/../services/PerformanceService.php';
+require_once __DIR__ . '/../services/PerformanceService.php';
 require_once __DIR__ . '/EventRepository.php';
 
 class DanceEventRepository extends EventRepository
@@ -39,5 +39,20 @@ class DanceEventRepository extends EventRepository
         } catch (Exception $e) {
             echo "Error while creating dance event instance: " . $e->getMessage();
         }
+    }
+
+    public function deleteVenue($venueId): bool
+    {
+        return $this->deleteLocation($venueId);
+    }
+
+    public function isPerformanceVenue($venueId): bool
+    {
+        $query = "SELECT performance.performanceId FROM performance WHERE performance.venueId = :venueId";
+        $result = $this->executeQuery($query, array(':venueId' => $venueId));
+        if (empty($result)) {
+            return false;
+        }
+        return true;
     }
 }
