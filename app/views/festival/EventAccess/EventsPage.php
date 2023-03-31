@@ -150,10 +150,10 @@
   </span>
 
 
-  <div class="position-relative " style="height: 135vh;">
+  <div class="position-relative container" style="height: 135vh;">
     <p><video muted autoplay>
 
-        <source src="../video/Festival/EventAccess/VeerplasVideo.mp4" class="h-100 position-absolute start-0"
+        <source src="../video/Festival/EventAccess/VeerplasVideo.mp4" class="col-xl h-100 mx-0 position-absolute start-0"
           type="video/mp4">
       </video></p>
 
