@@ -74,7 +74,8 @@
                             <label class="control-label">Tour Date</label>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="date" class="form-control" id="tour-date" name="tourTicketDate" readonly>
+                                    <input type="date" class="form-control" id="tour-date" name="tourTicketDate"
+                                           readonly>
                                 </div>
                             </div>
                         </div>
@@ -82,13 +83,15 @@
                             <label class="control-label">Tour Time</label>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="time" class="form-control" id="tour-time" name="tourTicketTime" readonly>
+                                    <input type="time" class="form-control" id="tour-time" name="tourTicketTime"
+                                           readonly>
                                 </div>
                             </div>
                         </div>
                         <div class="row justify-content-center mb-5">
                             <label class="control-label">Tour Language</label>
                             <div class="col-md-6">
+                                <input type="hidden" id="language" name="TourLanguage" value="" />
                                 <div id="languageButtonsContainer" class="d-flex justify-content-between">
                                 </div>
                             </div>
@@ -126,10 +129,12 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-warning mt-3" name="addNewHistoryTour" style="background-color: rgba(205, 53, 0, 1);">
+                        <button type="submit" class="btn btn-warning mt-3" name="addNewHistoryTour"
+                                style="background-color: rgba(205, 53, 0, 1);">
                             <span style="color: #fff;">Cancel</span>
                         </button>
-                        <button type="submit" class="btn btn-warning mt-3" name="addTourToCart" style="background-color: rgba(205, 53, 0, 1);">
+                        <button type="submit" class="btn btn-warning mt-3" name="addTourToCart"
+                                style="background-color: rgba(205, 53, 0, 1);">
                             <span style="color: #fff;">Add to cart</span>
                         </button>
                     </div>
@@ -167,12 +172,15 @@
     for (let i = 0; i < languagesArray.length; i++) {
         const language = languagesArray[i].trim(); // trim to remove any white space
         const button = document.createElement('button');
-        button.type = 'submit';
+        button.type = 'button';
         button.name = 'TourLanguage';
         button.value = language.toLowerCase();
         button.textContent = language;
         button.className = 'btn btn-outline-dark';
         buttonContainer.appendChild(button);
+        button.onclick = function () {
+            document.getElementById("language").value = language.toLowerCase();
+        }
     }
 
     document.getElementById('tour-date').value = tourDate;

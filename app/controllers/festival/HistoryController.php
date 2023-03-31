@@ -89,7 +89,7 @@ class HistoryController extends EventController
                 "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
                 "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
                 "tourTicketType" => "single",
-                "TourLanguage" => "english",
+                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
             );
             $_SESSION['shoppingCart'][] = $newOrderItem;
         } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['userId'])) {
@@ -108,15 +108,16 @@ class HistoryController extends EventController
                 "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
                 "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
                 "tourTicketType" => "single",
-                "TourLanguage" => "english",
+                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
             );
+            $quantity = $_POST["tourSingleTicket"];
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
             $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
             if(!$orderItem){
-                $this->shoppingCartService->createOrderItem($order, $ticketId, 12);
+                $this->shoppingCartService->createOrderItem($order, $ticketId, $quantity);
             }
             else{
-                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, 12);
+                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
             }
         }
 
@@ -175,7 +176,9 @@ class HistoryController extends EventController
         }
         $userId = $_SESSION['userId'];
 
-        $allItemsInShoppingCarts = $this->shoppingCartService->getAllOrdersByUserId($userId);
+        $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
+        $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+
         require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
     }
 
@@ -208,11 +211,7 @@ class HistoryController extends EventController
         }
         return $groupedHistoryTours;
     }
-//    public function updateQuantity($itemId, $quantity) {
-//        var_dump($itemId);
-//        var_dump($quantity);
-//        $this->shoppingCartService->updateQuantity($itemId,$quantity);
-//    }
+
     public function updateQuantity() {
         if($_SERVER['REQUEST_METHOD']==='POST'){
             $orderItemId = $_POST['orderItemId'];

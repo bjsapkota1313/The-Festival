@@ -31,16 +31,15 @@ class ShoppingCartService
         return $this->shoppingCartRepository->createOrderItem($userId, $ticketId, $quantity);
     }
 
-    public function getAllOrdersByUserId($userId)
+    public function getHistoryTourOrdersByUserId($userId)
     {
-        return $this->shoppingCartRepository->getAllOrdersByUserId($userId);
+        return $this->shoppingCartRepository->getHistoryTourOrdersByUserId($userId);
 
     }
 
     public function getOrderItemIdByTicketId($ticketId)
     {
         return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId);
-
     }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
@@ -52,6 +51,8 @@ class ShoppingCartService
     }
     public function deleteOrderItem($orderItemId){
         return $this->shoppingCartRepository->deleteOrderItem($orderItemId);
-
+    }
+    public function getRestaurantOrdersByUserId($userId) {
+        return $this->shoppingCartRepository->getRestaurantOrdersByUserId($userId);
     }
 }

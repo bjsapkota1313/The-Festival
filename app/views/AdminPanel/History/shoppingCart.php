@@ -44,27 +44,12 @@
                                         ?>
                                         <div class="row mb-4 d-flex justify-content-between align-items-center">
                                             <div class="col-md-2 col-lg-2 col-xl-2">
-                                                <img
-                                                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img5.webp"
-                                                        class="img-fluid rounded-3" alt="Cotton T-shirt">
+                                                    <h6 class="text-muted"><?= $allItemsInShoppingCart->getLanguage() ?></h6>
                                             </div>
                                             <div class="col-md-3 col-lg-3 col-xl-3">
                                                 <h6 class="text-muted"><?= $allItemsInShoppingCart->getTicketType() ?></h6>
                                             </div>
-                                            <!--                                        <div class="col-md-3 col-lg-3 col-xl-2 d-flex">-->
-                                            <!--                                            <button class="btn btn-decreaseQuantity px-2"-->
-                                            <!--                                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">-->
-                                            <!--                                                <i class="fas fa-minus"></i>-->
-                                            <!--                                            </button>-->
-                                            <!--                                            <input id="form1" min="0" name="quantity" value="-->
-                                            <? //=$allItemsInShoppingCart->getQuantity()?><!--" type="number"-->
-                                            <!--                                                   class="form-control form-control-sm" />-->
-                                            <!--                                            <button class="btn btn-increaseQuantity px-2"-->
-                                            <!--                                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">-->
-                                            <!--                                                <i class="fas fa-plus"></i>-->
-                                            <!--                                            </button>-->
-                                            <!--                                        </div>-->
-                                            <div id="orderItemContainer<?= $allItemsInShoppingCart->getOrderItemId() ?>" class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                            <div id="orderItemContainer<?= $allItemsInShoppingCart->getOrderItemId() ?>" class="col-md-3 col-lg-3 col-xl-3 d-flex">
                                                 <button class="btn btn-decreaseQuantity px-2" onclick="updateQuantity('<?= $allItemsInShoppingCart->getOrderItemId() ?>', document.getElementById('quantityForm<?= $allItemsInShoppingCart->getOrderItemId() ?>').value - 1)">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
@@ -73,15 +58,36 @@
                                                     <i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
-
                                             <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                <h6 class="mb-0"><?= $allItemsInShoppingCart->getPrice() ?></h6>
+                                                <h6 class="mb-0"><?= $totalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                                 <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
                                             </div>
+                                        </div>
+
+                                        <hr class="my-4">
+                                    <?php } ?>
+                                    <?php foreach ($allRestaurantItems as $allRestaurantItem) {
+                                        ?>
+                                        <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="col-md-2 col-lg-2 col-xl-2">
+                                                    <h6 class="text-muted"><?= $allRestaurantItem->getRestaurantName() ?></h6>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3 col-xl-3">
+                                                <h6 class="text-muted"><?= $allRestaurantItem->getRestaurantName() ?></h6>
+                                            </div>
+                                            <div id="orderItemContainer<?= $allRestaurantItem->getOrderItemId() ?>" class="col-md-3 col-lg-3 col-xl-3 d-flex">
+                                                <button class="btn btn-decreaseQuantity px-2" onclick="updateQuantity('<?= $allRestaurantItem->getOrderItemId() ?>', document.getElementById('quantityForm<?= $allRestaurantItem->getOrderItemId() ?>').value - 1)">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input id="quantityForm<?= $allRestaurantItem->getOrderItemId() ?>" min="0" name="quantity" value="<?= $allRestaurantItem->getQuantity() ?>" type="number" class="form-control form-control-sm" data-itemid="<?= $allRestaurantItem->getOrderItemId() ?>"/>
+                                                <button class="btn btn-increaseQuantity px-2" onclick="updateQuantity('<?= $allRestaurantItem->getOrderItemId() ?>', parseInt(document.getElementById('quantityForm<?= $allRestaurantItem->getOrderItemId() ?>').value) + 1)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
                                             <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                <h6 class="mb-0"><?= $allItemsInShoppingCart->getQuantity() ?></h6>
+                                                <h6 class="mb-0"><?= $totalPrice = $allRestaurantItem->getPrice() * $allRestaurantItem->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                                 <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
@@ -257,7 +263,7 @@
 <!--    }-->
 <!--</script>-->
 
-<!--<script>--> working code
+<!--<script>-->
 <!--    function updateQuantity(itemId, quantity) {-->
 <!--        console.log(itemId);-->
 <!--        console.log(quantity);-->

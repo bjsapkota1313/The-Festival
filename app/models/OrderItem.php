@@ -1,75 +1,130 @@
 <?php
 
 class OrderItem {
-    private $orderItemId;
-    private $quantity;
-    private $ticketType;
-    private $price;
+    private int $orderItemId;
+    private int $quantity;
+    private string $ticketType;
+    private string $price;
+    private string $language;
+    private string $foodType;
+    private string $restaurantName;
+
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getOrderItemId()
+    public function getOrderItemId(): int
     {
         return $this->orderItemId;
     }
 
     /**
-     * @param mixed $orderItemId
+     * @param int $orderItemId
      */
-    public function setOrderItemId($orderItemId): void
+    public function setOrderItemId(int $orderItemId): void
     {
         $this->orderItemId = $orderItemId;
     }
 
-
     /**
-     * @return mixed
+     * @return int
      */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
     /**
-     * @param mixed $quantity
+     * @param int $quantity
      */
-    public function setQuantity($quantity): void
+    public function setQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getTicketType()
+    public function getTicketType(): string
     {
         return $this->ticketType;
     }
 
     /**
-     * @param mixed $ticketType
+     * @param string $ticketType
      */
-    public function setTicketType($ticketType): void
+    public function setTicketType(string $ticketType): void
     {
         $this->ticketType = $ticketType;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPrice()
+    public function getPrice(): string
     {
         return $this->price;
     }
 
     /**
-     * @param mixed $price
+     * @param string $price
      */
-    public function setPrice($price): void
+    public function setPrice(string $price): void
     {
         $this->price = $price;
     }
+
+    /**
+     * @return string
+     */
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage(string $language): void
+    {
+        $this->language = $language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFoodType(): string
+    {
+        return $this->foodType;
+    }
+
+    /**
+     * @param string $foodType
+     */
+    public function setFoodType(string $foodType): void
+    {
+        $this->foodType = $foodType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRestaurantName(): string
+    {
+        return $this->restaurantName;
+    }
+
+    /**
+     * @param string $restaurantName
+     */
+    public function setRestaurantName(string $restaurantName): void
+    {
+        $this->restaurantName = $restaurantName;
+    }
+
+
+
+
 
 
 }
