@@ -7,11 +7,11 @@ function btnSaveChangesClicked(venueId,addressId) {
     let city = document.getElementById("input-city").value;
     let country = document.getElementById("input-country").value;
     if (venueName === "" || houseNumber === "" || postcode === "" || streetName === "" || city === "" || country === "") {
-        displayModal("Empty fields","Please fill in all fields");
+        displayError("Please fill in all fields");
         return;
     }
     else if (!isValidPostCode(postcode)) {
-        displayModal("Invalid postcode", "Please enter a valid postcode");
+        displayError("Please enter a valid postcode");
         return;
     }
     let venue = {
@@ -44,7 +44,7 @@ function sendPutRequest(venue){
             if (data.success) {
                 window.location.href = "/admin/dance/venues";
             } else {
-                displayModal("Cannot be Updated", data.message)
+                displayError( data.message)
             }
         });
     });
@@ -55,4 +55,9 @@ function isValidPostCode(postCode) {
         return true;
     }
     return false;
+}
+function displayError(message) {
+    let error = document.getElementById("errors");
+    error.innerHTML = message;
+    error.hidden = false;
 }

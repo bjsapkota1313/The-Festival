@@ -230,7 +230,5 @@ M
 app/services/ImageService.php,4\4\442d23413f4efd3971152440a67f2b93220ba036
 T
 $app/repositories/ImageRepository.php,e\f\efd29a42d738b93a4e696d1755349d5862ef0dfb
-X
-(app/views/AdminPanel/Dance/EditVenue.php,b\8\b8ca27641bd856a0d91653c435272a2be8174765
 i
 9app/public/Javascripts/AdminPanel/Dance/VenuesOverview.js,5\7\576e4b1d2557f534bd0ed2abea15663730d47230
