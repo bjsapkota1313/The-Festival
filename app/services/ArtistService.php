@@ -65,7 +65,7 @@ class ArtistService
     public function addArtist($data, $images): bool
     {
         // checking if the artist already exists in the database or not
-        if($this->artistRepository->artistExistenceInDatabase($data['artistName'],$data['artistDescription'])){
+        if ($this->artistRepository->artistExistenceInDatabase($data['artistName'], $data['artistDescription'])) {
             throw new DatabaseQueryException("Artist With same name and description already exists");
         }
         $newImagesNamesOthers['others'] = $this->getImagesNameByMovingToDirectory($images['others'], $this->imageuploadDirectory);
@@ -97,10 +97,18 @@ class ArtistService
 
     /**
      * @throws uploadFileFailedException
+     * @throws DatabaseQueryException
      */
     public function deleteArist($artistID): bool
     {
+        if ($this->artistRepository->isArtistParticipating($artistID)) {
+            throw new DatabaseQueryException("Artist is participating in event so cannot be deleted");
+        }
         $this->deleteArtistImagesByArtistId($artistID);
+        $artistImagesIds = $this->artistRepository->getAllImagesIdOfArtist($artistID);
+        if (!empty($artistImagesIds)) {
+            $this->deleteArtistImagesFromDb($artistImagesIds); // this will delete images from database
+        }
         return $this->artistRepository->deleteArtist($artistID);
     }
 
@@ -110,13 +118,26 @@ class ArtistService
     private function deleteArtistImagesByArtistId($artistId): void
     {
         $artistImages = $this->artistRepository->getAllImagesNameByArtistId($artistId);
-        if(!empty($artistImages)){
+        if (!empty($artistImages)) {
             $this->deleteImagesFromDirectory($artistImages, $this->imageuploadDirectory);
         }// if file cannot delete then it will throw exception
     }
-    public function isArtistAvailableAtTime($artistId,$date,$time): bool
+
+    public function isArtistAvailableAtTime($artistId, $date, $time): bool
     {
-        return $this->artistRepository->isArtistAvailableAtTime($artistId,$date,$time);
+        return $this->artistRepository->isArtistAvailableAtTime($artistId, $date, $time);
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     */
+    public function deleteArtistImagesFromDb($imageIds): void
+    {
+        foreach ($imageIds as $imageId) {
+            if (!$this->imageService->deleteImage($imageId)) {
+                throw new DatabaseQueryException("Image could not be deleted");
+            };
+        }
     }
 }
 

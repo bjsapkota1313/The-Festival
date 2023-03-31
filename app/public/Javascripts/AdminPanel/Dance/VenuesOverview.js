@@ -1,20 +1,18 @@
-async function deletePerformanceClicked(performanceId) {
+async function deleteButtonClicked(venueId) {
     if (await displayModalForDelete()) {
-        deletePerformance(performanceId);
+        deleteVenueRequest(venueId);
     }
 }
-
-function deletePerformance(performanceId) {
-    fetch('http://localhost/api/danceApi/performances?id=' + performanceId, {
+function deleteVenueRequest(venueId) {
+    fetch('http://localhost/api/danceApi/venues?venueId=' + venueId, {
         method: 'DELETE'
     }).then(response => {
         response.json().then(data => {
             if (data.success) {
-                window.location.reload();
+                location.reload();
             } else {
                 displayModal("Cannot be Deleted", data.message)
             }
         });
     });
 }
-

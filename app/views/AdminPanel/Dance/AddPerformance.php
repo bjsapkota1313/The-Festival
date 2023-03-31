@@ -64,11 +64,11 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="noOfTicket"> No of Ticket</label>
+                        <label class="form-label" for="noOfTicket"> No of Ticket<span style="font-size: 9px">10% will be for All access Pass</span></label>
                         <input type="number" name="noOfTicket" id="noOfTicket" class="form-control"/>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="noOfTicket">Price</label>
+                        <label class="form-label" for="noOfTicket">Price <span style="font-size: 9px">Included with 9% VAT</span></label>
                         <input type="number" name="price" id="price" step="0.01" name="price"
                                placeholder="Price in Euro" class="form-control" required>
                     </div>

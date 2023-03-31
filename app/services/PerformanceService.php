@@ -99,4 +99,8 @@ class PerformanceService
         }
 
     }
+    public function getPerformanceById($performanceId): ?Performance
+    {
+        return $this->performanceRepository->getPerformanceById($performanceId);
+    }
 }

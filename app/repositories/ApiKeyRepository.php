@@ -41,13 +41,13 @@ class ApiKeyRepository extends Repository
         return $result;
     }
 
-    public function checkExistenceOfAPiKey($usedBy,$purpose): bool
+    public function checkExistenceOfAPiKeyWithPurpose($usedBy,$purpose): bool
     {
         $query = "SELECT apikey.apiKeyId FROM apikey WHERE apikey.UsedBy = :usedBy and apikey.purpose = :purpose";
         $result = $this->executeQuery($query, [':usedBy' => $usedBy, ':purpose' => $purpose]);
-        if (!empty($result)) {
-            return true;
+        if (empty($result)) {
+            return false;
         }
-        return false;
+        return true;
     }
 }

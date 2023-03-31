@@ -20,20 +20,29 @@ class ApiController
         echo json_encode($data);
     }
 
-    function createObjectFromPostedJson($className)
+    function createObjectFromPostedJson($className, $data)
     {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json);
-
         $object = new $className();
         foreach ($data as $key => $value) $object->{$key} = $value;
         return $object;
     }
+
     protected function sendHeaders(): void
     {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: *");
         header("Access-Control-Allow-Methods: *");
         header('Content-Type: application/json');
+    }
+
+    function createObjectFromPostedJsonWithSetters($className, $data)
+    {
+        $object = new $className();
+        foreach ($data as $key => $value) {
+            // Construct the setter method name
+            $setterMethod = 'set' . ucfirst($key);
+            $object->$setterMethod(htmlspecialchars($value));
+        }
+        return $object;
     }
 }

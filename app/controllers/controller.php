@@ -50,7 +50,7 @@ abstract class Controller
         return true;
     }
 
-    protected function displayNavBar($title, $pathToCss): void
+    protected function displayNavBar($title, $pathToCss=null): void
     {
         $this->navBarService = new NavBarService();
         $navBarItems = $this->navBarService->getAllNavBarItems();

@@ -9,6 +9,57 @@ class Performance implements JsonSerializable
     private Location $venue;
     private int $duration;
     private PerformanceSession $session;
+    private float $totalPrice; // this is included with Vat
+    private int $totalTickets;
+    private int $availableTickets;
+
+    /**
+     * @return float
+     */
+    public function getTotalPrice(): float
+    {
+        return $this->totalPrice;
+    }
+
+    /**
+     * @param float $totalPrice
+     */
+    public function setTotalPrice(float $totalPrice): void
+    {
+        $this->totalPrice = $totalPrice;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalTickets(): int
+    {
+        return $this->totalTickets;
+    }
+
+    /**
+     * @param int $totalTickets
+     */
+    public function setTotalTickets(int $totalTickets): void
+    {
+        $this->totalTickets = $totalTickets;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAvailableTickets(): int
+    {
+        return $this->availableTickets;
+    }
+
+    /**
+     * @param int $availableTickets
+     */
+    public function setAvailableTickets(int $availableTickets): void
+    {
+        $this->availableTickets = $availableTickets;
+    }
 
     public function jsonSerialize() : mixed
     {

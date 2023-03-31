@@ -7,7 +7,8 @@ class ArtistRepository extends Repository
 {
     public function getAllArtists(): ?array
     {
-        $query = "SELECT artist.artistId, artist.artistName, artist.artistDescription, image.imageName FROM artist JOIN image ON artist.artistLogoId = image.imageId";
+        $query = "SELECT artist.artistId, artist.artistName, artist.artistDescription, image.imageName FROM artist 
+            JOIN image ON artist.artistLogoId = image.imageId";
         $result = $this->executeQuery($query);
         $artists = array();
         if (empty($result)) {
@@ -55,7 +56,8 @@ class ArtistRepository extends Repository
 
     private function getAllImagesOfArtistByArtistId($artistId): ?array
     {
-        $query = "SELECT image.imageName,artistImage.Imagespecification as imageSpecification  From artistImage JOIN image ON artistImage.imageId = image.imageId WHERE artistImage.artistId = :artistId";
+        $query = "SELECT image.imageName,artistImage.Imagespecification as imageSpecification  
+        From artistImage JOIN image ON artistImage.imageId = image.imageId WHERE artistImage.artistId = :artistId";
         $result = $this->executeQuery($query, array(':artistId' => $artistId));
         if (!empty($result)) {
             return $this->getImagesWithKeyValue($result);
@@ -251,9 +253,9 @@ class ArtistRepository extends Repository
         $query = "SELECT artistId   FROM artist WHERE artistName = :artistName AND artistDescription = :artistDescription";
         $result = $this->executeQuery($query, array(':artistName' => $artistName, ':artistDescription' => $artistDescription)); // it is difficult to have same name and have same description of the artist
         if (empty($result)) {
-            return true; // if there is no result then it means that the artist does not exist in the database
+            return false; // if there is no result then it means that the artist does not exist in the database
         }
-        return false;
+        return true;
     }
 
     public function deleteArtist($artistId): bool
@@ -301,5 +303,36 @@ class ArtistRepository extends Repository
             return true;
         }
         return false;
+    }
+    public function isArtistParticipating($artistId): bool
+    {
+        $query = "SELECT artistId FROM participatingartist WHERE artistId = :artistId";
+        $result = $this->executeQuery($query,[':artistId'=>$artistId]);
+        if (empty($result)) {
+            return false;
+        }
+        return true;
+    }
+    public function getAllImagesIdOfArtist($artistId): ?array
+    {
+        $query = "SELECT ImageId FROM (
+                        SELECT LogoImage.imageId AS ImageId FROM artist
+                        JOIN image AS LogoImage ON artist.artistLogoId = LogoImage.imageId
+                        WHERE artist.artistId = :artistId
+                        UNION
+                        SELECT image.imageId AS ImageId FROM artist
+                                                        JOIN artistImage ON artist.artistId = artistImage.artistId
+                                                        JOIN image ON artistImage.imageId = image.imageId
+                        WHERE artist.artistId = :artistId
+                    ) AS ImageIds";
+        $result = $this->executeQuery($query, array(':artistId' => $artistId));
+        if (empty($result)) {
+            return null;
+        }
+        $images = array();
+        foreach ($result as $row) {
+            $images[] = $row['ImageId'];
+        }
+        return $images;
     }
 }

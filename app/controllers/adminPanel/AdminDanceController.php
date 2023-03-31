@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../services/PerformanceService.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 require_once __DIR__ . '/../../models/Exceptions/NotAvailableException.php';
 require_once __DIR__ . '/../../models/Exceptions/InternalErrorException.php';
+
 class AdminDanceController extends AdminPanelController
 {
     private $artistService;
@@ -41,6 +42,21 @@ class AdminDanceController extends AdminPanelController
         require_once __DIR__ . '/../../views/AdminPanel/Dance/VenuesOverview.php';
     }
 
+    public function editVenue()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['venueId'])) {
+            $venueId = htmlspecialchars($_GET['venueId']);
+            $venue = $this->danceEventService->getVenueById($venueId);
+            if (empty($venue)) {
+                $this->display404PageNotFound();
+                exit();
+            }
+            $title = 'Edit ' . $venue->getLocationName();
+            $this->displaySideBar($title);
+            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditVenue.php';
+        }
+    }
+
     public function addVenue()
     {
         $title = 'Add Venue';
@@ -57,10 +73,10 @@ class AdminDanceController extends AdminPanelController
             if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
                 return $sanitizedInput;
             } else {
-                if(!$this->checkPostCodeValid($sanitizedInput['postCode'])){
+                if (!$this->checkPostCodeValid($sanitizedInput['postCode'])) {
                     return "THe entered Post Code is not valid {$sanitizedInput['postCode']}";
                 }
-                try{
+                try {
                     $dbResult = $this->eventService->addLocation($sanitizedInput);
                     if ($dbResult) {
                         header("location: /admin/dance/venues");
@@ -68,8 +84,7 @@ class AdminDanceController extends AdminPanelController
                     } else {
                         return "Error while adding the venue,Please try again";
                     }
-                }
-                catch (DatabaseQueryException $e){
+                } catch (DatabaseQueryException $e) {
                     return $e->getMessage();
                 }
             }
@@ -100,7 +115,7 @@ class AdminDanceController extends AdminPanelController
             } else if (is_string($validImages)) {
                 return $validImages;
             } else {
-                try{
+                try {
                     $dbResult = $this->artistService->addArtist($sanitizedInput, $validImages);
                     if ($dbResult) {
                         header("location: /admin/dance/artists");
@@ -108,8 +123,7 @@ class AdminDanceController extends AdminPanelController
                     } else {
                         return "Error while adding the artist,Please try again";
                     }
-                }
-                catch (DatabaseQueryException | uploadFileFailedException $e){
+                } catch (DatabaseQueryException|uploadFileFailedException $e) {
                     return $e->getMessage();
                 }
             }
@@ -121,19 +135,23 @@ class AdminDanceController extends AdminPanelController
         $title = 'Performances';
         $errorMessage = array();
         $this->displaySideBar($title);
-        $this->deletePerformance();
         $artistPerformances = $this->getDanceEvent()->getPerformances();
         if (empty($artistPerformances)) {
             $errorMessage['artistPerformances'] = "No Artist Performances found for {$this->getDanceEvent()->getEventName()} event";
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
-
-    private function deletePerformance()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $this->sanitizeInput($_POST['performanceId']);
-            $dbResult = $this->performanceService->deletePerformanceById($id);
+    public function editPerformance(){
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['performanceId'])) {
+            $venueId = htmlspecialchars($_GET['performanceId']);
+            $editingPerformance = $this->performanceService->getPerformanceById($venueId);
+            if (empty($editingPerformance)) {
+                $this->display404PageNotFound();
+                exit();
+            }
+            $title = 'Edit ' . 'Performance '.$editingPerformance->getPerformanceId();
+            $this->displaySideBar($title);
+            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditPerformance.php';
         }
     }
 
@@ -154,7 +172,7 @@ class AdminDanceController extends AdminPanelController
             $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['AddArtistPerformance'], ['artists']);
             if (is_string($sanitizedInput)) {
                 return $sanitizedInput;
-            } else { //TODO:check if the venue or artist is already added to the event
+            } else {
                 if ($this->checkDateIsInPast('' . $sanitizedInput['performanceDate'] . ' ' . $sanitizedInput['startTime'])) {
                     return "Entered Date and Time is in the past";
                 }
@@ -167,7 +185,7 @@ class AdminDanceController extends AdminPanelController
                     } else {
                         return "Error while adding the performance";
                     }
-                } catch (DatabaseQueryException |InternalErrorException | NotAvailableException $e) {
+                } catch (DatabaseQueryException|InternalErrorException|NotAvailableException $e) {
                     return $e->getMessage(); // will return the error message that got while adding the performance
                 } catch (Exception $e) {
                     return "Something went wrong, Please try again";
@@ -217,12 +235,14 @@ class AdminDanceController extends AdminPanelController
         return $duration->format('%h') * 60 + $duration->format('%i');
 
     }
+
     private function checkPostCodeValid($postCode): bool
     {
         $postCode = $this->sanitizeInput($postCode);
         if (preg_match('/^[0-9]{4}[a-zA-Z]{2}$/', $postCode)) {
-           return true;
+            return true;
         }
         return false;
     }
+
 }
