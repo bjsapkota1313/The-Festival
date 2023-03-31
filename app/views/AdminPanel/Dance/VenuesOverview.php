@@ -53,12 +53,12 @@
                             <td><?= $venue->getAddress()->getCountry() ?></td>
                             <td>
                                 <div class="d-inline-flex">
-                                    <form>
-                                        <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
+                                    <form action="/admin/dance/editVenue">
+                                        <button name="venueId" class="btn btn-primary" value="<?= $venue->getLocationId() ?>"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                        <button  class="btn btn-danger ms-3" onclick="deleteButtonClicked('<?= $venue->getLocationId()?>')"><i
-                                                class="fa-solid fa-trash"></i></button>
                                     </form>
+                                        <button type="button" class="btn btn-danger ms-3" onclick="deleteButtonClicked('<?= $venue->getLocationId()?>')"><i
+                                                class="fa-solid fa-trash"></i></button>
                                 </div>
 
                             </td>

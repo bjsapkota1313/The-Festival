@@ -1,5 +1,6 @@
 async function deleteButtonClicked(artistId) {
-    if (await displayModalForDelete()) {
+    const userChoice = await displayModalForDelete();
+    if ( userChoice) {
         deleteArtistRequest(artistId);
     }
 }
@@ -9,9 +10,9 @@ function deleteArtistRequest(artistId) {
     }).then(response => {
         response.json().then(data => {
             if (data.success) {
-                window.location.reload();
+               location.reload();
             } else {
-                alert("Error: " + data.message);
+                displayModal("Cannot be Deleted", data.message)
             }
         });
     });

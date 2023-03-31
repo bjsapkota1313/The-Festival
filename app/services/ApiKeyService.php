@@ -33,7 +33,7 @@ class ApiKeyService
      */
     public function createApiKey($data)
     {
-        if($this->apiKeyRepository->checkExistenceOfAPiKey($data['usedBy'],$data['purpose']))
+        if($this->apiKeyRepository->checkExistenceOfAPiKeyWithPurpose($data['usedBy'],$data['purpose']))
         {
             throw new DatabaseQueryException("Api key already exists for this Party and purpose");
         }

@@ -55,4 +55,26 @@ class DanceEventRepository extends EventRepository
         }
         return true;
     }
+
+    public function getVenueById($venueId): ?Location
+    {
+        return $this->getLocationById($venueId);
+    }
+
+    public function isUpdatingVenueDetailSame($venue): bool
+    {
+        return $this->isUpdatingLocationDetailSame($venue);
+    }
+    public function isUpdatingVenueAddressSame($address): bool
+    {
+        return $this->isUpdatingAddressDetailSame($address);
+    }
+    public function updateVenueDetail($venue): bool
+    {
+        return $this->updateLocation($venue);
+    }
+    public function updateVenueAddress(Address $address): bool
+    {
+        return $this->updateAddress($address);
+    }
 }

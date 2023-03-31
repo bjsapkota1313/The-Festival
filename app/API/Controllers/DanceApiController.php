@@ -5,6 +5,8 @@ require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
 require_once __DIR__ . '/../../models/Exceptions/uploadFileFailedException.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
+require_once __DIR__ . '/../../models/Location.php';
+
 class DanceApiController extends ApiController
 {
     private $performanceService;
@@ -40,7 +42,7 @@ class DanceApiController extends ApiController
      */
     public function artists()
     {
-        //ToDO: add try catch
+        //ToDO: bhvb
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
             $responseData = array(
                 "success" => false,
@@ -48,7 +50,7 @@ class DanceApiController extends ApiController
             );
             $this->sendHeaders();
             try {
-                if($this->artistService->deleteArist(htmlspecialchars($_GET['id']))){
+                if ($this->artistService->deleteArist(htmlspecialchars($_GET['id']))) {
                     $responseData = array(
                         "success" => true,
                         "message" => ""
@@ -66,28 +68,67 @@ class DanceApiController extends ApiController
 
     public function venues()
     { //TODO: add delete method
-        if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['venueId'])) {
             $responseData = array(
                 "success" => false,
                 "message" => "Something went wrong while processing your delete request for venue"
             );
             $this->sendHeaders();
-            try{
-                if($this->danceEventService->deleteVenue(htmlspecialchars($_GET['id'])))
-                {
+            try {
+                if ($this->danceEventService->deleteVenue(htmlspecialchars($_GET['venueId']))) {
                     $responseData = array(
                         "success" => true,
                         "message" => ""
                     );
                 }
-            }
-            catch (DatabaseQueryException $e)
-            {
+            } catch (DatabaseQueryException $e) {
                 $responseData = array(
                     "success" => false,
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
+        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            $this->sendHeaders();
+            $data = json_decode(file_get_contents('php://input'), true);
+            if (empty($data)) {
+                http_response_code(400);
+                return;
+            }
+            $address = $this->createObjectFromPostedJsonWithSetters(Address::class, $data['address']);
+            $venue = $this->createVenueInstance(htmlspecialchars($data['venueId']), htmlspecialchars($data['venueName']), $address);
+            $this->sendHeaders();
+            echo json_encode($this->editVenue($venue));
         }
     }
+
+    private function editVenue($venue)
+    {
+        $responseData = array(
+            "success" => false,
+            "message" => "Something went wrong while processing your Edit request for venue"
+        );
+        try {
+            if ($this->danceEventService->updateVenue($venue)) {
+                $responseData = array(
+                    "success" => true,
+                    "message" => ""
+                );
+            }
+        } catch (DatabaseQueryException $e) {
+            $responseData = array(
+                "success" => false,
+                "message" => $e->getMessage());
+        }
+        return $responseData;
+    }
+
+    private function createVenueInstance($id, $name, $address): Location
+    {
+        $location = new Location();
+        $location->setLocationId($id);
+        $location->setLocationName($name);
+        $location->setAddress($address);
+        return $location;
+    }
+
 }

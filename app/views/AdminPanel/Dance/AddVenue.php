@@ -71,7 +71,6 @@
                                 Cancel
                             </button>
                             <button type="submit" class="btn btn-primary" name="AddVenue">Add Venue</button>
-
                         </div>
                     </div>
                 </div>

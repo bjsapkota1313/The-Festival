@@ -65,6 +65,15 @@ function displayModalForDelete() {
     modalYesBtn.innerText = "Yes";
     modalFooter.appendChild(modalYesBtn);
 
+    // Show the modal
+    let modalBtn = document.createElement("button");
+    modalBtn.type = "button";
+    modalBtn.hidden = true;
+    modalBtn.setAttribute("data-bs-toggle", "modal");
+    modalBtn.setAttribute("data-bs-target", "#myModal");
+    document.body.appendChild(modalBtn);
+    modalBtn.click();
+
     // Create a Promise that resolves with the user's choice
     return new Promise((resolve) => {
         modalYesBtn.addEventListener("click", function () {
@@ -75,14 +84,42 @@ function displayModalForDelete() {
             resolve(false);
             modalCloseBtn.click();
         });
-
-        // Show the modal
-        let modalBtn = document.createElement("button");
-        modalBtn.type = "button";
-        modalBtn.hidden = true;
-        modalBtn.setAttribute("data-bs-toggle", "modal");
-        modalBtn.setAttribute("data-bs-target", "#myModal");
-        document.body.appendChild(modalBtn);
-        modalBtn.click();
     });
 }
+
+function displayModal(title,message) {
+    // create modal HTML elements
+    const modal = document.createElement('div');
+    modal.classList.add('modal', 'fade');
+    modal.setAttribute('tabindex', '-1');
+    modal.setAttribute('role', 'dialog');
+    modal.innerHTML = `
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">${title}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ${message}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+    // append modal to the document
+    document.body.appendChild(modal);
+
+    // show modal
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+
+    // remove modal from the document when closed
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+

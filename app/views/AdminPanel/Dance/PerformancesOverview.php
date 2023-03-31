@@ -54,7 +54,7 @@
                                 <div class="d-inline-flex">
                                     <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                    <button onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')"
+                                    <button type="button" onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')"
                                             class="btn btn-danger ms-3"><i
                                                 class="fa-solid fa-trash"></i></button>
                                 </div>
@@ -69,4 +69,6 @@
 </section>
 <script src="/Javascripts/CustomDialogueBox.js" type="text/javascript"></script>
 <script src="/Javascripts/AdminPanel/Dance/PerformanceOverview.js" type="text/javascript"></script>
+
+
 

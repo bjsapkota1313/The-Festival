@@ -50,9 +50,9 @@
                                 <form>
                                     <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
                                                 class="fa-solid fa-file-pen"></i></button>
-                                    <button onclick="deleteButtonClicked('<?= $artist->getArtistId() ?>')" class="btn btn-danger ms-3"><i
-                                                class="fa-solid fa-trash"></i></button>
                                 </form>
+                                    <button type="button" onclick="deleteButtonClicked('<?= $artist->getArtistId() ?>')" class="btn btn-danger ms-3"><i
+                                                class="fa-solid fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
