@@ -48,15 +48,13 @@ class AdminDanceController extends AdminPanelController
             $venueId = htmlspecialchars($_GET['venueId']);
             $venue = $this->danceEventService->getVenueById($venueId);
             if (empty($venue)) {
-               $this->display404PageNotFound();
-               exit();
+                $this->display404PageNotFound();
+                exit();
             }
-            $title = 'Edit '.$venue->getLocationName();
-//            $errorMessage = $this->editVenueSubmitted();
+            $title = 'Edit ' . $venue->getLocationName();
             $this->displaySideBar($title);
             require_once __DIR__ . '/../../views/AdminPanel/Dance/EditVenue.php';
         }
-
     }
 
     public function addVenue()
@@ -143,6 +141,20 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
+    public function editPerformance(){
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['performanceId'])) {
+            $venueId = htmlspecialchars($_GET['performanceId']);
+            $editingPerformance = $this->performanceService->getPerformanceById($venueId);
+            if (empty($editingPerformance)) {
+                $this->display404PageNotFound();
+                exit();
+            }
+            $title = 'Edit ' . 'Performance '.$editingPerformance->getPerformanceId();
+            $this->displaySideBar($title);
+            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditPerformance.php';
+        }
+    }
+
     public function addPerformance()
     {
         $title = 'Add Performance';

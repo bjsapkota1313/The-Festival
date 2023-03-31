@@ -17,8 +17,10 @@ class PerformanceRepository extends EventRepository
 
     public function getPerformancesByEventId($eventId): ?array
     {
-        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,performance.sessionId,Performance.duration
-                    FROM Performance
+        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,
+                  performance.sessionId,Performance.duration,performance.totalTickets,performance.availableTickets,
+                  performance.totalPrice
+                FROM Performance
                 join timetable on Performance.timetableId = timetable.timetableId
                 join eventdate on timetable.eventDateId = eventdate.eventDateId
                 WHERE performance.eventID = :eventId
@@ -46,6 +48,9 @@ class PerformanceRepository extends EventRepository
             $performance->setSession($this->getPerformanceSessionById($dbRow['sessionId']));
             $performance->setVenue($this->getLocationById($dbRow['venueId']));
             $performance->setDuration($dbRow['duration']);
+            $performance->setTotalTickets($dbRow['totalTickets']);
+            $performance->setAvailableTickets($dbRow['availableTickets']);
+            $performance->setTotalPrice($dbRow['totalPrice']);
             return $performance;
         } catch (Exception $e) {
             echo "Error while creating artist performance instance: " . $e->getMessage();
@@ -56,7 +61,9 @@ class PerformanceRepository extends EventRepository
     public function getAllPerformancesDoneByArtistIdAtEvent($artistId, $eventName): ?array
     {
 
-        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,performance.sessionId,performance.duration
+        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,
+                    performance.sessionId,performance.duration,performance.totalTickets
+                    ,performance.availableTickets, performance.totalPrice
             FROM Performance
             join timetable on Performance.timetableId = timetable.timetableId
             join eventdate on timetable.eventDateId = eventdate.eventDateId
@@ -153,6 +160,21 @@ class PerformanceRepository extends EventRepository
     public function getVenueById($locationId): ?Location
     {
         return $this->getLocationById($locationId);
+    }
+    public function getPerformanceById($performanceId): ?Performance
+    {
+        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,
+                performance.sessionId,performance.duration, performance.totalPrice,performance.totalTickets
+                    ,performance.availableTickets
+            FROM Performance
+            join timetable on Performance.timetableId = timetable.timetableId
+            join eventdate on timetable.eventDateId = eventdate.eventDateId
+            WHERE Performance.PerformanceId = :performanceId";
+        $result = $this->executeQuery($query, array(':performanceId' => $performanceId),false);
+        if (empty($result)) {
+            return null;
+        }
+        return $this->createPerformanceInstance($result);
     }
 
 

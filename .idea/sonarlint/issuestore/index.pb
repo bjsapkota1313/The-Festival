@@ -22,8 +22,6 @@ O
 app/repositories/repository.php,0\c\0c8ae6aceb34a2a46ad3b4268ac1ee25125bee0f
 N
 app/services/FooterService.php,d\0\d0cd09b0737aa98b6996423e41fceba59a93c2d9
-L
-app/services/userService.php,1\4\1455355d4f631ca58b715afe4bf149394227dd19
 G
 app/config/dbconfig.php,c\b\cb95ed6bf5b38e93ef7aaa0a9896d4bd688da4af
 d
@@ -68,8 +66,6 @@ D
 app/fpdf185/fpdf.php,2\1\21f96243fe1d43fce54f48972a76d9ccd949e073
 I
 app/models/FooterItem.php,b\6\b660df45f555fe4baadffb819028d6e2a055294d
-K
-app/services/PDFService.php,3\b\3bb52b6f0852aa60f09e4fccd84f00e33b6d552d
 N
 app/services/NavBarService.php,a\c\ac5a48220062ac1f3c11cd2247ee197865afe5f8
 Q
@@ -106,8 +102,6 @@ O
 app/models/historyTimeTable.php,0\1\011c5baba9e6ed86f382f02a3102ff8a0bf8eb6d
 C
 app/models/user.php,d\2\d25b1a516ee5ad218a8f8d71b5a5fc2d441afb8c
-U
-%app/models/DanceEvent/Performance.php,a\9\a9a9e3a2ab9a96d957681d8f23ac79a71b480c19
 T
 $app/models/DanceEvent/DanceEvent.php,5\2\52484db0e91828324d8468699ee8b0f96722d971
 I
@@ -130,8 +124,6 @@ G
 app/models/BodyHead.php,b\1\b1b10adeec938c71ad36494746e99f03ca34a106
 `
 0app/models/Exceptions/DatabaseQueryException.php,a\5\a5c90fd5a2f5d7df1fbb9b705a8ef80d2bea23b5
-D
-app/models/Event.php,b\7\b7b80cb112781c82160ce9e07c54218d76ed97ec
 F
 app/models/Content.php,6\6\668e361087a4b7a8c10adffbc7116b7d1b7b3027
 P
@@ -158,10 +150,6 @@ a
 ,app/API/Controllers/ShopOrdersController.php,e\7\e730d838fd2dbd00003c8c7c509097841b289d9c
 W
 'app/API/Controllers/PagesController.php,c\c\ccc0d110878f9f9f9da07c285879a77e58d5e8db
-Z
-*app/repositories/PerformanceRepository.php,1\c\1c7a4a32bad7f8cd230ba2a72076a9cc1cdc3a77
-W
-'app/API/Controllers/UsersController.php,3\2\32ed39b8166f12d66552e4a99b3ceff914fee4ed
 G
 app/views/page/show.php,1\e\1eeb5cebbbd687e805206f7fafec24257692464d
 R
@@ -194,12 +182,8 @@ i
 9app/controllers/adminPanel/AdminManageUsersController.php,0\5\056eaffe8e45d268cbc479026f544424709943d7
 f
 6app/controllers/adminPanel/AdminHomePageController.php,4\a\4a85dc4ee6f5895ab3510b7118bbe193f65ebf66
-]
--app/views/AdminPanel/Dance/AddPerformance.php,f\d\fdb9d3b06cb6ae3418be8c810609c16c47384c28
 e
 5app/controllers/adminPanel/AdminHistoryController.php,5\e\5e1742eeb1bd5a87ce8e4768d3d3f26d195353e2
-c
-3app/views/AdminPanel/Dance/PerformancesOverview.php,0\c\0ce485ae9274ef03babc8eecf627a280691ed3a9
 [
 +app/public/Javascripts/CustomDialogueBox.js,0\0\00e51fd33ced7e7af913483f6d9b589e69e4189b
 a

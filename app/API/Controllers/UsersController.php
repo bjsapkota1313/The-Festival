@@ -142,7 +142,7 @@ class UsersController extends ApiController
                     $users = $this->getUsersBySortingOptionSelected($sortBy);
                 }
             }
-            echo JSon_encode($users);
+            echo Json_encode($users);
         } catch (InvalidArgumentException|Exception $e) {
             http_response_code(500); // sending bad request error to APi request if something goes wrong
             echo $e->getMessage();
@@ -172,7 +172,7 @@ class UsersController extends ApiController
     public function editUserDetails()
     {
         try {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') { //TODO:check if the user editing details are same or not
                 $this->sendHeaders();
                 $responseData = array(
                     'success' => false,
@@ -229,6 +229,5 @@ class UsersController extends ApiController
         } catch (InvalidArgumentException|Exception $e) { // whenever something goes wrong while parsing
             http_response_code(500); // sending bad request error to APi request if something goes wrong
         }
-
     }
 }

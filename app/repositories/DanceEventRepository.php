@@ -18,7 +18,9 @@ class DanceEventRepository extends EventRepository
 
     public function getDanceEventByEventId($eventId): ?DanceEvent
     {
-        $query = "SELECT event.eventId,event.eventName FROM event WHERE eventId = :eventId";
+        $query = "SELECT event.eventId,event.eventName,vat.vatPercentage FROM event
+                  JOIN vat on event.vatId = vat.vatId
+                  WHERE eventId = :eventId";
         $result = $this->executeQuery($query, array(':eventId' => $eventId), false);
         if (!empty($result)) {
             return $this->createDanceEventInstance($result);
@@ -35,6 +37,7 @@ class DanceEventRepository extends EventRepository
             $danceEvent->setPerformances($this->performanceService->getPerformancesByEventId($dbRow['eventId']));
             $danceEvent->setEventParagraphs($this->getEventParagraphsByEventID($dbRow['eventId']));
             $danceEvent->setEventImages($this->getEventImagesByEventId($dbRow['eventId']));
+            $danceEvent->setEventVatPercentage($dbRow['vatPercentage']);
             return $danceEvent;
         } catch (Exception $e) {
             echo "Error while creating dance event instance: " . $e->getMessage();
@@ -65,14 +68,17 @@ class DanceEventRepository extends EventRepository
     {
         return $this->isUpdatingLocationDetailSame($venue);
     }
+
     public function isUpdatingVenueAddressSame($address): bool
     {
         return $this->isUpdatingAddressDetailSame($address);
     }
+
     public function updateVenueDetail($venue): bool
     {
         return $this->updateLocation($venue);
     }
+
     public function updateVenueAddress(Address $address): bool
     {
         return $this->updateAddress($address);

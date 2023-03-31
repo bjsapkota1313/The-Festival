@@ -28,7 +28,7 @@
                     <th>Session</th>
                     <th>Price</th>
                     <th>Tickets</th>
-                    <th>sold</th>
+                    <th>Available</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -47,13 +47,13 @@
                             <td><?= $performance->getVenue()->getLocationName() ?></td>
                             <td><?= $this->formatArtistName($performance->getArtists()) ?></td>
                             <td><?= $performance->getSession()->getSessionName() ?></td>
-                            <td>100.00</td>
-                            <td>100</td>
-                            <td>50</td>
+                            <td>€<?= number_format($performance->getTotalPrice(),2) ?></td>
+                            <td><?= $performance->getTotalTickets() ?></td>
+                            <td><?= $performance->getAvailableTickets() ?></td>
                             <td>
                                 <div class="d-inline-flex">
-                                    <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
-                                                class="fa-solid fa-file-pen"></i></button>
+                                    <a href="/admin/dance/editPerformance?performanceId=<?= $performance->getPerformanceId() ?>" class="btn btn-primary"><i
+                                                class="fa-solid fa-file-pen"></i></a>
                                     <button type="button" onclick="deletePerformanceClicked('<?= $performance->getPerformanceId() ?>')"
                                             class="btn btn-danger ms-3"><i
                                                 class="fa-solid fa-trash"></i></button>

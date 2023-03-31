@@ -18,7 +18,6 @@ class DanceController extends eventController
         $this->danceEventService = new DanceEventService();
         $this->performanceService = new PerformanceService();
     }
-
     public function index()
     {
         $this->displayNavBar('Dance',"/css/festival/Dance/IndexPage.css");

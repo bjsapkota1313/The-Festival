@@ -200,13 +200,16 @@ class UserService
 
 
 
-    public function updateUserV2($updatingUser, $picture)
+    public function updateUserV2($updatingUser, $picture): ?bool
     {
         if (!empty($updatingUser->getHashedPassword())) {
             $updatingUser->setHashedPassword($this->hashPassword($updatingUser->getHashedPassword()));  // when password is empty it will not be hashed sent as null
         }
         $imageName = $this->processUpdatingUserImage($picture, $this->repository->getUserPictureById($updatingUser->getId()));
         $updatingUser->setPicture($imageName);
+        if($this->repository->isUpdatingUserDetailsSame($updatingUser)){
+            return true; // no need to update
+        }
         return $this->repository->updateUserV2($updatingUser);
     }
     
