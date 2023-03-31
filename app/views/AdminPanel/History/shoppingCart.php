@@ -67,7 +67,7 @@
                                         </div>
 
                                         <hr class="my-4">
-                                        
+
                                     <?php } ?>
                                     <?php foreach ($allRestaurantItems as $allRestaurantItem) {
                                         ?>
