@@ -1,7 +1,7 @@
 <section class="home-section">
-    <div class="container-fluid pb-3">
-        <div class="row">
-            <div class="col-md-12">
+    <div class="container-fluid pb-3 pt-3 ps-5">
+        <div class="row ps-3">
+            <div class="col-md-12" class="ps-5">
                 <h1><?= $title ?></h1>
             </div>
         </div>

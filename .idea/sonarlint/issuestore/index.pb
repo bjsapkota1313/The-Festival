@@ -48,10 +48,6 @@ H
 app/models/EventPage.php,9\f\9fe6eca3fd9baf21dcb07249e204e0605b75b356
 \
 ,app/controllers/festival/EventController.php,6\4\64a5008dca65b00a34c9e785aea1fde43ff1e800
-R
-"app/views/festival/Dance/index.php,8\7\87d04c6a381c6cb8f73c1ef5e4fbba34c9af8809
-O
-app/models/DanceEvent/Style.php,3\4\34495e244522e5647c47fdf39e203c2e1e2a8052
 X
 (app/repositories/EventPageRepository.php,c\9\c94809da01516f3a8a8b1c2a412643ce585eb58f
 O
@@ -84,12 +80,8 @@ X
 (app/models/HistoryEvent/HistoryEvent.php,a\c\aceffb1493eaa18d131d6b9154fddc355e001098
 \
 ,app/models/HistoryEvent/HistoryTourImage.php,9\f\9fbe694cc51be65910600c0c030fe79f32d59963
-Z
-*app/views/AdminPanel/adminPanelSideBar.php,2\a\2ac2e862a6151c6a1c0bc41a6ea8740af4eeccf4
 W
 'app/views/AdminPanel/NotAllowedPage.php,0\d\0d63b72190442fabd1a2286d7ea9021be7c7e0ca
-X
-(app/views/AdminPanel/Dance/AddArtist.php,9\8\98033633b57e1748289307a767d47d821a688e8b
 `
 0app/views/AdminPanel/ApiManagement/AddApiKey.php,2\2\22a1ddf85b56c5c51f87a86e362ff89a8ae5b372
 l
@@ -126,8 +118,6 @@ G
 0app/models/Exceptions/DatabaseQueryException.php,a\5\a5c90fd5a2f5d7df1fbb9b705a8ef80d2bea23b5
 F
 app/models/Content.php,6\6\668e361087a4b7a8c10adffbc7116b7d1b7b3027
-P
- app/models/DanceEvent/Artist.php,8\0\805c2e2794dc6822b5b8fcd35e1c428ba53cfc5b
 D
 app/views/footer.php,9\d\9ddbd475ba1ab6b61e8a82b11467f8378d17d048
 D
@@ -138,8 +128,6 @@ E
 0app/models/Exceptions/InternalErrorException.php,0\5\05fed608822c77154a4e3da3dbf94d69456d761d
 _
 /app/models/Exceptions/NotAvailableException.php,d\a\dae34f003001be93b325ebb2b82e5221fcd2af26
-S
-#app/views/festival/Dance/artist.php,d\b\db1ade632edabb1c50e577c6a573b0ae07e3393d
 V
 &app/services/ShoppingBasketService.php,f\3\f39a2bf4e06c099cc4bf4df0cc3962d1a5a7c95b
 Q
@@ -192,12 +180,8 @@ N
 app/controllers/controller.php,e\1\e14d53846b2c7c5bfdc6d313888bead3e1519d90
 K
 app/views/PageNotFound.html,6\2\620fec708129125b3c6c9ec23d3c98f6773ed30e
-^
-.app/views/AdminPanel/Dance/artistsOverview.php,5\1\512adc74c25b34f310471395f7c9c9ae03acf5a2
 W
 'app/views/AdminPanel/Dance/AddVenue.php,3\6\360a94cf5c138fafafa2df232d51038d4369c477
-c
-3app/controllers/adminPanel/AdminPanelController.php,f\e\fe5467e7a2b292b06182a3b2b3aff95827b4fe93
 N
 app/services/ApiKeyService.php,d\7\d71dd30e98fef666e0099efc5490d7cc09acc583
 U

@@ -30,6 +30,23 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/artistsOverview.php';
     }
+    public function editArtist()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['artist'])) {
+            $artist = $this->artistService->getArtistByArtistID($_GET['artist']);
+            if (empty($artist)) {
+                $this->display404PageNotFound();
+                exit();
+            }
+            $styles = $this->artistService->getAllStyles();
+            if(empty($styles)){
+                $errorMessage['styles'] = "No Styles found in system";
+            }
+            $title = 'Edit ' . $artist->getArtistName();
+            $this->displaySideBar($title);
+            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditArtist.php';
+        }
+    }
 
     public function venues()
     {
@@ -141,19 +158,41 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
-    public function editPerformance(){
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['performanceId'])) {
-            $venueId = htmlspecialchars($_GET['performanceId']);
-            $editingPerformance = $this->performanceService->getPerformanceById($venueId);
-            if (empty($editingPerformance)) {
-                $this->display404PageNotFound();
-                exit();
-            }
-            $title = 'Edit ' . 'Performance '.$editingPerformance->getPerformanceId();
-            $this->displaySideBar($title);
-            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditPerformance.php';
+    public function editPerformance()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !isset($_GET['performanceId'])) {
+            $this->display404PageNotFound();
+            exit();
         }
+
+        $editingPerformance = $this->performanceService->getPerformanceById(htmlspecialchars($_GET['performanceId']));
+        if (empty($editingPerformance)) {
+            $this->display404PageNotFound();
+            exit();
+        }
+
+        $allArtists = $this->artistService->getAllArtists();
+        $allVenues = $this->eventService->getAllLocations();
+        $allSessions = $this->performanceService->getAllPerformanceSessions();
+        $errorMessage = [];
+
+        if (empty($allArtists)) {
+            $errorMessage['artists'] = "No Artists found in system";
+        }
+
+        if (empty($allVenues)) {
+            $errorMessage['venues'] = "No Venues found in system";
+        }
+
+        if (empty($allSessions)) {
+            $errorMessage['sessions'] = "No Performance Sessions found in system";
+        }
+
+        $title = 'Edit Performance ' . $editingPerformance->getPerformanceId();
+        $this->displaySideBar($title);
+        require_once __DIR__ . '/../../views/AdminPanel/Dance/EditPerformance.php';
     }
+
 
     public function addPerformance()
     {
