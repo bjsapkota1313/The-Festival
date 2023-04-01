@@ -36,20 +36,17 @@ class UserService
 
     public function getAllUsers()
     {
-        $repository = new UserRepository();
-        return $repository->getAllUsers();
+        return $this->repository->getAllUsers();
     }
 
     public function getUsersBySearchQuery($searchingTerm)
     {
-        $repository = new UserRepository();
-        return $repository->getUsersBySearchQuery($searchingTerm);
+        return $this->repository->getUsersBySearchQuery($searchingTerm);
     }
 
     public function getUserBySortingFirstNameByAscOrDescOrders($order)
     {
-        $repository = new UserRepository();
-        return $repository->getUserBySortingFirstNameByAscOrDescOrders($order);
+        return $this->repository->getUserBySortingFirstNameByAscOrDescOrders($order);
     }
 
     public function getUserBySortingFirstNameByAscendingOrder()
@@ -64,14 +61,12 @@ class UserService
 
     public function getUsersByRoles($roles)
     {
-        $repository = new UserRepository();
-        return $repository->getUsersByRoles($roles);
+        return $this->repository->getUsersByRoles($roles);
     }
 
     public function getUsersBySearchAndSpecificRoles($searchingTerm, $criteria)
     {
-        $repository = new UserRepository();
-        return $repository->getUsersBySearchAndSpecificRoles($searchingTerm, $criteria);
+        return $this->repository->getUsersBySearchAndSpecificRoles($searchingTerm, $criteria);
     }
 
     public function deleteUserById($userId): bool
@@ -88,7 +83,6 @@ class UserService
 
     public function registerUser($newUser): bool
     {
-        $repository = new UserRepository();
         $plainPassword = $newUser['password'];
         $newUser['password'] = $this->hashPassword($plainPassword);
         $image = $newUser['picture'];
@@ -97,13 +91,12 @@ class UserService
         } else {
             $newUser['picture'] = DEFAULT_AVATAR; // default image
         }
-        return $repository->registerUser($newUser);
+        return $this->repository->registerUser($newUser);
     }
 
     public function checkUserExistenceByEmail($email)
     {
-        $repository = new UserRepository();
-        return $repository->checkUserExistenceByEmail($email);
+        return $this->repository->checkUserExistenceByEmail($email);
     }
 
     public function updatePassword($userId, $newPassword): void
@@ -119,8 +112,7 @@ class UserService
 
     public function deleteDataForgotPassword($email, $tokenExpiration): void
     {
-        $repository = new UserRepository();
-        $repository->deleteDataForgotPassword($email, $tokenExpiration);
+        $this->repository->deleteDataForgotPassword($email, $tokenExpiration);
     }
 
     /**
@@ -164,8 +156,7 @@ class UserService
 
     public function isTokenValid($token)
     {
-        $repository = new UserRepository();
-        return $repository->isTokenValid($token);
+        return $this->repository->isTokenValid($token);
     }
 
     public function hashPassword($password)

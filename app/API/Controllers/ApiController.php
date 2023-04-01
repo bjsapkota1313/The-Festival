@@ -20,13 +20,6 @@ class ApiController
         echo json_encode($data);
     }
 
-    function createObjectFromPostedJson($className, $data)
-    {
-        $object = new $className();
-        foreach ($data as $key => $value) $object->{$key} = $value;
-        return $object;
-    }
-
     protected function sendHeaders(): void
     {
         header("Access-Control-Allow-Origin: *");
@@ -44,5 +37,29 @@ class ApiController
             $object->$setterMethod(htmlspecialchars($value));
         }
         return $object;
+    }
+    protected function getSanitizedData()
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json);
+        return $this->sanitize($data);
+    }
+
+    protected function sanitize($data)
+    {
+        if (is_object($data)) {
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $data->$key = htmlspecialchars($value);
+                }
+            }
+        } else if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                if (is_string($value)) {
+                    $data[$key] = htmlspecialchars($value);
+                }
+            }
+        }
+        return $data;
     }
 }

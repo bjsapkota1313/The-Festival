@@ -28,10 +28,8 @@ function btnSaveChangesClicked(venueId,addressId) {
         }
     };
     sendPutRequest(venue);
-
 }
 function sendPutRequest(venue){
-    console.log(venue);
     fetch('http://localhost/api/danceApi/venues', {
         method: 'PUT',
         headers: {
@@ -42,7 +40,7 @@ function sendPutRequest(venue){
         response.json()
             .then(data => {
             if (data.success) {
-                window.location.href = "/admin/dance/venues";
+                location.href = "/admin/dance/venues";
             } else {
                 displayError( data.message)
             }

@@ -39,7 +39,7 @@
                 foreach ($artists as $artist) :
                     ?>
                     <tr>
-                        <td><?= $artist->getArtistId(); ?></td>
+                        <td><?= $artist->getArtistId() ?></td>
                         <td><img src="<?=$this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>" alt="Profile Picture"
                                  class="round-image"></td>
                         <td><?= $artist->getArtistName(); ?></td>
@@ -47,10 +47,8 @@
                         <td><?= mb_strimwidth($artist->getArtistDescription(), 0, 35, '...') ?></td>
                         <td>
                             <div class="d-inline-flex">
-                                <form>
-                                    <button href="/admin/dance/addNewArtistPerformance" class="btn btn-primary"><i
-                                                class="fa-solid fa-file-pen"></i></button>
-                                </form>
+                                    <a type="button" href="/admin/dance/editArtist?artist=<?= $artist->getArtistId() ?>" class="btn btn-primary"><i
+                                                class="fa-solid fa-file-pen"></i></a>
                                     <button type="button" onclick="deleteButtonClicked('<?= $artist->getArtistId() ?>')" class="btn btn-danger ms-3"><i
                                                 class="fa-solid fa-trash"></i></button>
                             </div>

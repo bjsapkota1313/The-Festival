@@ -298,7 +298,6 @@ class ArtistRepository extends Repository
                   :startTime <= DATE_ADD(timetable.time, INTERVAL performance.duration MINUTE)";
         $parameters = array(':artistId' => $artistId, ':date' => $date, ':startTime' => $time);
         $result = $this->executeQuery($query, $parameters);
-        echo print_r($result);
         if (empty($result)) {
             return true;
         }
