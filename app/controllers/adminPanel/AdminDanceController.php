@@ -159,17 +159,12 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
-    public function editPerformance(){
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['performanceId'])) {
-            $venueId = htmlspecialchars($_GET['performanceId']);
-            $editingPerformance = $this->performanceService->getPerformanceById($venueId);
-            if (empty($editingPerformance)) {
-                $this->display404PageNotFound();
-                exit();
-            }
-            $title = 'Edit ' . 'Performance '.$editingPerformance->getPerformanceId();
-            $this->displaySideBar($title);
-            require_once __DIR__ . '/../../views/AdminPanel/Dance/EditPerformance.php';
+
+    public function editPerformance()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !isset($_GET['performanceId'])) {
+            $this->display404PageNotFound();
+            exit();
         }
 
         $editingPerformance = $this->performanceService->getPerformanceById(htmlspecialchars($_GET['performanceId']));

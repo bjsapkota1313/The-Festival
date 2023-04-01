@@ -184,23 +184,6 @@ class PerformanceRepository extends EventRepository
         }
         return $this->createPerformanceInstance($result);
     }
-
-    public function getPerformanceById($performanceId): ?Performance
-    {
-        $query = "SELECT Performance.PerformanceId,Performance.venueId,timetable.time,eventDate.date,
-                performance.sessionId,performance.duration, performance.totalPrice,performance.totalTickets
-                    ,performance.availableTickets
-            FROM Performance
-            join timetable on Performance.timetableId = timetable.timetableId
-            join eventdate on timetable.eventDateId = eventdate.eventDateId
-            WHERE Performance.PerformanceId = :performanceId";
-        $result = $this->executeQuery($query, array(':performanceId' => $performanceId), false);
-        if (empty($result)) {
-            return null;
-        }
-        return $this->createPerformanceInstance($result);
-    }
-
     public function isPerformanceDetailsSameInDb($performanceDetails): bool
     {
         $query = "SELECT performance.performanceId FROM performance 
