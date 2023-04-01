@@ -41,16 +41,16 @@ abstract class Controller
     protected function parseDateOfBirth($date): bool|string
     {
         $current_date = new DateTime();
-        $birthDate = DateTime::createFromFormat('YYYY-mm-dd', $date);
+        $birthDate = DateTime::createFromFormat('Y-m-d', $date);
         if ($birthDate === false || array_sum($birthDate->getLastErrors()) > 0) {
             return "please input a valid date format (YYYY-MM-DD) for birthdate";
-        }  if ($date > $current_date) {
+        } else if ($date > $current_date) {
             return "Please select a date that is not in the future";
         }
         return true;
     }
 
-    protected function displayNavBar($title, $pathToCss=null): void
+    protected function displayNavBar($title, $pathToCss = null): void
     {
         $this->navBarService = new NavBarService();
         $navBarItems = $this->navBarService->getAllNavBarItems();

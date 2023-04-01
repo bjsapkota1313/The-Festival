@@ -48,7 +48,7 @@ class AdminManageUsersController extends AdminPanelController
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnRegister'])) {// initialize message variable
             if (!empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['email']) && !empty($_POST['dateOfBirth']) && !empty($_POST['role']) && !empty($_POST['password']) && !empty($_POST['passwordConfirm'])) {
-                $dateParseResult=$this->parseDateOfBirth($this->sanitizeInput($_POST['dateOfBirth']));
+                $dateParseResult=$this->parseDateOfBirth($this->sanitizeInput($_POST['dateOfBirth'])); //TODO: check if the date is valid
                 if(is_string($dateParseResult)){ // checking if the controller sends some error message or not
                     return $dateParseResult;
                 }
