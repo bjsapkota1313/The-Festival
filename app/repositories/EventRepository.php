@@ -129,8 +129,8 @@ class EventRepository extends repository
      */
     private function getTimetableIDByInsertingTimeWithDateId($time, $eventDateId)
     {
-        $query = "SELECT timeTableId FROM timetable WHERE time = :time ";
-        $result = $this->executeQuery($query, array(':time' => $time), false);
+        $query = "SELECT timeTableId FROM timetable WHERE time = :time AND eventDateId = :eventDateId";
+        $result = $this->executeQuery($query, array(':time' => $time,':eventDateId'=>$eventDateId), false);
         if (empty($result)) {
             $query = "INSERT INTO timetable (time,eventDateId) VALUES (:time,:eventDateId)";
             $executedResult = $this->executeQuery($query, array(':time' => $time, ':eventDateId' => $eventDateId), false, true);
@@ -146,7 +146,7 @@ class EventRepository extends repository
      * @throws DatabaseQueryException
      */
     protected function getTimetableIdByDateAndTime($date, $time)
-    {
+    { // this function will give us timetable Id by Date and time
         $eventDateId = $this->getEventDateIdByInsertingDate($date);
         return $this->getTimetableIDByInsertingTimeWithDateId($time, $eventDateId);
     }
@@ -168,7 +168,7 @@ class EventRepository extends repository
         return null;
     }
 
-    protected function getEventImagesByEventID($eventID)
+    protected function getEventImagesByEventID($eventID): ?array
     {
         $query = "SELECT image.imageName,eventimage.specification as imageSpecification
                 FROM image

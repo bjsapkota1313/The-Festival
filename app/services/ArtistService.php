@@ -139,5 +139,8 @@ class ArtistService
             };
         }
     }
+    public function updateArtist($data){
+
+    }
 }
 

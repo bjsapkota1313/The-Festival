@@ -30,6 +30,7 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/artistsOverview.php';
     }
+
     public function editArtist()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['artist'])) {
@@ -39,7 +40,7 @@ class AdminDanceController extends AdminPanelController
                 exit();
             }
             $styles = $this->artistService->getAllStyles();
-            if(empty($styles)){
+            if (empty($styles)) {
                 $errorMessage['styles'] = "No Styles found in system";
             }
             $title = 'Edit ' . $artist->getArtistName();
@@ -158,6 +159,7 @@ class AdminDanceController extends AdminPanelController
         }
         require_once __DIR__ . '/../../views/AdminPanel/Dance/PerformancesOverview.php';
     }
+
     public function editPerformance()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !isset($_GET['performanceId'])) {

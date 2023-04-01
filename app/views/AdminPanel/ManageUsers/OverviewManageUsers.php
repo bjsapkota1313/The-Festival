@@ -124,6 +124,7 @@
         </div>
     </div>
 </section>
+<script src="/Javascripts/CustomDialogueBox.js" type="text/javascript"></script>
 <script src="/Javascripts/ManageUsers.js"></script>
 </body>
 </html>

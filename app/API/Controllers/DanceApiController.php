@@ -3,6 +3,7 @@ require_once __DIR__ . '/ApiController.php';
 require_once __DIR__ . '/../../services/DanceEventService.php';
 require_once __DIR__ . '/../../services/ArtistService.php';
 require_once __DIR__ . '/../../services/PerformanceService.php';
+require_once __DIR__ . '/../../models/Exceptions/NotAvailableException.php';
 require_once __DIR__ . '/../../models/Exceptions/uploadFileFailedException.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 require_once __DIR__ . '/../../models/Location.php';
@@ -23,17 +24,19 @@ class DanceApiController extends ApiController
 
     public function performances()
     {
-        try {
-            if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
-                $this->sendHeaders();
-                echo "Fuck";
-//                $performanceId = htmlspecialchars($_GET['id']);
-//                $this->performanceService->deletePerformanceById($performanceId);
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
+            $responseData = array(
+                "success" => true,
+                "message" => "Something went wrong while processing your delete request,Please try again later"
+            );
+            $this->sendHeaders();
+            //  $this->performanceService->deletePerformanceById(htmlspecialchars($_GET['id'])); //TODO: fix this
 
-        } catch (InvalidArgumentException|Exception $e) {
-            http_response_code(500); // sending bad request error to APi request if something goes wrong
-            echo $e->getMessage();
+            echo json_encode($responseData);
+        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+            $this->sendHeaders();
+            $data = $this->getSanitizedData();
+            echo json_encode($this->editPerformance($data));
         }
     }
 
@@ -52,16 +55,15 @@ class DanceApiController extends ApiController
                         "message" => ""
                     );
                 }
-            } catch (DatabaseQueryException| uploadFileFailedException $e) {
+            } catch (DatabaseQueryException|uploadFileFailedException $e) {
                 $responseData = array(
                     "success" => false,
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
-        }
-        else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['artistId'])) {
+        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['artistId'])) {
             $this->sendHeaders();
-            $data=array();
+            $data = array();
             echo json_encode($this->editArtist($data));
         }
     }
@@ -88,8 +90,7 @@ class DanceApiController extends ApiController
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
-        }
-        else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             $this->sendHeaders();
             $data = json_decode(file_get_contents('php://input'), true);
             if (empty($data)) {
@@ -123,6 +124,7 @@ class DanceApiController extends ApiController
         }
         return $responseData;
     }
+
     private function editArtist($artist): array
     {
         $responseData = array(
@@ -130,19 +132,20 @@ class DanceApiController extends ApiController
             "message" => "Something went wrong while processing your Edit request for artist"
         );
         try {
-//            if ($this->artistService->updateArtist($artist)) {
+            if ($this->artistService->updateArtist($artist)) { //TODO: fix this
                 $responseData = array(
                     "success" => true,
                     "message" => ""
                 );
-//            }
-        } catch (DatabaseQueryException | uploadFileFailedException $e) {
+            }
+        } catch (DatabaseQueryException|uploadFileFailedException $e) {
             $responseData = array(
                 "success" => false,
                 "message" => $e->getMessage());
         }
         return $responseData;
     }
+
 
     private function createVenueInstance($id, $name, $address): Location
     {
@@ -151,6 +154,27 @@ class DanceApiController extends ApiController
         $location->setLocationName($name);
         $location->setAddress($address);
         return $location;
+    }
+
+    private function editPerformance($data): array
+    {
+        $responseData = array(
+            "success" => false,
+            "message" => "Something went wrong while processing your Edit request for performance"
+        );
+        try {
+            if ($this->performanceService->updatePerformance($data)) { //TODO: fix this
+                $responseData = array(
+                    "success" => true,
+                    "message" => ""
+                );
+            }
+        } catch (NotAvailableException | InternalErrorException | DatabaseQueryException   $e) {
+            $responseData = array(
+                "success" => false,
+                "message" => $e->getMessage());
+        }
+        return $responseData;
     }
 
 }

@@ -10,7 +10,7 @@ function deletePerformance(performanceId) {
     }).then(response => {
         response.json().then(data => {
             if (data.success) {
-                window.location.reload();
+                location.reload();
             } else {
                 displayModal("Cannot be Deleted", data.message)
             }

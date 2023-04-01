@@ -160,8 +160,8 @@ function sortValueChanged(selectElement) {
     });
 }
 
-function btnDeleteUserClicked(id) {
-    const confirmation = confirm("Are you sure you want to delete this user?");
+async function btnDeleteUserClicked(id) {
+    const confirmation = await displayModalForDelete();
     if (confirmation) {
         let sortingCondition = document.getElementById('filter-select').value;
         data = {'userID': id, 'SortingCondition': sortingCondition};
@@ -190,7 +190,7 @@ function btnDeleteUserClicked(id) {
                 }
             }
             else {
-                alert(data.Message);
+                displayModal("opps!Something went wrong",data.Message);
             }
         })
     }
@@ -237,11 +237,11 @@ async function onEditUserSubmitChangesBtn(userId) {
 
     if (changePasswordCheckBox) {
         if(!password || !confirmNewPassword){
-            alert('Password and confirm password are required');
+            displayErrors('Password and confirm password are required');
             return;
         }
         else if (password != confirmNewPassword) {
-            alert('Password and confirm password do not match');
+            displayErrors('Password and confirm password do not match');
             return;
         }
         data = {
@@ -266,7 +266,7 @@ async function onEditUserSubmitChangesBtn(userId) {
         if (response.success) {
            location.href="/admin/manageusers";
         } else {
-            alert(response.message);
+            displayErrors(response.message);
         }
     });
 }
@@ -289,21 +289,21 @@ function getImageFileUsingPath() {
 }
 function validateForm(lastName, firstName, email,dateOfBirth, profilePicture) {
     if (!lastName) {
-        alert('Please enter a Last name');
+        displayErrors('Please enter a Last name');
         return false;
     }
 
     if (!firstName) {
-        alert('Please enter a firstName');
+        displayErrors('Please enter a firstName');
         return false;
     }
 
     if (!email) {
-        alert('Please enter a email');
+        displayErrors('Please enter am email');
         return false;
     }
     if (!dateOfBirth) {
-        alert('Please enter a date of birth');
+        displayErrors('Please enter a date of birth');
     }
     if (!checkUploadedFile(profilePicture)) {
         return false;
@@ -319,8 +319,14 @@ function checkUploadedFile(image) {
     let validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
 
     if (validImageTypes.indexOf(fileType) < 0) {
-        alert("Invalid file type. Please select an image file (jpg, jpeg, png)");
+        displayErrors("Invalid file type. Please select an image file (jpg, jpeg, png)");
         return false;
     }
     return true;
+}
+function displayErrors(message){
+    let error=document.getElementById('errors');
+    error.innerHTML=message;
+    error.hidden=false;
+
 }

@@ -40,7 +40,7 @@ function sendPutRequest(venue){
         response.json()
             .then(data => {
             if (data.success) {
-                window.location.href = "/admin/dance/venues";
+                location.href = "/admin/dance/venues";
             } else {
                 displayError( data.message)
             }

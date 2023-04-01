@@ -87,12 +87,12 @@ function displayModalForDelete() {
     });
 }
 
-function displayModal(title,message) {
+function displayModal(title, message) {
     // create modal HTML elements
-    const modal = document.createElement('div');
-    modal.classList.add('modal', 'fade');
-    modal.setAttribute('tabindex', '-1');
-    modal.setAttribute('role', 'dialog');
+    const modal = document.createElement("div");
+    modal.classList.add("modal", "fade");
+    modal.setAttribute("tabindex", "-1");
+    modal.setAttribute("role", "dialog");
     modal.innerHTML = `
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -104,7 +104,7 @@ function displayModal(title,message) {
           ${message}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="modal-ok-button">OK</button>
         </div>
       </div>
     </div>
@@ -117,9 +117,16 @@ function displayModal(title,message) {
     const modalInstance = new bootstrap.Modal(modal);
     modalInstance.show();
 
+    // add event listener to OK button to reload the page
+    const okButton = modal.querySelector("#modal-ok-button");
+    okButton.addEventListener("click", () => {
+        location.reload();
+    });
+
     // remove modal from the document when closed
-    modal.addEventListener('hidden.bs.modal', () => {
+    modal.addEventListener("hidden.bs.modal", () => {
         document.body.removeChild(modal);
     });
 }
+
 
