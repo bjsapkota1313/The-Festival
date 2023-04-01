@@ -160,8 +160,8 @@ function sortValueChanged(selectElement) {
     });
 }
 
-async function btnDeleteUserClicked(id) {
-    const confirmation = await displayModalForDelete();
+ function btnDeleteUserClicked(id) {
+    const confirmation = confirm('Are you sure you want to delete this user?');
     if (confirmation) {
         let sortingCondition = document.getElementById('filter-select').value;
         data = {'userID': id, 'SortingCondition': sortingCondition};
