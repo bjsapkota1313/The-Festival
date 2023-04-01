@@ -28,10 +28,8 @@ function btnSaveChangesClicked(venueId,addressId) {
         }
     };
     sendPutRequest(venue);
-
 }
 function sendPutRequest(venue){
-    console.log(venue);
     fetch('http://localhost/api/danceApi/venues', {
         method: 'PUT',
         headers: {

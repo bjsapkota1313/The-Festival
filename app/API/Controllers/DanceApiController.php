@@ -37,12 +37,8 @@ class DanceApiController extends ApiController
         }
     }
 
-    /**
-     * @throws uploadFileFailedException
-     */
     public function artists()
     {
-        //ToDO: bhvb
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['id'])) {
             $responseData = array(
                 "success" => false,
@@ -56,18 +52,23 @@ class DanceApiController extends ApiController
                         "message" => ""
                     );
                 }
-            } catch (DatabaseQueryException|uploadFileFailedException $e) {
+            } catch (DatabaseQueryException| uploadFileFailedException $e) {
                 $responseData = array(
                     "success" => false,
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
         }
+        else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['artistId'])) {
+            $this->sendHeaders();
+            $data=array();
+            echo json_encode($this->editArtist($data));
+        }
     }
 
 
     public function venues()
-    { //TODO: add delete method
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['venueId'])) {
             $responseData = array(
                 "success" => false,
@@ -87,7 +88,8 @@ class DanceApiController extends ApiController
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
-        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+        }
+        else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             $this->sendHeaders();
             $data = json_decode(file_get_contents('php://input'), true);
             if (empty($data)) {
@@ -101,7 +103,7 @@ class DanceApiController extends ApiController
         }
     }
 
-    private function editVenue($venue)
+    private function editVenue($venue): array
     {
         $responseData = array(
             "success" => false,
@@ -115,6 +117,26 @@ class DanceApiController extends ApiController
                 );
             }
         } catch (DatabaseQueryException $e) {
+            $responseData = array(
+                "success" => false,
+                "message" => $e->getMessage());
+        }
+        return $responseData;
+    }
+    private function editArtist($artist): array
+    {
+        $responseData = array(
+            "success" => false,
+            "message" => "Something went wrong while processing your Edit request for artist"
+        );
+        try {
+//            if ($this->artistService->updateArtist($artist)) {
+                $responseData = array(
+                    "success" => true,
+                    "message" => ""
+                );
+//            }
+        } catch (DatabaseQueryException | uploadFileFailedException $e) {
             $responseData = array(
                 "success" => false,
                 "message" => $e->getMessage());

@@ -61,25 +61,26 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="portrait">Portrait</label><br>
-                                <input type="file" name="portrait" alt="Artist Portrait" accept=".png, .jpg, .jpeg"
-                                       class="pb-3">
-                                <?php if (!empty($artist->getArtistImages()['Portrait'][0])): ?>
-                                    <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>"
-                                         alt="Artist Portrait" style="width: 200px; height: 200px;">
-                                <?php else: ?>
-                                    <div class="alert alert-info" role="alert">
-                                        There is no Portrait for <?= $artist->getArtistName() ?>. Please upload one
-                                        image which will
-                                        be viewed in the artist page.
-                                    </div>
-                                <?php endif; ?>
+                                <label class="form-label" for="artistPortrait">Portrait</label><br>
+                                <input type="file" id="artistPortrait" alt="Artist Portrait" accept=".png, .jpg, .jpeg"
+                                       class="pb-3" >
+                                <div class="image-container">
+                                    <?php if (!empty($artist->getArtistImages()['Portrait'][0])): ?>
+                                        <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Portrait'][0]) ?>"
+                                             alt="Artist Portrait"  style="width: 200px; height: 200px;">
+                                    <?php else: ?>
+                                        <div class="alert alert-info" role="alert">
+                                            There is no Portrait for <?= $artist->getArtistName() ?>. Please upload one image which will be viewed in the artist page.
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
+
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label" for="banner">Banner</label><br>
-                                <input type="file" name="banner" accept=".png, .jpg, .jpeg" class="pb-3">
+                                <label class="form-label" for="artistBanner">Banner</label><br>
+                                <input type="file" id="artistBanner" accept=".png, .jpg, .jpeg" class="pb-3">
                                 <?php if (!empty($artist->getArtistImages()['Banner'][0])): ?>
                                     <img src="<?= $this->getImageFullPath($artist->getArtistImages()['Banner'][0]) ?>"
                                          alt="Artist Banner" style="width: 200px; height: 200px;">
@@ -94,8 +95,8 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="gallery">Other Images</label><br>
-                    <input type="file" name="others[]" multiple accept=".png, .jpg, .jpeg" class="pb-3">
+                    <label class="form-label" for="OtherArtistImages">Other Images</label><br>
+                    <input type="file" id="OtherArtistImages" multiple accept=".png, .jpg, .jpeg" class="pb-3">
                     <?php if (!empty($artist->getArtistImages()['Other'])): ?>
                         <?php foreach ($artist->getArtistImages()['Other'] as $image): ?>
                             <img src="<?= $this->getImageFullPath($image) ?>" alt="Artist Gallery"
@@ -124,7 +125,6 @@
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

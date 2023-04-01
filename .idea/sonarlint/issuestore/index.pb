@@ -186,8 +186,6 @@ N
 app/services/ApiKeyService.php,d\7\d71dd30e98fef666e0099efc5490d7cc09acc583
 U
 %app/repositories/ApiKeyRepository.php,0\6\06945af3d429385afd4c1e964644387dc7f2726a
-i
-9app/public/Javascripts/AdminPanel/Dance/ArtistOverview.js,9\c\9cf1dda575722390fa4cf4cc2fe677d2f750954b
 n
 >app/public/Javascripts/AdminPanel/Dance/PerformanceOverview.js,8\1\81c6214c44d2c2feebda7d3beb316a883e4a6582
 ]
