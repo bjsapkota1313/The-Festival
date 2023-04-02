@@ -54,7 +54,7 @@ class ArtistRepository extends Repository
         }
     }
 
-    private function getAllImagesOfArtistByArtistId($artistId): ?array
+    public function getAllImagesOfArtistByArtistId($artistId): ?array
     {
         $query = "SELECT image.imageName,artistImage.Imagespecification as imageSpecification  
         From artistImage JOIN image ON artistImage.imageId = image.imageId WHERE artistImage.artistId = :artistId";
@@ -212,7 +212,7 @@ class ArtistRepository extends Repository
             throw new DatabaseQueryException("Error while inserting artist");
         }
         foreach ($data['artistStyles'] as $style) {
-            $this->insertArtistStyleWithArtistIdAndStyleId($artistID, $style);
+            $this->addArtistStyle($artistID, $style);
         }
         foreach ($data['others'] as $key => $imageId) {
             $this->insertArtistImageWithArtistIdAndImageId($artistID, $imageId, 'Other');
@@ -239,7 +239,7 @@ class ArtistRepository extends Repository
     /**
      * @throws DatabaseQueryException
      */
-    private function insertArtistStyleWithArtistIdAndStyleId($artistId, $styleId)
+    public function addArtistStyle($artistId, $styleId)
     {
         $query = "INSERT INTO artistStyle (artistId,styleId) VALUES (:artistId,:styleId)";
         if (!$this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId))) {
@@ -287,7 +287,7 @@ class ArtistRepository extends Repository
         return $images;
     }
 
-    public function isArtistAvailableAtTime($artistId, $date, $time):bool
+    public function isArtistAvailableAtTime($artistId, $date, $time): bool
     {
         $query = "SELECT performance.performanceId
                   FROM participatingartist
@@ -303,15 +303,17 @@ class ArtistRepository extends Repository
         }
         return false;
     }
+
     public function isArtistParticipating($artistId): bool
     {
         $query = "SELECT artistId FROM participatingartist WHERE artistId = :artistId";
-        $result = $this->executeQuery($query,[':artistId'=>$artistId]);
+        $result = $this->executeQuery($query, [':artistId' => $artistId]);
         if (empty($result)) {
             return false;
         }
         return true;
     }
+
     public function getAllImagesIdOfArtist($artistId): ?array
     {
         $query = "SELECT ImageId FROM (
@@ -333,5 +335,52 @@ class ArtistRepository extends Repository
             $images[] = $row['ImageId'];
         }
         return $images;
+    }
+
+    public function getAllStylesIdOfArtist($artistId): ?array
+    {
+        $query = "SELECT styleId FROM artistStyle WHERE artistId = :artistId";
+        $result = $this->executeQuery($query, array(':artistId' => $artistId));
+        if (empty($result)) {
+            return null;
+        }
+        $styles = array();
+        foreach ($result as $row) {
+            $styles[] = $row['styleId'];
+        }
+        return $styles;
+    }
+
+    public function removeArtistStyle($artistId, $styleId): bool
+    {
+        $query = "DELETE FROM artistStyle WHERE artistId = :artistId AND styleId = :styleId";
+        return $this->executeQuery($query, array(':artistId' => $artistId, ':styleId' => $styleId));
+    }
+
+    public function isArtistDetailsSameInDb($artistDetails): bool
+    {
+        $query = "SELECT artistId FROM artist WHERE artistName = :artistName AND artistDescription = :artistDescription";
+        $result = $this->executeQuery($query, array(':artistName' => $artistDetails->name, ':artistDescription' => $artistDetails->description));
+        if (empty($result)) {
+            return false;
+        }
+        return true;
+    }
+    public function updateArtistDetails($artistDetails): bool
+    {
+        $query = "UPDATE artist SET artistName = :artistName, artistDescription = :artistDescription WHERE artistId = :artistId";
+        return $this->executeQuery($query, array(':artistName' => $artistDetails->name,
+            ':artistDescription' => $artistDetails->description,
+            ':artistId' => $artistDetails->id));
+    }
+
+    public function getArtistLogoNameByArtistId($artistId)
+    {
+        $query ="SELECT image.ImageName FROM artist JOIN image ON artist.artistLogoId = image.imageId WHERE artist.artistId = :artistId";
+        $result = $this->executeQuery($query, array(':artistId' => $artistId),false);
+        if (empty($result)) {
+            return null;
+        }
+        return $result['ImageName'];
     }
 }

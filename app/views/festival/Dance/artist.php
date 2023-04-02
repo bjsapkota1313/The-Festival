@@ -48,7 +48,7 @@
             </div>
             <div class="col-6 justify-content-center">
                 <svg class="pr-3">
-                    <img class="image-fluid" src="<?=$this->getImageFullPath($selectedArtist->getArtistLogo())?>" alt="<?= $selectedArtist->getArtistName()?>">
+                    <img class="image-fluid" src="<?=$this->getImageFullPath($selectedArtist->getArtistLogo())?>" alt="<?= $selectedArtist->getArtistName()?>" style="width: 250px; height: 250px;">
                 </svg>
             </div>
         </div>
@@ -114,7 +114,7 @@
                                 <br>
                                 <?php foreach($performances as $performance) { ?>
                                     <label class="timeLabel"><?=$performance->getDate()->format('H:i')?> - <?= $performance->getEndDateTime()->format('H:i')?>
-                                        <a class="link" style="text-decoration: underline; color: black;" href="<?= $this->getGoogleDirectionsLink($performance->getVenue()->getAddress()) ?>"><?= $performance->getVenue()->getLocationName() ?>
+                                        <a class="link" style="text-decoration: underline; color: black;" target=”_blank”  href="<?= $this->getGoogleDirectionsLink($performance->getVenue()->getAddress()) ?>"><?= $performance->getVenue()->getLocationName() ?>
                                         </a></label>
                                     <br>
                                     <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>

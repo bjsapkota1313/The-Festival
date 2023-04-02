@@ -14,14 +14,23 @@ function btnSaveChangesClicked(artistId) {
     }
 
     let artist = {
-        artistId:artistId,
-        artistName: artistName,
-        artistDescription: artistDescription,
-        artistStyles: selectedArtistStyles,
+        artistDetails: {
+            id: artistId,
+            name: artistName,
+            description: artistDescription,
+            styles: selectedArtistStyles,
+        },
         artistLogo: artistLogo,
         artistPortrait: artistPortrait,
         artistBanner: artistBanner,
         OtherArtistImages: OtherArtistImages
+
+    }
+    if(artist.OtherArtistImages.length !== 0){
+        if(!checkArtistOtherImagesMinimum(artist.OtherArtistImages)){
+            displayError("Please upload at least 3 other images for artist");
+            return;
+        }
     }
     sendUpdateRequest(artist);
 }
@@ -45,31 +54,44 @@ function displayError(error) {
 
 function sendUpdateRequest(artist) {
     let formData = getFormData(artist);
-    fetch('http://localhost/api/danceApi/artists?artistId='+artist.artistId, {
-        method: 'PUT',
+    fetch('http://localhost/api/danceApi/artists?artistId=' + artist.artistDetails.id, {
+        method: 'POST',
         body: formData
     }).then(response => {
         response.json()
             .then(data => {
                 if (data.success) {
-                    location.href = "/admin/dance/venues";
+                    location.href = "/admin/dance/artists";
                 } else {
                     displayError(data.message)
                 }
             });
-    }).catch(error => {console.log(error)});
+    }).catch(error => {
+        console.log(error)
+    });
 }
-function getFormData(artist){
+
+function getFormData(artist) {
     const formData = new FormData();
-    formData.append('artistName', artist.artistName);
-    formData.append('artistDescription', artist.artistDescription);
-    formData.append('artistStyles', JSON.stringify(artist.artistStyles));
+    formData.append('artistDetails', JSON.stringify(artist.artistDetails));
     formData.append('artistLogo', artist.artistLogo);
     formData.append('artistPortrait', artist.artistPortrait);
     formData.append('artistBanner', artist.artistBanner);
-    for (let i = 0; i < artist.OtherArtistImages.length; i++) {
-        formData.append('OtherArtistImages', artist.OtherArtistImages[i]);
+    if (artist.OtherArtistImages.length !== 0) {
+        for (let i = 0; i < artist.OtherArtistImages.length; i++) {
+            formData.append('OtherArtistImages[' + i + ']', artist.OtherArtistImages[i]);
+        }
+    } else {
+        formData.append('OtherArtistImages', '');
     }
     return formData;
 }
+
+function checkArtistOtherImagesMinimum(artistOtherImages) {
+    if ( artistOtherImages.length < 3) {
+        return false;
+    }
+    return true;
+}
+
 
