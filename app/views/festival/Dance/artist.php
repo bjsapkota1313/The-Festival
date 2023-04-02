@@ -43,12 +43,13 @@
         <div class="row ps-3">
             <div class="col-6 ps-3">
                 <p class="text-center" style="font-size: 24px;">
-                    <?= nl2br($selectedArtist->getArtistDescription())?>
+                    <?= nl2br($selectedArtist->getArtistDescription()) ?>
                 </p>
             </div>
             <div class="col-6 justify-content-center">
                 <svg class="pr-3">
-                    <img class="image-fluid" src="<?=$this->getImageFullPath($selectedArtist->getArtistLogo())?>" alt="<?= $selectedArtist->getArtistName()?>" style="width: 250px; height: 250px;">
+                    <img class="image-fluid" src="<?= $this->getImageFullPath($selectedArtist->getArtistLogo()) ?>"
+                         alt="<?= $selectedArtist->getArtistName() ?>" style="width: 250px; height: 250px;">
                 </svg>
             </div>
         </div>
@@ -72,29 +73,30 @@
                         <strong>Error:</strong> <?= $errorMessage['connectionToSpotify'] ?>
                     </div>
                 <?php else: ?>
-                <?php if (isset($errorMessage['artistAlbums'])) : ?>
-                    <div class="alert alert-warning" role="alert">
-                        <strong>Error:</strong> <?= $errorMessage['artistAlbums'] ?>
-                    </div>
-                <?php else : ?>
-                    <?php foreach ($artistAlbums->items as $album) : ?>
-                        <div class="col-2">
-                            <a href="<?= $album->external_urls->spotify ?>" class="album-link text-decoration-none">
-                                <div class="podcast-card">
-                                    <div class="frame-117">
-                                        <img src="<?= $album->images[0]->url ?>" class="img-fluid" alt="<?= $album->name ?>">
-                                    </div>
-                                    <div class="text ps-3">
-                                        <p class="albumName"><?= mb_strimwidth($album->name, 0,7,'...') ?></p>
-                                        <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
-                                                    class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
+                    <?php if (isset($errorMessage['artistAlbums'])) : ?>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>Error:</strong> <?= $errorMessage['artistAlbums'] ?>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php else : ?>
+                        <?php foreach ($artistAlbums->items as $album) : ?>
+                            <div class="col-2">
+                                <a href="<?= $album->external_urls->spotify ?>" class="album-link text-decoration-none">
+                                    <div class="podcast-card">
+                                        <div class="frame-117">
+                                            <img src="<?= $album->images[0]->url ?>" class="img-fluid"
+                                                 alt="<?= $album->name ?>">
+                                        </div>
+                                        <div class="text ps-3">
+                                            <p class="albumName"><?= mb_strimwidth($album->name, 0, 7, '...') ?></p>
+                                            <p class="detail-Text"><?= date('Y', strtotime($album->release_date)) ?> <i
+                                                        class="fa-sharp fa-solid fa-circle fa-2xs"></i> <?= $album->album_type ?>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
@@ -108,16 +110,24 @@
                         <h5 style="font-weight: bold; font-size: 40px; margin-bottom: -25px;">Show times</h5>
                     </div>
                     <div class="card-body d-flex flex-column justify-content-center text-center">
-                        <?php foreach($filteredArtistPerformances as $date=>$performances) { ?>
+                        <?php foreach ($filteredArtistPerformances as $date => $performances) { ?>
                             <div class="container pb-5">
-                                <button class="DateShowButton mx-auto" disabled><?= $this->getDayByDateString($date) ?></button>
+                                <button class="DateShowButton mx-auto"
+                                        disabled><?= $this->getDayByDateString($date) ?></button>
                                 <br>
-                                <?php foreach($performances as $performance) { ?>
-                                    <label class="timeLabel"><?=$performance->getDate()->format('H:i')?> - <?= $performance->getEndDateTime()->format('H:i')?>
-                                        <a class="link" style="text-decoration: underline; color: black;" target=”_blank”  href="<?= $this->getGoogleDirectionsLink($performance->getVenue()->getAddress()) ?>"><?= $performance->getVenue()->getLocationName() ?>
+                                <?php foreach ($performances as $performance) { ?>
+                                    <label class="timeLabel"><?= $performance->getDate()->format('H:i') ?>
+                                        - <?= $performance->getEndDateTime()->format('H:i') ?>
+                                        <a class="link" style="text-decoration: underline; color: black;"
+                                           target=”_blank”
+                                           href="<?= $this->getGoogleDirectionsLink($performance->getVenue()->getAddress()) ?>"><?= $performance->getVenue()->getLocationName() ?>
                                         </a></label>
                                     <br>
-                                    <button class="BookBtn mx-auto">Book Ticket <i class="fa-solid fa-circle-arrow-right"></i>
+                                    <button type="button"
+                                            onclick='showTicketModal("<?= addslashes(json_encode($performance)) ?>")'
+                                            class="BookBtn mx-auto" data-bs-toggle="modal"
+                                            data-bs-target="#performanceModal">Book Ticket <i
+                                                class="fa-solid fa-circle-arrow-right"></i>
                                     </button>
                                     <br>
                                 <?php } ?>
@@ -128,7 +138,8 @@
             </div>
             <div class="col-6">
                 <div class="container-fluid">
-                    <p style="font-style: normal;font-weight: 700;font-size: 40px;line-height: 64px;text-align: center;">Check out tracks</p>
+                    <p style="font-style: normal;font-weight: 700;font-size: 40px;line-height: 64px;text-align: center;">
+                        Check out tracks</p>
                 </div>
                 <div class="card" style="background-color:#121D22; border-radius: 30px; border: none">
                     <div class="container-fluid">
@@ -164,7 +175,7 @@
                                                          class="img-fluid" style="width: 40px; height:38px;">
                                                 </div>
                                                 <div class="col-6 " style="margin-left: -15px">
-                                                    <h2 class="pt-2 "><?= mb_strimwidth($track->name, 0,20,'...') ?></h2>
+                                                    <h2 class="pt-2 "><?= mb_strimwidth($track->name, 0, 20, '...') ?></h2>
                                                 </div>
                                                 <div class="col-4">
                                                 </div>
@@ -191,16 +202,26 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-8" style="border-radius: 49px;">
-                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][1]) ?>" class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
+                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][1]) ?>"
+                         class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
                          style="height:613px; width: 963px; border-radius: 49px;">
                 </div>
                 <div class="col-4" style="border-radius: 49px;">
-                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][2]) ?>" class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
+                    <img src="<?= $this->getImageFullPath($selectedArtist->getArtistImages()['Other'][2]) ?>"
+                         class="img-fluid" alt="<?= $selectedArtist->getArtistName() ?>"
                          style="height: 613px; width: 924px; border-radius: 49px;">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<?php require_once __DIR__ . '/TicketModal.html' ?>
+<script>
+    function showTicketModal(data) {
+        performance = JSON.parse(data.replace(/\\/g, ''));
+        fillTicketModal(performance);
+    }
+</script>
+<script src="/Javascripts/festival/Dance/TicketModalPerformance.js" type="text/javascript"></script>
 <script src="/Javascripts/festival/Dance/Audioplayer.js" type="text/javascript"></script>
 </body>

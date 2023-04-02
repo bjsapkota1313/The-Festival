@@ -30,7 +30,7 @@ class DanceApiController extends ApiController
                 "message" => "Something went wrong while processing your delete request,Please try again later"
             );
             $this->sendHeaders();
-            //  $this->performanceService->deletePerformanceById(htmlspecialchars($_GET['id'])); //TODO: fix this
+              $this->performanceService->deletePerformanceById(htmlspecialchars($_GET['id']));
 
             echo json_encode($responseData);
         } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {

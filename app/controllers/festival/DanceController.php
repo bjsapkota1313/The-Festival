@@ -87,5 +87,4 @@ class DanceController extends eventController
         }
         return $name;
     }
-
 }
