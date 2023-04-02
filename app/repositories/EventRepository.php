@@ -129,8 +129,8 @@ class EventRepository extends repository
      */
     private function getTimetableIDByInsertingTimeWithDateId($time, $eventDateId)
     {
-        $query = "SELECT timeTableId FROM timetable WHERE time = :time ";
-        $result = $this->executeQuery($query, array(':time' => $time), false);
+        $query = "SELECT timeTableId FROM timetable WHERE time = :time AND eventDateId = :eventDateId";
+        $result = $this->executeQuery($query, array(':time' => $time,':eventDateId'=>$eventDateId), false);
         if (empty($result)) {
             $query = "INSERT INTO timetable (time,eventDateId) VALUES (:time,:eventDateId)";
             $executedResult = $this->executeQuery($query, array(':time' => $time, ':eventDateId' => $eventDateId), false, true);
@@ -146,7 +146,7 @@ class EventRepository extends repository
      * @throws DatabaseQueryException
      */
     protected function getTimetableIdByDateAndTime($date, $time)
-    {
+    { // this function will give us timetable Id by Date and time
         $eventDateId = $this->getEventDateIdByInsertingDate($date);
         return $this->getTimetableIDByInsertingTimeWithDateId($time, $eventDateId);
     }
@@ -168,7 +168,7 @@ class EventRepository extends repository
         return null;
     }
 
-    protected function getEventImagesByEventID($eventID)
+    protected function getEventImagesByEventID($eventID): ?array
     {
         $query = "SELECT image.imageName,eventimage.specification as imageSpecification
                 FROM image
@@ -219,7 +219,7 @@ class EventRepository extends repository
             $query .= " AND houseNumberAdditional = :houseNumberAdditional";
             $params[':houseNumberAdditional'] = $houseNumberAdditional;
         }
-        $result = $this->executeQuery($query, $params,false);
+        $result = $this->executeQuery($query, $params, false);
         if (empty($result)) {
             return $this->insertAddressAndGetId($postcode, $streetName, $houseNumber, $city, $country, $houseNumberAdditional);
         }
@@ -253,15 +253,67 @@ class EventRepository extends repository
         return $this->executeQuery($query, array(':locationName' => $locationName, ':addressId' => $addressId));
         // since it is an insert query it will return us bool if it was inserted or not
     }
+
     public function checkLocationExistence($locationName): bool
     {
         $query = "SELECT locationId FROM location WHERE locationName = :locationName"; // since location should be Unique According to db design
-        $result = $this->executeQuery($query, array(':locationName' => $locationName) );
+        $result = $this->executeQuery($query, array(':locationName' => $locationName));
         if (empty($result)) {
             return false;
         }
         return true;
     }
 
+    protected function deleteLocation($locationId): bool
+    {
+        $query = "DELETE FROM location WHERE locationId = :locationId";
+        return $this->executeQuery($query, [':locationId' => $locationId]); // since it is an delete query it will return us bool if it was deleted or not
+    }
 
+    protected function isUpdatingLocationDetailSame(Location $location): bool
+    {
+        $query = "SELECT locationId FROM location WHERE locationName = :locationName AND locationId = :locationId";
+        $result = $this->executeQuery($query, array(':locationName' => $location->getLocationName(), ':locationId' => $location->getLocationId()));
+        if (!empty($result)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function isUpdatingAddressDetailSame(Address $address): bool
+    {
+        $query = "SELECT addressId FROM address WHERE postCode = :postCode AND streetName = :streetName AND houseNumber = :houseNumber  
+                            AND city = :city AND country = :country AND addressId = :addressId";
+        $params = array(':postCode' => $address->getPostCode(), ':streetName' => $address->getStreetName(), ':houseNumber' => $address->getHouseNumber(),
+            ':city' => $address->getCity(), ':country' => $address->getCountry(), ':addressId' => $address->getAddressId());
+        if (empty($address->getHouseNumberAdditional())) {
+            $query .= " AND (houseNumberAdditional IS NULL OR houseNumberAdditional = '')";
+        } else {
+            $query .= " AND houseNumberAdditional = :houseNumberAdditional";
+            $params[':houseNumberAdditional'] = $address->getHouseNumberAdditional();
+        }
+        $result = $this->executeQuery($query, $params);
+        if (empty($result)) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function updateLocation(Location $location)
+    {
+        $query = "UPDATE location SET locationName = :locationName WHERE locationId = :locationId";
+        return $this->executeQuery($query, [':locationName' => $location->getLocationName(), ':locationId' => $location->getLocationId()]);
+    }
+
+    protected function updateAddress(Address $address)
+    {
+        $query = "UPDATE address SET postCode = :postCode, streetName = :streetName, houseNumber = :houseNumber, 
+              city = :city, country = :country, houseNumberAdditional = NULLIF(:houseNumberAdditional, '') 
+              WHERE addressId = :addressId";
+        $params = array(':postCode' => $address->getPostCode(), ':streetName' => $address->getStreetName(),
+            ':houseNumber' => $address->getHouseNumber(),
+            ':city' => $address->getCity(), ':country' => $address->getCountry(), ':addressId' => $address->getAddressId(),
+            ':houseNumberAdditional' => $address->getHouseNumberAdditional());
+        return $this->executeQuery($query, $params);
+    }
 }

@@ -47,7 +47,7 @@
         </li>
         <li>
             <a href="/admin/homepage/edithomepage" >
-                <i class='bx bx-grid-alt'></i>
+                <i class="fas fa-home-alt" style="color: #ffffff;"></i>
                 <span class="link_name">Edit Home Page</span>
             </a>
         </li>
@@ -60,7 +60,7 @@
             </div>
             <ul class="sub-menu">
                 <li><a class="link_name" href="#">Category</a></li>
-                <li><a href="/admin/dance/artists">Artist</a></li>
+                <li><a href="/admin/dance/artists">Artists</a></li>
                 <li><a href="/admin/dance/Performances">Performances</a></li>
                 <li><a href="/admin/dance/venues">Venues</a></li>
             </ul>

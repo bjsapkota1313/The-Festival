@@ -6,6 +6,23 @@ require_once __DIR__ . '/Paragraph.php';
     protected int $eventId;
     protected ?array $eventParagraphs; // every event does not need to have a paragraph
     protected ?array $eventImages; // every event does not need to have  images
+     protected float $eventVatPercentage; // each event has a different vat percentage but
+
+     /**
+      * @return float
+      */
+     public function getEventVatPercentage(): float
+     {
+         return $this->eventVatPercentage;
+     }
+
+     /**
+      * @param float $eventVatPercentage
+      */
+     public function setEventVatPercentage(float $eventVatPercentage): void
+     {
+         $this->eventVatPercentage = $eventVatPercentage;
+     }
 
 
      public function __construct()

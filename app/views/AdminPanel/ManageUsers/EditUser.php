@@ -127,6 +127,8 @@
                                 <?php if (!empty($message)): ?>
                                     <div class="text-danger"><p><?= $message; ?></p></div>
                                 <?php endif; ?>
+                                <div class="alert alert-danger" role="alert" id="errors" hidden>
+                                </div>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="d-grid gap-2">

@@ -18,7 +18,10 @@ class ImageService
     public function getImageById($id)
     {
         return $this->imageRepository->getImageById($id);
-
+    }
+    public function deleteImage($id)
+    {
+        return $this->imageRepository->deleteImage($id);
     }
 
 }

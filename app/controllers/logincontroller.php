@@ -13,17 +13,6 @@ class LoginController extends Controller
         $this->userService = new UserService();
     }
 
-    public function test()
-    {
-        echo "This is a test for login page";
-    }
-
-    public function passhash()
-    {
-        $pass = "Sara";
-        echo password_hash($pass, PASSWORD_DEFAULT);
-    }
-
     public function logout($query){
         // session_start();
         session_unset();

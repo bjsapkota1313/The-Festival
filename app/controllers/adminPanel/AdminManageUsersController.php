@@ -38,8 +38,8 @@ class AdminManageUsersController extends AdminPanelController
 
     public function registerNewUser()
     {
-        $this->displaySideBar("RegisterNewUser",'/css/registerStyle.css');
         $message = $this->registerNewUserSubmit();
+        $this->displaySideBar("RegisterNewUser",'/css/registerStyle.css');
         require __DIR__ . '/../../views/AdminPanel/ManageUsers/RegisterNewUser.php';
     }
 
@@ -68,7 +68,7 @@ class AdminManageUsersController extends AdminPanelController
                             "picture" => $_FILES['profilePicUpload']
                         );
                         if ($this->userService->registerUser($user)) {
-                            echo "<script>location.href='/admin/manageusers'</script>";
+                            header("Location: /admin/manageusers");
                             exit();
                         } else {
                             return "Something went wrong while creating an account please try again later";

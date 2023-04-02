@@ -165,6 +165,7 @@ class UserRepository extends Repository
             echo $e;
         }
     }
+
     public function deleteUserById($id)
     {
         try {
@@ -323,8 +324,6 @@ class UserRepository extends Repository
         }
     }
 
-    
-
 
     //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
@@ -334,31 +333,22 @@ class UserRepository extends Repository
             $query .= ", password=:password"; // adding password to the query when password will be changed
         }
         $query .= " WHERE id=:id";
-        try {
-            $stmt = $this->connection->prepare($query);
-            $stmt->bindValue(":id", $updatedUser->getId());
-            $stmt->bindValue(":role", Roles::getLabel($updatedUser->getRole()));
-            $stmt->bindValue(":firstName", $updatedUser->getFirstName());
-            $stmt->bindValue(":lastName", $updatedUser->getLastName());
-            $stmt->bindValue(":dateOfBirth", $updatedUser->getDateOfBirth()->format('Y-m-d'));
-            $stmt->bindValue(":email", $updatedUser->getEmail());
-            $stmt->bindValue(":picture", $updatedUser->getPicture());
-            if (!empty($updatedUser->getHashedPassword())) {
-                $stmt->bindValue(":password", $updatedUser->getHashedPassword());
-            }
-            $stmt->execute();
-            if ($stmt->rowcount() == 0) {
-                return false;
-            }
-            return true;
-        } catch (PDOException $e) {
-            echo $e;
+        $parameters = array(
+            ":id" => $updatedUser->getId(),
+            ":role" => Roles::getLabel($updatedUser->getRole()),
+            ":firstName" => $updatedUser->getFirstName(),
+            ":lastName" => $updatedUser->getLastName(),
+            ":dateOfBirth" => $updatedUser->getDateOfBirth()->format('Y-m-d'),
+            ":email" => $updatedUser->getEmail(),
+            ":picture" => $updatedUser->getPicture()
+        );
+        if (!empty($updatedUser->getHashedPassword())) {
+            $parameters[":password"] = $updatedUser->getHashedPassword();
         }
+        return $this->executeQuery($query, $parameters);
     }
-    
-    
-   
-    
+
+
     // used when user edit process is going on
     function checkEditingUserEmailExistence($email, $userID): bool
     {
@@ -372,10 +362,10 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    
-    
-    
-    function getUserPictureById($id){
+
+
+    function getUserPictureById($id)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT picture FROM User WHERE id = :id");
             $stmt->bindValue(':id', $id);
@@ -385,13 +375,12 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    
-    
-     
-     public function retrieveUserByIdWithUrl($id)
+
+
+    public function retrieveUserByIdWithUrl($id)
     {
         try {
-            
+
             $stmt = $this->connection->prepare("SELECT * From User WHERE id LIKE :id");
             $stmt->bindValue(':id', "%$id%");
             if ($this->checkUserExistence($stmt)) {
@@ -405,12 +394,10 @@ class UserRepository extends Repository
     }
 
 
-    
-    
-   public function retrieveUserPermissionsWithUrl($id)
+    public function retrieveUserPermissionsWithUrl($id)
     {
         try {
-            
+
             $stmt = $this->connection->prepare("SELECT role From User WHERE id LIKE :id");
             $stmt->bindValue(':id', "%$id%");
             if ($this->checkUserExistence($stmt)) {
@@ -422,22 +409,45 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-    
+
 
     public function checkUserExistenceByEmailWithUrl($email)
     {
         try {
-            
+
             $stmt = $this->connection->prepare("SELECT id From User WHERE email LIKE :email");
             $stmt->bindValue(':email', "%$email%");
             if ($this->checkUserExistence($stmt)) {
                 $stmt->execute();
-                if($stmt->rowCount() > 0){return true;}
+                if ($stmt->rowCount() > 0) {
+                    return true;
+                }
                 return false;
             }
         } catch (PDOException $e) {
             echo $e;
         }
+    }
+    public function isUpdatingUserDetailsSame($user){
+        if(!empty($user->getHashedPassword())){
+            return false; // if someone wants to change password then it  is already as not a same detail
+        }
+        $query="SELECT id FROM User WHERE id=:id AND role=:role AND firstName=:firstName AND lastName=:lastName 
+                      AND dateOfBirth=:dateOfBirth AND email=:email AND picture=:picture";
+        $parameters=array(
+            ":id"=>$user->getId(),
+            ":role"=>Roles::getLabel($user->getRole()),
+            ":firstName"=>$user->getFirstName(),
+            ":lastName"=>$user->getLastName(),
+            ":dateOfBirth"=>$user->getDateOfBirth()->format('Y-m-d'),
+            ":email"=>$user->getEmail(),
+            ":picture"=>$user->getPicture()
+        );
+        $result=$this->executeQuery($query,$parameters);
+        if(empty($result)){
+            return false;
+        }
+        return true;
     }
 
 }
