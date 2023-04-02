@@ -139,8 +139,89 @@ class ArtistService
             };
         }
     }
-    public function updateArtist($data){
 
+    /**
+     * @throws DatabaseQueryException
+     */
+    public function updateArtistStyles($artistId, $styles): void
+    {
+        $presentArtistStyles = $this->artistRepository->getAllStylesIdOfArtist($artistId);
+        $stylesToBeAdded = array_diff($styles, $presentArtistStyles);
+        if (!empty($stylesToBeAdded)) {
+            foreach ($stylesToBeAdded as $styleToBeAdded) {
+                $this->artistRepository->addArtistStyle($artistId, $styleToBeAdded);
+            }
+        }
+        $stylesToBeDeleted = array_diff($presentArtistStyles, $styles);
+        if (!empty($stylesToBeDeleted)) {
+            foreach ($stylesToBeDeleted as $styleToBeDeleted) {
+                $this->artistRepository->removeArtistStyle($artistId, $styleToBeDeleted);
+            }
+        }
     }
+
+    private function isArtistStyleSame($artistId, $styles): bool
+    {
+        $presentArtistStyles = $this->artistRepository->getAllStylesIdOfArtist($artistId);
+        if (empty(array_diff($presentArtistStyles, $styles)) && empty(array_diff($styles, $presentArtistStyles))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @throws DatabaseQueryException
+     * @throws uploadFileFailedException
+     */
+    public function updateArtist($artistDetails, $artistImages): bool
+    {
+        $isArtistStyleSame = $this->isArtistStyleSame($artistDetails->id, $artistDetails->styles);
+        $isArtistDetailsSame = $this->artistRepository->isArtistDetailsSameInDb($artistDetails);
+        if (empty($artistImages) && $isArtistDetailsSame && $isArtistStyleSame) {
+            return true; //nothing to be updated
+        }
+        if (!$isArtistStyleSame) {
+            $this->updateArtistStyles($artistDetails->id, $artistDetails->styles);
+            if ($isArtistDetailsSame && empty($artistImages)) {
+                return true; // otherwise there is no need to update
+            }
+        }
+        if (!empty($artistImages)) {
+            $this->processUpdatingArtistImages($artistDetails->id, $artistImages);
+            if($isArtistDetailsSame && $isArtistStyleSame){
+                return true; // if only images are updated then no need to update details
+            }
+        }
+        if(!$isArtistDetailsSame){
+           return  $this->artistRepository->updateArtistDetails($artistDetails);
+           // it will return true if details are updated or false
+        }
+        return true; // if everything have been updated
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    private function processUpdatingArtistImages($artistId, $newImages): void
+    {
+        if (!empty($newImages['artistLogo'])) {
+            $this->editNewImageAccordanceToCurrent($this->artistRepository->getArtistLogoNameByArtistId($artistId),
+                $newImages['artistLogo'], $this->imageuploadDirectory);
+        }
+        $artistsImages = $this->artistRepository->getAllImagesOfArtistByArtistId($artistId);
+        if (!empty($newImages['artistBanner'])) {
+            $this->editNewImageAccordanceToCurrent($artistsImages['Banner'][0], $newImages['artistBanner'], $this->imageuploadDirectory);
+        }
+        if (!empty($newImages['artistPortrait'])) {
+            $this->editNewImageAccordanceToCurrent($artistsImages['Portrait'][0], $newImages['artistPortrait'], $this->imageuploadDirectory);
+        }
+        if (!empty($newImages['artistOthers'])) {
+            foreach ($newImages['artistOthers'] as $key => $artistImage) {
+                $this->editNewImageAccordanceToCurrent($artistsImages['Other'][$key], $newImages['artistOthers'][$key], $this->imageuploadDirectory);
+            }
+        }
+    }
+
+
 }
 

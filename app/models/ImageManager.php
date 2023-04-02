@@ -72,5 +72,32 @@ trait ImageManager
             $this->deleteImageFromDirectory($directory . $imageName);
         }
     }
+     function checkValidImageOrNot($image): bool
+    {
+        $imageFileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    function renameImageFromDirectory($oldImageName, $newImageName, $directory): void
+    {
+        if(!rename($directory . $oldImageName, $directory . $newImageName)){
+            throw new uploadFileFailedException("File rename Failed:");
+        }
+    }
+
+    /**
+     * @throws uploadFileFailedException
+     */
+    function editNewImageAccordanceToCurrent($currentImageName, $newImage, $directory): void
+    { //delete existing Image and rename previous One
+        $this->deleteImageFromDirectory($directory . $currentImageName);
+        $this->moveImageToSpecifiedDirectory($newImage, $directory . $currentImageName);
+    }
 
 }
