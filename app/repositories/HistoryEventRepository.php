@@ -20,7 +20,7 @@ class HistoryEventRepository extends EventRepository
 
     private function createHistoryEventInstance($dbRow)
     {
-        try{
+        try {
             $historyEvent = new HistoryEvent();
             $historyEvent->setEventId($dbRow['eventId']);
             $historyEvent->setEventName($dbRow['eventName']);
@@ -28,8 +28,7 @@ class HistoryEventRepository extends EventRepository
             $historyEvent->setEventParagraphs($this->getEventParagraphsByEventId($dbRow['eventId']));
             $historyEvent->setEventImages($this->getEventImagesByEventId($dbRow['eventId']));
             return $historyEvent;
-        }
-        catch (Exception $e){
+        } catch (Exception $e) {
             echo $e;
         }
 
@@ -39,12 +38,12 @@ class HistoryEventRepository extends EventRepository
     {
         try {
             $stmt = $this->connection->prepare("SELECT eventDate.date, language.name, timetable.time, historytour.eventId, historytour.historyTourId
-FROM eventdate
-INNER JOIN timetable ON eventdate.eventDateId = timetable.eventDateId
-INNER JOIN historytour ON historytour.timeTableId = timetable.timeTableId
-INNER JOIN language ON language.languageId = historytour.languageId
-WHERE historytour.eventId = :eventId
-ORDER BY eventDate.date ASC, timetable.time ASC;");
+                                                    FROM eventdate
+                                                    INNER JOIN timetable ON eventdate.eventDateId = timetable.eventDateId
+                                                    INNER JOIN historytour ON historytour.timeTableId = timetable.timeTableId
+                                                    INNER JOIN language ON language.languageId = historytour.languageId
+                                                    WHERE historytour.eventId = :eventId
+                                                    ORDER BY eventDate.date ASC, timetable.time ASC;");
             $stmt->bindParam(':eventId', $eventId);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -58,6 +57,7 @@ ORDER BY eventDate.date ASC, timetable.time ASC;");
             echo $e;
         }
     }
+
     public function getHistoryTourById($historyTourId)
     {
         try {
@@ -204,7 +204,8 @@ WHERE historytour.historyTourId = :historyTourId;");
         return $images;
     }
 
-    public function insertNewTourLocation($newTourLocation){
+    public function insertNewTourLocation($newTourLocation)
+    {
         // Prepare and execute first query
         $stmt1 = $this->connection->prepare("INSERT INTO address (streetName, country, houseNumber, postCode, city) VALUES (:streetName, :country, :houseNumber, :postCode, :city)");
 
@@ -223,7 +224,7 @@ WHERE historytour.historyTourId = :historyTourId;");
         $stmt2 = $this->connection->prepare("INSERT INTO location (locationName, addressId) VALUES (:locationName, :addressId)");
 
         $stmt2->bindValue(':locationName', 'test');
-        $stmt2->bindValue(':addressId',$address_id);
+        $stmt2->bindValue(':addressId', $address_id);
 
         $stmt2->execute();
 
@@ -237,7 +238,8 @@ WHERE historytour.historyTourId = :historyTourId;");
         $stmt3->execute();
     }
 
-    public function checkEventDateExistence($eventDate){
+    public function checkEventDateExistence($eventDate)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT eventDateId, date FROM eventDate WHERE date = :date");
             $stmt->bindParam(':date', $eventDate);
@@ -252,7 +254,9 @@ WHERE historytour.historyTourId = :historyTourId;");
             echo $e;
         }
     }
-    public function checkLanguageExistence($language){
+
+    public function checkLanguageExistence($language)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT languageId, name FROM language WHERE name = :name");
             $stmt->bindParam(':name', $language);
@@ -267,7 +271,9 @@ WHERE historytour.historyTourId = :historyTourId;");
             echo $e;
         }
     }
-    public function checkTourTimeTableExistence($eventDateId,$timeTable){
+
+    public function checkTourTimeTableExistence($eventDateId, $timeTable)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT eventDateId, timeTableId, time FROM timetable WHERE time = :time AND eventDateId = :eventDateId;");
             $stmt->bindParam(':time', $timeTable);
@@ -283,7 +289,9 @@ WHERE historytour.historyTourId = :historyTourId;");
             echo $e;
         }
     }
-    public function insertNewHistoryTour($newHistoryTour){
+
+    public function insertNewHistoryTour($newHistoryTour)
+    {
 // Prepare and execute first query
         $stmt1 = $this->connection->prepare("INSERT INTO eventDate (date) VALUES (:date)");
 
@@ -298,7 +306,7 @@ WHERE historytour.historyTourId = :historyTourId;");
         $stmt2 = $this->connection->prepare("INSERT INTO timetable (eventDateId, time) VALUES (:eventDateId, :time)");
 
         $stmt2->bindValue(':eventDateId', $eventDateId);
-        $stmt2->bindValue(':time',$newHistoryTour["newTourTime"]);
+        $stmt2->bindValue(':time', $newHistoryTour["newTourTime"]);
 
         $stmt2->execute();
 
@@ -322,6 +330,7 @@ WHERE historytour.historyTourId = :historyTourId;");
 
         $stmt4->execute();
     }
+
     public function insertNewEventDate($eventDate)
     {
         $stmt = $this->connection->prepare("INSERT INTO eventDate (date) VALUES (:date)");
@@ -329,7 +338,7 @@ WHERE historytour.historyTourId = :historyTourId;");
         $stmt->execute();
     }
 
-    public function insertNewTimeTable($eventDateId,$time)
+    public function insertNewTimeTable($eventDateId, $time)
     {
         $stmt = $this->connection->prepare("INSERT INTO timetable (eventDateId, time) VALUES (:eventDateId, :time)");
         $stmt->bindValue(':eventDateId', $eventDateId);
@@ -346,6 +355,7 @@ WHERE historytour.historyTourId = :historyTourId;");
 
         return $result ? $result['id'] : null;
     }
+
     public function insertNewLanguage($language)
     {
         $stmt = $this->connection->prepare("INSERT INTO language (name) VALUES (:name)");
@@ -362,6 +372,7 @@ WHERE historytour.historyTourId = :historyTourId;");
 
         return $result ? $result['id'] : null;
     }
+
     private function checkDataExistence($stmt): bool
     {
         try {
@@ -377,7 +388,8 @@ WHERE historytour.historyTourId = :historyTourId;");
             exit();
         }
     }
-    public function insertNewTourTest($languageId,$timeTableId)
+
+    public function insertNewTourTest($languageId, $timeTableId)
     {
         $stmt = $this->connection->prepare("INSERT INTO historytour (eventId, languageId, timeTableId) VALUES (:eventId, :languageId, :timeTableId)");
         $stmt->bindValue(':eventId', 1);
@@ -385,17 +397,23 @@ WHERE historytour.historyTourId = :historyTourId;");
         $stmt->bindValue(':timeTableId', $timeTableId);
         $stmt->execute();
     }
-    public function deleteTest($selectedTourId){
+
+    public function deleteTest($selectedTourId)
+    {
         $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
         $stmt->bindValue(':historyTourId', $selectedTourId);
         $stmt->execute();
     }
-    public function getSelectedTourById($selectedTourId){
+
+    public function getSelectedTourById($selectedTourId)
+    {
         $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
         $stmt->bindValue(':historyTourId', $selectedTourId);
         $stmt->execute();
     }
-    public function updateHistoryTourByTourId($selectedTourId, $updateHistoryTour){
+
+    public function updateHistoryTourByTourId($selectedTourId, $updateHistoryTour)
+    {
         $stmt = $this->connection->prepare("UPDATE historytour
                                                     INNER JOIN timetable ON historytour.timeTableId = timetable.timeTableId
                                                     INNER JOIN eventdate ON timetable.eventDateId = eventdate.eventDateId

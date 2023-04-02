@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../models/OrderItem.php';
+require_once __DIR__ . '/../models/restaurantOrderItem.php';
+require_once __DIR__ . '/../models/historyTourOrderItem.php';
 
 
 class ShoppingCartRepository extends EventRepository
 {
-    public function getOrderByUserId($userId){
+    public function getOrderByUserId($userId)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE user_id = :user_id;");
             $stmt->bindValue(':user_id', $userId);
@@ -20,7 +23,9 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
-    public function createOrder($userId){
+
+    public function createOrder($userId)
+    {
         try {
             $stmt = $this->connection->prepare("INSERT INTO `order` (user_id, order_date, orderStatus) VALUES (:user_id, NOW(), 'open');");
             $stmt->bindValue(':user_id', $userId);
@@ -31,7 +36,9 @@ class ShoppingCartRepository extends EventRepository
             // or redirect to an error page
         }
     }
-    public function getTicketId($newOrderItem) {
+
+    public function getTicketId($newOrderItem)
+    {
         $stmt = $this->connection->prepare("SELECT historytourticket.id
                                         FROM historytour
                                         JOIN language ON language.languageId = historytour.languageId
@@ -54,7 +61,9 @@ class ShoppingCartRepository extends EventRepository
 
         return $result['id'];
     }
-    public function createOrderItem($userId, $ticketId, $quantity) {
+
+    public function createOrderItem($userId, $ticketId, $quantity)
+    {
         $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, historyTourTicketId, quantity) VALUES (:order_id, :historyTourTicketId, :quantity)");
         $stmt->bindParam(':order_id', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':historyTourTicketId', $ticketId, PDO::PARAM_INT);
@@ -66,7 +75,9 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
-    public function getHistoryTourOrdersByUserId($userId) {
+
+    public function getHistoryTourOrdersByUserId($userId)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, historytourticket.ticket_type, historytourticket.price, language.name
                                             FROM orderitem
@@ -78,28 +89,31 @@ class ShoppingCartRepository extends EventRepository
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $orderItems = array();
+            $historyOrderItem = array();
             foreach ($dbRow as $row) {
-                $orderItems[] = $this->createHistoryOrderItemObject($row);
+                $historyOrderItem[] = $this->createHistoryOrderItemObject($row);
             }
-            return $orderItems;
+            return $historyOrderItem;
 
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
+
     private function createHistoryOrderItemObject($row)
     {
-        $orderItem = new OrderItem();
-        $orderItem->setOrderItemId($row['orderItemId']);
-        $orderItem->setQuantity($row['quantity']);
-        $orderItem->setTicketType($row['ticket_type']);
-        $orderItem->setPrice($row['price']);
-        $orderItem->setLanguage($row['name']);
-        return $orderItem;
+        $historyOrderItem = new HistoryTourOrderItem();
+        $historyOrderItem->setOrderItemId($row['orderItemId']);
+        $historyOrderItem->setQuantity($row['quantity']);
+        $historyOrderItem->setTicketType($row['ticket_type']);
+        $historyOrderItem->setPrice($row['price']);
+        $historyOrderItem->setLanguage($row['name']);
+        return $historyOrderItem;
     }
-    public function getRestaurantOrdersByUserId($userId) {
+
+    public function getRestaurantOrdersByUserId($userId)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, restaurant.name, restaurant.foodTypes, restaurantticket.ticketType, restaurantticket.price
                                             FROM orderitem
@@ -110,29 +124,32 @@ class ShoppingCartRepository extends EventRepository
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $orderItems = array();
+            $restaurantOrderItem = array();
             foreach ($dbRow as $row) {
-                $orderItems[] = $this->createRestaurantOrderItemObject($row);
+                $restaurantOrderItem[] = $this->createRestaurantOrderItemObject($row);
             }
-            return $orderItems;
+            return $restaurantOrderItem;
 
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
         }
     }
+
     private function createRestaurantOrderItemObject($row)
     {
-        $orderItem = new OrderItem();
-        $orderItem->setOrderItemId($row['orderItemId']);
-        $orderItem->setQuantity($row['quantity']);
-        $orderItem->setTicketType($row['ticketType']);
-        $orderItem->setPrice($row['price']);
-        $orderItem->setRestaurantName($row['name']);
-        $orderItem->setFoodType($row['foodTypes']);
-        return $orderItem;
+        $restaurantOrderItem = new RestaurantOrderItem();
+        $restaurantOrderItem->setOrderItemId($row['orderItemId']);
+        $restaurantOrderItem->setQuantity($row['quantity']);
+        $restaurantOrderItem->setTicketType($row['ticketType']);
+        $restaurantOrderItem->setPrice($row['price']);
+        $restaurantOrderItem->setRestaurantName($row['name']);
+        $restaurantOrderItem->setFoodType($row['foodTypes']);
+        return $restaurantOrderItem;
     }
-    public function getOrderItemIdByTicketId($ticketId){
+
+    public function getOrderItemIdByTicketId($ticketId)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT orderItemId FROM orderitem WHERE historyTourTicketId = :historyTourTicketId;");
             $stmt->bindValue(':historyTourTicketId', $ticketId);
@@ -147,7 +164,9 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
-    public function updateOrderItemByTicketId($ticketId, $quantity){
+
+    public function updateOrderItemByTicketId($ticketId, $quantity)
+    {
         try {
             $stmt = $this->connection->prepare("UPDATE orderItem SET quantity = quantity + :quantity WHERE historyTourTicketId = :historyTourTicketId");
             $stmt->bindParam(':quantity', $quantity);
@@ -158,7 +177,9 @@ class ShoppingCartRepository extends EventRepository
             echo "Error updating order item: " . $e->getMessage();
         }
     }
-    public function updateQuantity($orderItemId, $quantity) {
+
+    public function updateQuantity($orderItemId, $quantity)
+    {
         try {
             $stmt = $this->connection->prepare("UPDATE orderitem SET quantity = :quantity WHERE orderItemId = :orderItemId");
             $stmt->bindParam(':quantity', $quantity);
@@ -172,7 +193,9 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
-    public function deleteOrderItem($orderItemId) {
+
+    public function deleteOrderItem($orderItemId)
+    {
         try {
             // Prepare the SQL query
             $stmt = $this->connection->prepare('DELETE FROM orderitem WHERE orderItemId = :orderItemId');
@@ -183,11 +206,87 @@ class ShoppingCartRepository extends EventRepository
             // Execute the query
             $stmt->execute();
 
-        }
-        catch(PDOException $e) {
+        } catch (PDOException $e) {
             // Handle the exception here
             echo "Error: " . $e->getMessage();
             return false;
+        }
+    }
+
+    public function getOrderIdByOrderItemId($orderItemId)
+    {
+        try {
+            // Prepare the SQL statement with a named parameter
+            $stmt = $this->connection->prepare('SELECT order_id FROM orderitem WHERE orderItemId = :orderItemId');
+
+            // Bind the parameter to a variable
+            $stmt->bindParam(':orderItemId', $orderItemId);
+
+            // Execute the statement
+            $stmt->execute();
+
+            // Fetch the result
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Output the order_id
+            echo $result['order_id'];
+        } catch (PDOException $e) {
+            // Handle the exception here
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    public function updateTotalPrice($orderId){
+        try {
+
+            // Prepare the SQL statement with named parameters
+            $stmt = $this->connection->prepare('UPDATE `Order`
+                          SET totalPrice = (
+                            SELECT SUM(
+                              COALESCE(historytourticket.price, 0) * orderItem.quantity +
+                              COALESCE(restaurantticket.price, 0) * orderItem.quantity +
+                              COALESCE(performance.totalPrice, 0) * orderItem.quantity
+                            )
+                            FROM orderItem
+                            LEFT JOIN historytourticket ON orderItem.historyTourTicketId = historytourticket.id
+                            LEFT JOIN restaurantticket ON orderItem.restaurantTicketId = restaurantticket.restaurantTicketId
+                            LEFT JOIN performanceticket ON orderItem.performanceTicketId = performanceticket.performanceTicket
+                            LEFT JOIN performance on performance.performanceId = performanceticket.performanceId
+                            WHERE orderItem.order_id = :orderId
+                          )
+                          WHERE `Order`.orderId = :orderId');
+
+            // Bind the parameter to a variable
+            $orderId = 1;
+            $stmt->bindParam(':orderId', $orderId);
+
+            // Execute the statement
+            $stmt->execute();
+
+            // Check if any rows were affected
+            if ($stmt->rowCount() > 0) {
+                echo 'Total price updated successfully!';
+            } else {
+                echo 'No rows were updated.';
+            }
+        } catch (PDOException $e) {
+            echo 'Database error: ' . $e->getMessage();
+        }
+
+    }
+    public function getTotalPriceByUserId($userId){
+        try {
+            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.user_Id = :userId');
+            $stmt->bindParam(':userId', $userId);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                echo $row['totalPrice'];
+            } else {
+                echo 'No results found';
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
         }
     }
 

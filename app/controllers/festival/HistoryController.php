@@ -124,51 +124,6 @@ class HistoryController extends EventController
         require __DIR__ . '/../../views/festival/History/ticketSelection.php';
     }
 
-//    public function d(){
-//        // Check if userId is null
-//        if(empty($_SESSION['userId'])) {
-//            // Generate a unique identifier for the user and store it in the session
-//            $uniqueId = uniqid();
-//            $_SESSION['uniqueId'] = $uniqueId;
-//
-//            // Check if shopping cart session variable exists, if not, create an empty array
-//            if(!isset($_SESSION['shoppingCart'])) {
-//                $_SESSION['shoppingCart'] = array();
-//            }
-//
-//            // Add the item to the shopping cart session variable
-//            $newOrderItem = array(
-//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
-//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
-//                "tourTicketType" => "single",
-//                "TourLanguage" => "english",
-//            );
-//            $_SESSION['shoppingCart'][] = $newOrderItem;
-//        } else {
-//            $userId = $_SESSION['userId'];
-//            $order = $this->shoppingCartService->getOrderByUserId($userId);
-//
-//            // Check if there is an existing order for the user
-//            if (!$order) {
-//                // Create a new order for the user
-//                $this->shoppingCartService->createOrder($userId);
-//                $order = $this->shoppingCartService->getOrderByUserId($userId);
-//            }
-//
-//            // Add the tour to the order
-//            $newOrderItem = array(
-//                "orderId" => $order,
-//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
-//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
-//                "tourTicketType" => "single",
-//                "TourLanguage" => "english",
-//            );
-//            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-//            $this->shoppingCartService->createOrderItem($order,$ticketId,12);
-//        }
-//    }
-
-
     public function shoppingCart()
     {
         if (empty($_SESSION['userId'])) {
@@ -178,6 +133,24 @@ class HistoryController extends EventController
 
         $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
         $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+        $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+
+        if (isset($_POST['payNow'])) {
+            // Get payment parameters from form submission
+            $amount = number_format($_POST["amount"], 2, '.', '');
+            $description = $_POST["description"];
+            $redirectUrl = $_POST["redirectUrl"];
+            $webhookUrl = $_POST["webhookUrl"];
+
+            // Create Mollie payment
+            $payment = $this->shoppingCartService->createPayment($amount, $description, $redirectUrl, $webhookUrl);
+
+            echo "<script>window.location.replace('" . $payment->getCheckoutUrl() . "');</script>";
+
+//            // Redirect user to Mollie payment page
+//            header("Location: " . $payment->getCheckoutUrl());
+//            exit();
+        }
 
         require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
     }
@@ -214,20 +187,25 @@ class HistoryController extends EventController
 
     public function updateQuantity() {
         if($_SERVER['REQUEST_METHOD']==='POST'){
-            $orderItemId = $_POST['orderItemId'];
-            $quantity = $_POST['quantity'];
-            var_dump('updateQuantity called!');
-            var_dump($orderItemId);
-            var_dump($quantity);
-            $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
+            if(!empty($_SESSION['userId'])){
+                $orderItemId = $_POST['orderItemId'];
+                $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
+                $quantity = $_POST['quantity'];
+                $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
+                $this->shoppingCartService->updateTotalPrice($orderId);
+            }
         }
     }
     public function deleteOrderItem(){
         if($_SERVER['REQUEST_METHOD']==='POST'){
             $orderItemId = $_POST['orderItemId'];
-
             $this->shoppingCartService->deleteOrderItem($orderItemId);
         }
-
+    }
+    public function getTotalPrice(){
+        if (!empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+            $this->shoppingCartService->getTotalPriceByUserId($userId);
+        }
     }
 }

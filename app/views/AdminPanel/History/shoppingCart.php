@@ -13,6 +13,8 @@
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/22097c36aa.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://js.mollie.com/v2"></script>
     <meta name="description" content="">
     <meta name="author" content="">
     <script type="text/javascript"
@@ -58,8 +60,8 @@
                                                     <i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
-                                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                <h6 class="mb-0"><?= $totalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
+                                            <div id="itemTotalPrice"class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                                <h6 class="mb-0"><?= $itemTotalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                                 <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
@@ -88,7 +90,7 @@
                                                 </button>
                                             </div>
                                             <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                <h6 class="mb-0"><?= $totalPrice = $allRestaurantItem->getPrice() * $allRestaurantItem->getQuantity(); ?></h6>
+                                                <h6 class="mb-0"><?= $itemTotalPrice = $allRestaurantItem->getPrice() * $allRestaurantItem->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                                 <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
@@ -111,10 +113,10 @@
                                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                                     <hr class="my-4">
 
-                                    <div class="d-flex justify-content-between mb-4">
-                                        <h5 class="text-uppercase">items 3</h5>
-                                        <h5>€ 132.00</h5>
-                                    </div>
+<!--                                    <div class="d-flex justify-content-between mb-4">-->
+<!--                                        <h5 class="text-uppercase">items 3</h5>-->
+<!--                                        <h5>€ 132.00</h5>-->
+<!--                                    </div>-->
 
                                     <h5 class="text-uppercase mb-3">Shipping</h5>
 
@@ -141,12 +143,19 @@
 
                                     <div class="d-flex justify-content-between mb-5">
                                         <h5 class="text-uppercase">Total price</h5>
-                                        <h5>€ 137.00</h5>
+                                        <h5 id="totalPrice"><?php echo $this->getTotalPrice() ?></h5>
                                     </div>
 
-                                    <button type="button" class="btn btn-dark btn-block btn-lg"
-                                            data-mdb-ripple-color="dark">Register
-                                    </button>
+<!--                                    <button type="button" class="btn btn-dark btn-block btn-lg"-->
+<!--                                            data-mdb-ripple-color="dark">Pay now-->
+<!--                                    </button>-->
+                                    <form method="post">
+                                        <input type="hidden" name="amount" value="<?php echo $this->getTotalPrice() ?>">
+                                        <input type="hidden" name="description" value="Test payment">
+                                        <input type="hidden" name="redirectUrl" value="https://example.com/redirect">
+                                        <input type="hidden" name="webhookUrl" value="https://example.com/webhook">
+                                        <button type="submit" name="payNow"class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice() ?></button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -294,6 +303,21 @@
 <!--</script>-->
 
 <script>
+    function updateTotalPrice() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://localhost/festival/history/getTotalPrice');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var totalPrice = xhr.responseText;
+                document.getElementById('totalPrice').innerHTML = totalPrice;
+            }
+            else {
+                console.log('Error fetching total price!');
+            }
+        };
+        xhr.send();
+    }
+
     function updateQuantity(itemId, quantity) {
         console.log(quantity);
 
@@ -334,6 +358,7 @@
                     // Update the quantity value in the input field
                     var quantityInput = document.getElementById('quantityForm' + itemId);
                     quantityInput.value = quantity;
+                    updateTotalPrice();
                 }
                 else {
                     console.log('Error updating quantity!');
@@ -342,6 +367,11 @@
             xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);
         }
     }
-
+    function updateTotalItemPrice(itemId) {
+        var quantity = document.getElementById('quantityForm' + itemId).value;
+        var price = parseFloat(document.getElementById('itemPrice' + itemId).textContent);
+        var totalItemPrice = quantity * price;
+        document.getElementById('itemTotalPrice' + itemId).textContent = totalItemPrice.toFixed(2);
+    }
 </script>
 
