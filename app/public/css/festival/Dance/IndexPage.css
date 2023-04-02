@@ -249,4 +249,12 @@ pre {
     background-color: black;
     color: white;
 }
+.book-button {
+    background-color: rgba(205, 53, 0, 1);
+    border: none;
+}
 
+.book-button:hover {
+    color: #ffb86c;
+    border: none;
+}

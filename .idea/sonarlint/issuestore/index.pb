@@ -3,10 +3,6 @@
 -app/views/AdminPanel/Dance/AddPerformance.php,f\d\fdb9d3b06cb6ae3418be8c810609c16c47384c28
 h
 8app/views/AdminPanel/ManageUsers/OverviewManageUsers.php,f\8\f8e2ef55e05ca7d91464c8ce24fb828a92f9497e
-c
-3app/views/AdminPanel/Dance/PerformancesOverview.php,0\c\0ce485ae9274ef03babc8eecf627a280691ed3a9
-]
--app/views/AdminPanel/ManageUsers/EditUser.php,f\2\f21ad437df40d27ec7f318c6a3dc3f0a4f7f6390
 S
 #app/controllers/logincontroller.php,7\3\738053c05837012db25209058909c8ab12772ba2
 n
@@ -17,10 +13,6 @@ n
 .app/views/AdminPanel/Dance/EditPerformance.php,2\c\2c7eb8327bb04d59ae32528e3a6cafe60df178d4
 Z
 *app/repositories/PerformanceRepository.php,1\c\1c7a4a32bad7f8cd230ba2a72076a9cc1cdc3a77
-W
-'app/API/Controllers/UsersController.php,3\2\32ed39b8166f12d66552e4a99b3ceff914fee4ed
-i
-9app/controllers/adminPanel/AdminManageUsersController.php,0\5\056eaffe8e45d268cbc479026f544424709943d7
 U
 %app/public/Javascripts/ManageUsers.js,d\3\d334277f617f6cb849f2b72fdc3b61c9398f349b
 c
@@ -29,19 +21,11 @@ e
 5app/public/Javascripts/AdminPanel/Dance/EditArtist.js,5\0\50837b9ca17f8eb86b6bcd6dfdb6e35151c3a3c1
 U
 %app/API/Controllers/ApiController.php,6\9\69c2d909de0eaaccb45e71c1dfb88ff1d6b0e177
-S
-#app/services/PerformanceService.php,b\8\b83f8a99d3c7615aee46317b2c717a7c0d206e7d
 N
 app/controllers/controller.php,e\1\e14d53846b2c7c5bfdc6d313888bead3e1519d90
 K
 app/models/ImageManager.php,1\0\10380c5794d6e94be90eb382cf853d2e3cbca6a1
-R
-"app/views/festival/Dance/index.php,8\7\87d04c6a381c6cb8f73c1ef5e4fbba34c9af8809
 U
 %app/repositories/ArtistRepository.php,d\2\d2ff607f24bae428d6812fe3462ae27c67261862
-Z
-*app/API/Controllers/DanceApiController.php,0\c\0ccf81e361e88059e3a52df2cda56dea166b46fb
 N
 app/services/ArtistService.php,c\3\c3866651ad4b1c736f144d8b8ae454fa5049f9c9
-S
-#app/views/festival/Dance/artist.php,d\b\db1ade632edabb1c50e577c6a573b0ae07e3393d

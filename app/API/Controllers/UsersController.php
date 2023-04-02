@@ -172,7 +172,7 @@ class UsersController extends ApiController
     public function editUserDetails()
     {
         try {
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') { //TODO:check if the user editing details are same or not
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $this->sendHeaders();
                 $responseData = array(
                     'success' => false,
