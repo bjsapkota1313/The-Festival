@@ -25,7 +25,13 @@ N
 app/controllers/controller.php,e\1\e14d53846b2c7c5bfdc6d313888bead3e1519d90
 K
 app/models/ImageManager.php,1\0\10380c5794d6e94be90eb382cf853d2e3cbca6a1
+R
+"app/views/festival/Dance/index.php,8\7\87d04c6a381c6cb8f73c1ef5e4fbba34c9af8809
 U
 %app/repositories/ArtistRepository.php,d\2\d2ff607f24bae428d6812fe3462ae27c67261862
+Z
+*app/API/Controllers/DanceApiController.php,0\c\0ccf81e361e88059e3a52df2cda56dea166b46fb
 N
 app/services/ArtistService.php,c\3\c3866651ad4b1c736f144d8b8ae454fa5049f9c9
+S
+#app/views/festival/Dance/artist.php,d\b\db1ade632edabb1c50e577c6a573b0ae07e3393d
