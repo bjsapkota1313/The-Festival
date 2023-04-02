@@ -6,6 +6,7 @@ function fillTicketModal(performance) {
     document.getElementById('price').innerText = "€" +performance.price.toFixed(2);
     document.getElementById('numberOfTickets').value = 1; //for now
     document.getElementById('performanceId').value = performance.id;
+    document.getElementById('performanceModal').setAttribute('data-performancePrice', performance.price);
 
 }
 function clearTicketModals(){
@@ -15,7 +16,7 @@ function clearTicketModals(){
     document.getElementById('price').innerText = '';
     document.getElementById('performanceId').value = '';
     document.getElementById('numberOfTickets').value = 1; //for now
-
+    document.getElementById('performanceModal').setAttribute('data-performancePrice', '');
 }
 function getArtistName(artists) {
     let artistName = '';
@@ -36,4 +37,9 @@ function getFullDate(dateString) {
         year: 'numeric'
     };
     return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+function updatePrice(nrOfTicketInput){
+    let nrOfTickets = nrOfTicketInput.value;
+    let updatedPrice = nrOfTickets *  document.getElementById('performanceModal').getAttribute('data-performancePrice');
+    document.getElementById('price').innerHTML = "€"+updatedPrice.toFixed(2);
 }
