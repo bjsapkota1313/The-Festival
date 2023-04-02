@@ -3,10 +3,12 @@ require_once __DIR__ . '/../repositories/EventRepository.php';
 class EventService
 {
     private $eventRepository;
-
+//    private $eventPageRepository;
     public function __construct()
     {
         $this->eventRepository = new EventRepository();
+//        $this->eventPageRepository = new EventPageRepository();
+
     }
 
     public function getEventByName($name)

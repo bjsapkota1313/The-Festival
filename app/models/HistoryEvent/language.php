@@ -1,6 +1,6 @@
 <?php
 
-class language
+class language implements JsonSerializable
 {
     public string $name;
 
@@ -20,4 +20,10 @@ class language
         $this->name = $name;
     }
 
+    public function jsonSerialize() :mixed
+    {
+        return [
+            'name' => $this->name
+        ];
+    }
 }
