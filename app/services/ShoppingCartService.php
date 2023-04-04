@@ -54,24 +54,37 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
     }
-    public function updateQuantity($itemId,$quantity){
+
+    public function updateQuantity($itemId, $quantity)
+    {
         return $this->shoppingCartRepository->updateQuantity($itemId, $quantity);
     }
-    public function deleteOrderItem($orderItemId){
+
+    public function deleteOrderItem($orderItemId)
+    {
         return $this->shoppingCartRepository->deleteOrderItem($orderItemId);
     }
-    public function getRestaurantOrdersByUserId($userId) {
+
+    public function getRestaurantOrdersByUserId($userId)
+    {
         return $this->shoppingCartRepository->getRestaurantOrdersByUserId($userId);
     }
-    public function getOrderIdByOrderItemId($orderItemId){
+
+    public function getOrderIdByOrderItemId($orderItemId)
+    {
         $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
     }
-    public function updateTotalPrice($orderId){
+
+    public function updateTotalPrice($orderId)
+    {
         $this->shoppingCartRepository->updateTotalPrice($orderId);
     }
-    public function getTotalPriceByUserId($userId){
+
+    public function getTotalPriceByUserId($userId)
+    {
         $this->shoppingCartRepository->getTotalPriceByUserId($userId);
     }
+
     public function createPayment($amount, $description, $redirectUrl, $webhookUrl)
     {
         $payment = $this->mollie->payments->create([
@@ -86,4 +99,89 @@ class ShoppingCartService
 
         return $payment;
     }
+
+    public function damn($historyOrder)
+    {
+        $historyOrderItem = array();
+        foreach ($historyOrder as $order) {
+            $historyOrderItem[] = $this->createShoppingCartSession($historyOrder, $order);
+        }
+        return $historyOrderItem;
+    }
+
+    public function deleteSessionShoppingCartItem($historyOrder, $selectedId)
+    {
+        foreach ($historyOrder as $item) {
+            if($selectedId == $item->getOrderItemId()){
+                unset($historyOrder[$item]);
+            }
+        }
+    }
+    public function updateSessionShoppingCartItem($historyOrder, $selectedId, $quantity)
+    {
+        foreach ($historyOrder as $item) {
+            if ($selectedId == $item->getOrderItemId()) {
+                $item->setQuantity($quantity);
+                break;
+            }
+        }
+    }
+
+
+    public function createShoppingCartSession($test, $historyOrders)
+    {
+        static $id = 1; // Initialize $id only once, and keep track of its value across function calls.
+
+        $historyOrderItem = new HistoryTourOrderItem();
+        $historyOrderItem->setOrderItemId($id);
+        $historyOrderItem->setPrice(10);
+        $historyOrderItem->setTicketType($historyOrders['tourTicketType']);
+        $historyOrderItem->setLanguage($historyOrders['TourLanguage']);
+        $historyOrderItem->setQuantity((int)$historyOrders['tourSingleTicket']);
+
+        $id += 1; // Increment $id after setting the order item id for the current history order.
+
+        return $historyOrderItem;
+    }
+//    public function createShoppingCartSession($historyOrder){
+//        var_dump($historyOrder);
+//        $historyOrderItem = new HistoryTourOrderItem();
+//        $historyOrderItem->setOrderItemId(1);
+//        $historyOrderItem->setQuantity(1);
+//        $historyOrderItem->setTicketType('single');
+//        $historyOrderItem->setPrice(10);
+//        $historyOrderItem->setLanguage('english');
+//
+//        return $historyOrderItem;
+//    }
+//    public function createShoppingCartSession($historyOrder)
+//    {
+//        $historyOrderItem = new HistoryTourOrderItem();
+//        var_dump($historyOrder);
+//
+//        $historyOrderItem->setOrderItemId(1);
+//        $historyOrderItem->setPrice(10);
+//        $historyOrderItem->setTicketType(strval($historyOrder[2]));
+//        $historyOrderItem->setLanguage(strval($historyOrder[3]));
+//        $historyOrderItem->setQuantity(intval($historyOrder[4]));
+//
+//
+//        return $historyOrderItem;
+//    }
+//    public function createShoppingCartSession($historyOrders)
+//    {
+//
+//        $historyOrderItem = new HistoryTourOrderItem();
+//        $historyOrderItem->setOrderItemId(1);
+//        $historyOrderItem->setPrice(10);
+//        $historyOrderItem->setTicketType($historyOrders['tourTicketType']);
+//        $historyOrderItem->setLanguage($historyOrders['TourLanguage']);
+//        $historyOrderItem->setQuantity((int)$historyOrders['tourSingleTicket']);
+//        var_dump($historyOrderItem);
+//
+//        return $historyOrderItem;
+//    }
+
+
 }
+//        $historyOrderItem->setPrice($this->shoppingCartRepository->getTicketId($historyOrder));
