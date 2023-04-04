@@ -49,7 +49,7 @@
                                                     <h6 class="text-muted"><?= $allItemsInShoppingCart->getLanguage() ?></h6>
                                             </div>
                                             <div class="col-md-3 col-lg-3 col-xl-3">
-                                                <h6 class="text-muted"><?= $allItemsInShoppingCart->getTicketType() ?></h6>
+                                                <h6 class="text-muted"><?= $allItemsInShoppingCart->getOrderItemId() ?></h6>
                                             </div>
                                             <div id="orderItemContainer<?= $allItemsInShoppingCart->getOrderItemId() ?>" class="col-md-3 col-lg-3 col-xl-3 d-flex">
                                                 <button class="btn btn-decreaseQuantity px-2" onclick="updateQuantity('<?= $allItemsInShoppingCart->getOrderItemId() ?>', document.getElementById('quantityForm<?= $allItemsInShoppingCart->getOrderItemId() ?>').value - 1)">
@@ -64,7 +64,7 @@
                                                 <h6 class="mb-0"><?= $itemTotalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                                <button class="text-muted" id="close-icon" data-id="123" onclick="updateSessionItemQuantity(event)"><i class="fas fa-times"></i></button>
                                             </div>
                                         </div>
 
@@ -203,105 +203,6 @@
     }
 </style>
 
-<!--<script>-->
-<!--    function updateQuantity(itemId, quantity) {-->
-<!--        // Get the input element-->
-<!--        var inputElement = document.getElementById('quantityForm');-->
-<!---->
-<!--        // Get the item ID from the data-itemid attribute-->
-<!--        var itemId = inputElement.getAttribute('data-itemid');-->
-<!---->
-<!--        // Make an AJAX call to the server-->
-<!--        var xhr = new XMLHttpRequest();-->
-<!--        xhr.open('POST', 'localhost/festival/history/shoppingcart?controller=HistoryController&action=updateQuantity');-->
-<!--        // xhr.open('POST', 'shoppingCart.php?controller=HistoryController&action=updateQuantity');-->
-<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
-<!--        xhr.onload = function () {-->
-<!--            if (xhr.status === 200) {-->
-<!--                console.log('Quantity updated successfully!');-->
-<!--            } else {-->
-<!--                console.log('Error updating quantity!');-->
-<!--            }-->
-<!--        };-->
-<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
-<!--    }-->
-<!---->
-<!--</script>-->
-
-
-
-<!--<script>-->
-<!--    function updateQuantity(itemId, quantity) {-->
-<!--        console.log(itemId);-->
-<!--        console.log(quantity);-->
-<!--        // Make an AJAX call to the server-->
-<!--        var xhr = new XMLHttpRequest();-->
-<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
-<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
-<!--        xhr.onload = function() {-->
-<!--            if (xhr.status === 200) {-->
-<!--                console.log('Quantity updated successfully!');-->
-<!--            }-->
-<!--            else {-->
-<!--                console.log('Error updating quantity!');-->
-<!--            }-->
-<!--        };-->
-<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script>-->
-<!--    function updateQuantity(itemId, quantity) {-->
-<!--        console.log(itemId);-->
-<!--        console.log(quantity);-->
-<!--        // Make an AJAX call to the server-->
-<!--        var xhr = new XMLHttpRequest();-->
-<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
-<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
-<!--        xhr.onload = function() {-->
-<!--            if (xhr.status === 200) {-->
-<!--                console.log('Quantity updated successfully!');-->
-<!--                // Update the quantity value in the input field-->
-<!--                var quantityInput = document.getElementById('quantityForm' + itemId);-->
-<!--                quantityInput.value = quantity;-->
-<!--            }-->
-<!--            else {-->
-<!--                console.log('Error updating quantity!');-->
-<!--            }-->
-<!--        };-->
-<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script>-->
-<!--    function updateQuantity(itemId, quantity) {-->
-<!--        console.log(itemId);-->
-<!--        console.log(quantity);-->
-<!---->
-<!--        // Make sure the quantity is not less than zero-->
-<!--        if (quantity < 0) {-->
-<!--            quantity = 0;-->
-<!--        }-->
-<!---->
-<!--        // Make an AJAX call to the server-->
-<!--        var xhr = new XMLHttpRequest();-->
-<!--        xhr.open('POST', 'http://localhost/festival/history/updateQuantity');-->
-<!--        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');-->
-<!--        xhr.onload = function() {-->
-<!--            if (xhr.status === 200) {-->
-<!--                console.log('Quantity updated successfully!');-->
-<!--                // Update the quantity value in the input field-->
-<!--                var quantityInput = document.getElementById('quantityForm' + itemId);-->
-<!--                quantityInput.value = quantity;-->
-<!--            }-->
-<!--            else {-->
-<!--                console.log('Error updating quantity!');-->
-<!--            }-->
-<!--        };-->
-<!--        xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);-->
-<!--    }-->
-<!--</script>-->
-
 <script>
     function updateTotalPrice() {
         var xhr = new XMLHttpRequest();
@@ -367,11 +268,30 @@
             xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);
         }
     }
+
     function updateTotalItemPrice(itemId) {
         var quantity = document.getElementById('quantityForm' + itemId).value;
         var price = parseFloat(document.getElementById('itemPrice' + itemId).textContent);
         var totalItemPrice = quantity * price;
         document.getElementById('itemTotalPrice' + itemId).textContent = totalItemPrice.toFixed(2);
     }
+
+    function handleClick(event) {
+        event.preventDefault(); // Prevent the default link behavior.
+
+        const closeIcon = event.target;
+        const id = closeIcon.dataset.id; // Get the ID from the data-id attribute.
+        const parentElement = closeIcon.parentElement; // Get the parent element.
+
+        // Remove the item from the array.
+        const index = myArray.findIndex(item => item.id === id);
+        if (index !== -1) {
+            myArray.splice(index, 1);
+        }
+
+        // Perform any other desired actions.
+        parentElement.remove();
+    }
 </script>
+
 
