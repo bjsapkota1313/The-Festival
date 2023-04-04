@@ -39,7 +39,7 @@ class ShoppingCartRepository extends EventRepository
 
     public function getTicketId($newOrderItem)
     {
-        $stmt = $this->connection->prepare("SELECT historytourticket.id
+        $stmt = $this->connection->prepare("SELECT historytourticket.id, historytourticket.price
                                         FROM historytour
                                         JOIN language ON language.languageId = historytour.languageId
                                         JOIN timetable ON timetable.timeTableId = historytour.timeTableId
