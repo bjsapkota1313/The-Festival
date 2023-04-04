@@ -102,12 +102,12 @@
                 </ul>
         </li>
         <li>
-            <a href="#">
-                <i class='bx bx-line-chart'></i>
-                <span class="link_name">Chart</span>
+            <a href="/admin/infoPages">
+                <i class="fa-solid fa-circle-info" style="color: #FFFFFF;"></i>
+                <span class="link_name">Info Pages</span>
             </a>
             <ul class="sub-menu blank">
-                <li><a class="link_name" href="#">Chart</a></li>
+                <li><a class="link_name" >Manage Info Page</a></li>
             </ul>
         </li>
         <li>
