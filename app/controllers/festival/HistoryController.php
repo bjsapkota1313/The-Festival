@@ -314,6 +314,7 @@ class HistoryController extends EventController
 
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
             $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
         } else {
             $orderId = $_SESSION['orderId'];
@@ -393,16 +394,16 @@ class HistoryController extends EventController
 
                 $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
             }
-            else{
-                $orderItemId = $_POST['orderItemId'];
-                $quantity = $_POST['quantity'];
-                var_dump($orderItemId);
-//                print_r($_SESSION['shoppingCart']);
-//                var_dump($_POST);
+//            else{
+//                $orderItemId = $_POST['orderItemId'];
+//                $quantity = $_POST['quantity'];
 //                var_dump($orderItemId);
-//                var_dump($quantity);
-                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
-            }
+////                print_r($_SESSION['shoppingCart']);
+////                var_dump($_POST);
+////                var_dump($orderItemId);
+////                var_dump($quantity);
+//                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
+//            }
         }
     }
 

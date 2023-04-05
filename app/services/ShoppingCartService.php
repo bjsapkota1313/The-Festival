@@ -53,6 +53,9 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId,$order);
     }
+    public function getPerformanceOrderItemIdByTicketId($ticketId,$order){
+        return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId,$order);
+    }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
@@ -156,7 +159,9 @@ class ShoppingCartService
     }
     public function updateOrderStatus($orderId, $newOrderStatus) {
         return $this->shoppingCartRepository->updateOrderStatus($orderId,$newOrderStatus);
-
+    }
+    public function getPerformanceOrdersByUserId($userId){
+        return $this->shoppingCartRepository->getPerformanceOrdersByUserId($userId);
     }
 //    public function createShoppingCartSession($historyOrder){
 //        var_dump($historyOrder);

@@ -3,6 +3,7 @@ require_once __DIR__ . '/EventRepository.php';
 require_once __DIR__ . '/../models/OrderItem.php';
 require_once __DIR__ . '/../models/restaurantOrderItem.php';
 require_once __DIR__ . '/../models/historyTourOrderItem.php';
+require_once __DIR__ . '/../models/performanceOrderItem.php';
 
 
 class ShoppingCartRepository extends EventRepository
@@ -191,16 +192,75 @@ class ShoppingCartRepository extends EventRepository
         $restaurantOrderItem->setFoodType($row['foodTypes']);
         return $restaurantOrderItem;
     }
+    public function getPerformanceOrdersByUserId($userId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, location.locationName, artist.artistName, performance.totalPrice, performancesession.sessionName
+                                                    FROM orderitem
+                                                    JOIN performanceTicket pt1 ON pt1.performanceTicket = orderitem.performanceTicketId
+                                                    JOIN performance ON pt1.performanceId = performance.performanceId
+                                                    JOIN participatingartist on participatingartist.performanceId = performance.performanceId
+                                                    JOIN artist ON artist.artistId = participatingartist.artistId
+                                                    JOIN `order` ON `order`.orderId = orderitem.order_id
+                                                    JOIN location ON location.locationId = performance.venueId
+                                                    JOIN performancesession on performancesession.performanceSessionId = performance.SessionId
+                                                    WHERE `order`.user_id = :user_id;");
+            $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $performanceOrderItem = array();
+            foreach ($dbRow as $row) {
+                $performanceOrderItem[] = $this->createPerformanceOrderItemObject($row);
+            }
+            return $performanceOrderItem;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    private function createPerformanceOrderItemObject($row)
+    {
+        $performanceOrderItem = new PerformanceOrderItem();
+        $performanceOrderItem->setOrderItemId($row['orderItemId']);
+        $performanceOrderItem->setQuantity($row['quantity']);
+        $performanceOrderItem->setArtistName($row['artistName']);
+        $performanceOrderItem->setPrice($row['totalPrice']);
+        $performanceOrderItem->setVenue($row['locationName']);
+        $performanceOrderItem->setGenre($row['sessionName']);
+        return $performanceOrderItem;
+    }
 
     public function getOrderItemIdByTicketId($ticketId,$order)
     {
         try {
             $stmt = $this->connection->prepare("SELECT orderItemId 
-FROM orderitem 
-JOIN `Order` ON `Order`.orderid = orderitem.order_id
-WHERE historyTourTicketId = :historyTourTicketId AND `Order`.orderId = :orderId;
-;");
+                                                    FROM orderitem 
+                                                    JOIN `Order` ON `Order`.orderid = orderitem.order_id
+                                                    WHERE historyTourTicketId = :historyTourTicketId AND `Order`.orderId = :orderId;
+                                                ;");
             $stmt->bindValue(':historyTourTicketId', $ticketId);
+            $stmt->bindValue(':orderId', $order);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['orderItemId'];
+
+        } catch (PDOException $e) {
+            // Handle the exception here
+            // For example, you could log the error message and return null
+            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+            return null;
+        }
+    }
+    public function getPerformanceOrderItemIdByTicketId($ticketId,$order)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT orderItemId 
+                                                    FROM orderitem 
+                                                    JOIN `Order` ON `Order`.orderid = orderitem.order_id
+                                                    WHERE performanceTicketId = :performanceTicketId AND `Order`.orderId = :orderId;
+                                                ;");
+            $stmt->bindValue(':performanceTicketId', $ticketId);
             $stmt->bindValue(':orderId', $order);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -374,3 +434,13 @@ WHERE historyTourTicketId = :historyTourTicketId AND `Order`.orderId = :orderId;
 //                                            JOIN `order` ON `order`.orderId = orderitem.order_id
 //                                            JOIN restaurant on restaurant.id = restaurantticket.restaurantId
 //                                            WHERE `order`.user_id = '104';
+
+//SELECT orderItem.orderItemId, orderitem.quantity, location.locationName, artist.artistName
+//FROM orderitem
+//JOIN performanceTicket pt1 ON pt1.performanceTicket = orderitem.performanceTicketId
+//JOIN performance ON pt1.performanceId = performance.performanceId
+//JOIN participatingartist on participatingartist.performanceId = performance.performanceId
+//JOIN artist ON artist.artistId = participatingartist.artistId
+//JOIN `order` ON `order`.orderId = orderitem.order_id
+//JOIN location ON location.locationId = performance.venueId
+//WHERE `order`.user_id = 104;

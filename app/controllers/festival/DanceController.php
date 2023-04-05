@@ -2,6 +2,8 @@
 require_once __DIR__ . '/EventController.php';
 require_once __DIR__ . '/../../services/SpotifyService.php';
 require_once __DIR__ . '/../../services/ArtistService.php';
+require_once __DIR__ . '/../../services/ShoppingCartService.php';
+
 
 class DanceController extends eventController
 {
@@ -9,6 +11,7 @@ class DanceController extends eventController
     private $artistService;
     private $danceEventService;
     private $performanceService;
+    private $shoppingCartService;
 
     public function __construct()
     {
@@ -17,19 +20,22 @@ class DanceController extends eventController
         $this->artistService = new ArtistService();
         $this->danceEventService = new DanceEventService();
         $this->performanceService = new PerformanceService();
+        $this->shoppingCartService = new ShoppingCartService();
     }
+
     public function index()
     {
-        $this->displayNavBar('Dance',"/css/festival/Dance/IndexPage.css");
+        $this->displayNavBar('Dance', "/css/festival/Dance/IndexPage.css");
         $participatingArtists = $this->artistService->getAllArtistsParticipatingInEvent();
         $danceEvent = $this->eventService->getEventByName('Dance'); //TODO: get event by id
         $artistPerformances = $danceEvent->getPerformances();
-        if(empty($artistPerformances)){
+        if (empty($artistPerformances)) {
             $this->display404PageNotFound(); // every artisst should have at least one performance
         }
         $groupedPerformances = $this->performanceService->groupPerformancesWithDate($artistPerformances);
         require __DIR__ . '/../../views/festival/Dance/index.php';
     }
+
     public function artistDetails()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['artist'])) {
@@ -73,18 +79,45 @@ class DanceController extends eventController
             return "Unknown";
         }
     }
-    private function formatArtistName($artists){
-        $name='';
-        if(is_array($artists)){
-            foreach ($artists as $artist ){
-                $name=$name.$artist->getArtistName().' | ';
+
+    private function formatArtistName($artists)
+    {
+        $name = '';
+        if (is_array($artists)) {
+            foreach ($artists as $artist) {
+                $name = $name . $artist->getArtistName() . ' | ';
             }
             // Remove the last '|' character
             $name = substr($name, 0, -2);
-        }
-        else{
-            $name=$artists->getArtistName();
+        } else {
+            $name = $artists->getArtistName();
         }
         return $name;
+    }
+
+    private function ticketSelection()
+    {
+        if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+            // Check if there is an existing order for the user
+            if (!$orderId) {
+                // Create a new order for the user
+                $this->shoppingCartService->createOrder($userId);
+                $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+            }
+            $ticketId = $_POST['performanceId'];
+            var_dump($ticketId);
+            $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($ticketId, $orderId);
+            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+            $quantity = $_POST['NoOfTickets'];
+
+            if (!$orderItem) {
+                $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
+            } else {
+                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+            }
+        }
+        require __DIR__ . '/../../views/festival/Dance/TicketModal.html';
     }
 }
