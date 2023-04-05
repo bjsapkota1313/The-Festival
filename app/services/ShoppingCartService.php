@@ -1,5 +1,6 @@
 <?php
 
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 
 require_once __DIR__ . '/../repositories/ShoppingCartRepository.php';
@@ -12,6 +13,9 @@ class ShoppingCartService
     private $mollie;
 
 
+    /**
+     * @throws ApiException
+     */
     public function __construct()
     {
         $this->shoppingCartRepository = new ShoppingCartRepository();
@@ -107,7 +111,10 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
 
-    public function createPayment($amount, $description, $redirectUrl, $webhookUrl)
+    /**
+     * @throws ApiException
+     */
+    public function createPayment($amount, $description, $redirectUrl, $webhookUrl): \Mollie\Api\Resources\Payment
     {
         $payment = $this->mollie->payments->create([
             "amount" => [

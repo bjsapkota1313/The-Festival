@@ -307,23 +307,23 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
-    public function getPerformanceTicketIdByPerformanceId($performanceId){
-        try {
-            $stmt = $this->connection->prepare("SELECT performanceTicketId 
-                                                    FROM performanceTicket 
-                                                    WHERE performanceId = :performanceId;");
-            $stmt->bindValue(':performanceId', $performanceId);
-            $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result['performanceTicketId'];
-
-        } catch (PDOException $e) {
-            // Handle the exception here
-            // For example, you could log the error message and return null
-            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
-            return null;
-        }
-    }
+//    public function getPerformanceTicketIdByPerformanceId($performanceId){
+//        try {
+//            $stmt = $this->connection->prepare("SELECT performanceTicketId
+//                                                    FROM performanceTicket
+//                                                    WHERE performanceId = :performanceId;");
+//            $stmt->bindValue(':performanceId', $performanceId);
+//            $stmt->execute();
+//            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+//            return $result['performanceTicketId'];
+//
+//        } catch (PDOException $e) {
+//            // Handle the exception here
+//            // For example, you could log the error message and return null
+//            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+//            return null;
+//        }
+//    }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
@@ -425,7 +425,7 @@ class ShoppingCartRepository extends EventRepository
                             FROM orderItem
                             LEFT JOIN historytourticket ON orderItem.historyTourTicketId = historytourticket.id
                             LEFT JOIN restaurantticket ON orderItem.restaurantTicketId = restaurantticket.restaurantTicketId
-                            LEFT JOIN performanceticket ON orderItem.performanceTicketId = performanceticket.performanceTicket
+                            LEFT JOIN performanceticket ON orderItem.performanceTicketId = performanceticket.performanceTicketId
                             LEFT JOIN performance on performance.performanceId = performanceticket.performanceId
                             WHERE orderItem.order_id = :orderId
                           )
