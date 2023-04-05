@@ -113,7 +113,7 @@ class DanceController extends eventController
             $quantity = $_POST['NoOfTickets'];
 
             if (!$orderItem) {
-                $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
+                $this->shoppingCartService->createOrderItem($orderId, $ticketId, $quantity);
             } else {
                 $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
             }
