@@ -2,7 +2,7 @@
 /*
  * Handle an order status change using the Mollie API.
  */
-
+$shoppingCartService = new ShoppingCartService();
 try {
     /*
      * Initialize the Mollie API library with your API key or OAuth access token.
@@ -21,26 +21,38 @@ try {
     /*
      * Update the order in the database.
      */
-    database_write($orderId, $order->status);
+//    database_write($orderId, $order->status);
+    $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
 
     if ($order->isPaid() || $order->isAuthorized()) {
+        $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
         /*
          * The order is paid or authorized
          * At this point you'd probably want to start the process of delivering the product to the customer.
          */
     } elseif ($order->isCanceled()) {
+        $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
         /*
          * The order is canceled.
          */
     } elseif ($order->isExpired()) {
+        $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
         /*
          * The order is expired.
          */
     } elseif ($order->isCompleted()) {
+        $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
         /*
          * The order is completed.
          */
     } elseif ($order->isPending()) {
+        $shoppingCartService->updateOrderStatus(13, 'big fuck you');
+
         /*
          * The order is pending.
          */

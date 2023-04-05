@@ -64,7 +64,7 @@
                                                 <h6 class="mb-0"><?= $itemTotalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <button class="text-muted" id="close-icon" data-id="123" onclick="updateSessionItemQuantity(event)"><i class="fas fa-times"></i></button>
+                                                <button class="text-muted" onclick="deleteItem('<?= $allItemsInShoppingCart->getOrderItemId() ?>')"<i class="fas fa-times"></i>
                                             </div>
                                         </div>
 
@@ -220,7 +220,7 @@
     }
 
     function updateQuantity(itemId, quantity) {
-        console.log(quantity);
+        console.log(itemId,quantity);
 
         // Make sure the quantity is not less than zero
         if (quantity < 0) {
@@ -267,6 +267,26 @@
             };
             xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);
         }
+    }
+    function deleteItem(itemId){
+        // Send a request to delete the item from the shopping cart
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost/festival/history/deleteOrderItem');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                console.log('Item deleted successfully!');
+                // Remove the item from the DOM
+                var itemContainer = document.getElementById('orderItemContainer' + itemId);
+                console.log(itemId);
+                console.log(itemContainer);
+                itemContainer.parentNode.removeChild(itemContainer);
+            }
+            else {
+                console.log('Error deleting item!');
+            }
+        };
+        xhr.send('orderItemId=' + itemId);
     }
 
     function updateTotalItemPrice(itemId) {
