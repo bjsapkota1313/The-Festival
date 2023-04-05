@@ -34,25 +34,43 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getTicketId($test);
     }
 
-    public function createOrderItem($userId, $ticketId, $quantity)
+    public function createOrderItem($orderId, $ticketId, $quantity)
     {
-        return $this->shoppingCartRepository->createOrderItem($userId, $ticketId, $quantity);
+        return $this->shoppingCartRepository->createOrderItem($orderId, $ticketId, $quantity);
     }
+    public function createPerformanceOrderItem($orderId, $ticketId, $quantity){
+        return $this->shoppingCartRepository->createPerformanceOrderItem($orderId, $ticketId, $quantity);
+    }
+
 
     public function getHistoryTourOrdersByUserId($userId)
     {
         return $this->shoppingCartRepository->getHistoryTourOrdersByUserId($userId);
 
     }
+    public function getHistoryTourOrdersByOrderId($orderId){
+        return $this->shoppingCartRepository->getHistoryTourOrdersByOrderId($orderId);
 
-    public function getOrderItemIdByTicketId($ticketId)
+    }
+
+    public function getOrderItemIdByTicketId($ticketId,$order)
     {
-        return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId);
+        return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId,$order);
+    }
+    public function getPerformanceOrderItemIdByTicketId($ticketId,$order){
+        return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId,$order);
     }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
         return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
+    }
+    public function getPerformanceTicketIdByPerformanceId($performanceId){
+        return $this->shoppingCartRepository->getPerformanceTicketIdByPerformanceId($performanceId);
+
+    }
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity){
+        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity);
     }
 
     public function updateQuantity($itemId, $quantity)
@@ -82,7 +100,11 @@ class ShoppingCartService
 
     public function getTotalPriceByUserId($userId)
     {
-        $this->shoppingCartRepository->getTotalPriceByUserId($userId);
+        return $this->shoppingCartRepository->getTotalPriceByUserId($userId);
+    }
+    public function getTotalPriceByOrderId($orderId)
+    {
+        return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
 
     public function createPayment($amount, $description, $redirectUrl, $webhookUrl)
@@ -142,6 +164,15 @@ class ShoppingCartService
         $id += 1; // Increment $id after setting the order item id for the current history order.
 
         return $historyOrderItem;
+    }
+    public function getOrderByOrderId($orderId){
+        return $this->shoppingCartRepository->getOrderByOrderId($orderId);
+    }
+    public function updateOrderStatus($orderId, $newOrderStatus) {
+        return $this->shoppingCartRepository->updateOrderStatus($orderId,$newOrderStatus);
+    }
+    public function getPerformanceOrdersByUserId($userId){
+        return $this->shoppingCartRepository->getPerformanceOrdersByUserId($userId);
     }
 //    public function createShoppingCartSession($historyOrder){
 //        var_dump($historyOrder);
