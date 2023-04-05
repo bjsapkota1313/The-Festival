@@ -38,6 +38,10 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->createOrderItem($orderId, $ticketId, $quantity);
     }
+    public function createPerformanceOrderItem($orderId, $ticketId, $quantity){
+        return $this->shoppingCartRepository->createPerformanceOrderItem($orderId, $ticketId, $quantity);
+    }
+
 
     public function getHistoryTourOrdersByUserId($userId)
     {
@@ -60,6 +64,13 @@ class ShoppingCartService
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
         return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
+    }
+    public function getPerformanceTicketIdByPerformanceId($performanceId){
+        return $this->shoppingCartRepository->getPerformanceTicketIdByPerformanceId($performanceId);
+
+    }
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity){
+        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity);
     }
 
     public function updateQuantity($itemId, $quantity)

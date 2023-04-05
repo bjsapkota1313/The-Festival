@@ -24,6 +24,7 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
+
     public function getOrderByOrderId($orderId)
     {
         try {
@@ -97,6 +98,21 @@ class ShoppingCartRepository extends EventRepository
         }
     }
 
+    public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
+    {
+        $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, performanceTicketId, quantity) VALUES (:order_id, :performanceTicketId, :quantity)");
+        $stmt->bindParam(':order_id', $orderId);
+        $stmt->bindParam(':performanceTicketId', $ticketId, PDO::PARAM_INT);
+        $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            $this->updateTotalPrice($orderId);
+            return $this->connection->lastInsertId();
+        } else {
+            return false;
+        }
+    }
+
     public function getHistoryTourOrdersByUserId($userId)
     {
         try {
@@ -121,6 +137,7 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
+
     public function getHistoryTourOrdersByOrderId($orderId)
     {
         try {
@@ -192,12 +209,13 @@ class ShoppingCartRepository extends EventRepository
         $restaurantOrderItem->setFoodType($row['foodTypes']);
         return $restaurantOrderItem;
     }
+
     public function getPerformanceOrdersByUserId($userId)
     {
         try {
             $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, location.locationName, artist.artistName, performance.totalPrice, performancesession.sessionName
                                                     FROM orderitem
-                                                    JOIN performanceTicket pt1 ON pt1.performanceTicket = orderitem.performanceTicketId
+                                                    JOIN performanceTicket pt1 ON pt1.performanceTicketId = orderitem.performanceTicketId
                                                     JOIN performance ON pt1.performanceId = performance.performanceId
                                                     JOIN participatingartist on participatingartist.performanceId = performance.performanceId
                                                     JOIN artist ON artist.artistId = participatingartist.artistId
@@ -219,6 +237,7 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
+
     private function createPerformanceOrderItemObject($row)
     {
         $performanceOrderItem = new PerformanceOrderItem();
@@ -231,7 +250,7 @@ class ShoppingCartRepository extends EventRepository
         return $performanceOrderItem;
     }
 
-    public function getOrderItemIdByTicketId($ticketId,$order)
+    public function getOrderItemIdByTicketId($ticketId, $order)
     {
         try {
             $stmt = $this->connection->prepare("SELECT orderItemId 
@@ -252,7 +271,8 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
-    public function getPerformanceOrderItemIdByTicketId($ticketId,$order)
+
+    public function getPerformanceOrderItemIdByTicketId($ticketId, $order)
     {
         try {
             $stmt = $this->connection->prepare("SELECT orderItemId 
@@ -273,6 +293,23 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
+    public function getPerformanceTicketIdByPerformanceId($performanceId){
+        try {
+            $stmt = $this->connection->prepare("SELECT performanceTicketId 
+                                                    FROM performanceTicket 
+                                                    WHERE performanceId = :performanceId;");
+            $stmt->bindValue(':performanceId', $performanceId);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['performanceTicketId'];
+
+        } catch (PDOException $e) {
+            // Handle the exception here
+            // For example, you could log the error message and return null
+            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+            return null;
+        }
+    }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
@@ -280,6 +317,19 @@ class ShoppingCartRepository extends EventRepository
             $stmt = $this->connection->prepare("UPDATE orderItem SET quantity = quantity + :quantity WHERE historyTourTicketId = :historyTourTicketId");
             $stmt->bindParam(':quantity', $quantity);
             $stmt->bindParam(':historyTourTicketId', $ticketId);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // Handle the error
+            echo "Error updating order item: " . $e->getMessage();
+        }
+    }
+
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity)
+    {
+        try {
+            $stmt = $this->connection->prepare("UPDATE orderItem SET quantity = quantity + :quantity WHERE performanceTicketId = :performanceTicketId");
+            $stmt->bindParam(':quantity', $quantity);
+            $stmt->bindParam(':performanceTicketId', $ticketId);
             $stmt->execute();
         } catch (PDOException $e) {
             // Handle the error
@@ -345,7 +395,9 @@ class ShoppingCartRepository extends EventRepository
             echo "Error: " . $e->getMessage();
         }
     }
-    public function updateTotalPrice($orderId){
+
+    public function updateTotalPrice($orderId)
+    {
         try {
 
             // Prepare the SQL statement with named parameters
@@ -383,7 +435,9 @@ class ShoppingCartRepository extends EventRepository
         }
 
     }
-    public function getTotalPriceByUserId($userId){
+
+    public function getTotalPriceByUserId($userId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.user_Id = :userId');
             $stmt->bindParam(':userId', $userId);
@@ -399,7 +453,9 @@ class ShoppingCartRepository extends EventRepository
             echo 'Error: ' . $e->getMessage();
         }
     }
-    public function getTotalPriceByOrderId($orderId){
+
+    public function getTotalPriceByOrderId($orderId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.orderId = :orderId');
             $stmt->bindParam(':orderId', $orderId);
@@ -415,10 +471,12 @@ class ShoppingCartRepository extends EventRepository
             echo 'Error: ' . $e->getMessage();
         }
     }
-    function updateOrderStatus($orderId, $newOrderStatus) {
+
+    function updateOrderStatus($orderId, $newOrderStatus)
+    {
 
         $stmt = $this->connection->prepare('UPDATE `Order` SET orderStatus = :orderStatus WHERE orderId = :orderId');
-        $orderId =13;
+        $orderId = 13;
         $stmt->bindParam(':orderStatus', $newOrderStatus);
         $stmt->bindParam(':orderId', $orderId);
         $stmt->execute();

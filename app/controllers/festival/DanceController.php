@@ -97,25 +97,27 @@ class DanceController extends eventController
 
     private function ticketSelection()
     {
-        if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) {
+        if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) { // check if button pressed and user has an account
             $userId = $_SESSION['userId'];
-            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+            $orderId = $this->shoppingCartService->getOrderByUserId($userId); // get orderId by user Id
             // Check if there is an existing order for the user
             if (!$orderId) {
-                // Create a new order for the user
+                // Create a new order for the user if user does not have an order yet
                 $this->shoppingCartService->createOrder($userId);
                 $orderId = $this->shoppingCartService->getOrderByUserId($userId);
             }
-            $ticketId = $_POST['performanceId'];
-            var_dump($ticketId);
-            $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($ticketId, $orderId);
-            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+            $performanceId = $_POST['performanceId']; // passed performanceId from ticket selection
+            $performanceTicketId = $this->shoppingCartService->getPerformanceTicketIdByPerformanceId($performanceId); // get performanceTicketId having performance Id
+            $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
+//            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
             $quantity = $_POST['NoOfTickets'];
 
             if (!$orderItem) {
-                $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
+                // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId
+                $this->shoppingCartService->createPerformanceOrderItem($orderId, $performanceTicketId, $quantity);
             } else {
-                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+                // if user already has same performance ticket in the shopping cart, just update quantity
+                $this->shoppingCartService->updatePerformanceOrderItemByTicketId($performanceTicketId, $quantity);
             }
         }
         require __DIR__ . '/../../views/festival/Dance/TicketModal.html';
