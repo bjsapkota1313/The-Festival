@@ -75,41 +75,150 @@ class HistoryController extends EventController
 
     public function ticketSelection()
     {
-
-        if (isset($_POST["addTourToCart"]) && empty($_SESSION['userId'])) {
-            $uniqueId = uniqid();
-            $_SESSION['uniqueId'] = $uniqueId;
-
-            // Check if shopping cart session variable exists, if not, create an empty array
-            if (!isset($_SESSION['shoppingCart'])) {
-                $_SESSION['shoppingCart'] = array();
-            }
-
-            // Add the item to the shopping cart session variable
-            $newOrderItem = [
-                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
-                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
-                "tourTicketType" => "single",
-                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
-                "tourSingleTicket" => htmlspecialchars($_POST["tourSingleTicket"])
-            ];
-
-            $_SESSION['shoppingCart'][] = $newOrderItem;
-
-
+//        if (isset($_POST["addTourToCart"])) {
+//            if (empty($_SESSION['userId']) && empty($_SESSION['orderId'])) {
+//                $orderId = $this->shoppingCartService->createOrder(null);
+//                $_SESSION['orderId'] = $orderId;
+//                $order = $this->shoppingCartService->getOrderByOrderId($orderId);
+//                // Add the tour to the order
+//                $newOrderItem = array(
+//                    "orderId" => $order,
+//                    "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                    "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                    "tourTicketType" => "single",
+//                    "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//                );
+//                $quantity = $_POST["tourSingleTicket"];
+//                $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+////                var_dump($ticketId);
+//                $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//
+//                if (!$orderItem) {
+//                    $this->shoppingCartService->createOrderItem($order, $ticketId, $quantity);
+//                } else {
+//                    $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+//                }
+//            }
+//            else if(!empty($_SESSION['orderId'])){
+//                $order = $this->shoppingCartService->getOrderByOrderId($_SESSION['orderId']);
+//                // Add the tour to the order
+//                $newOrderItem = array(
+//                    "orderId" => $_SESSION['orderId'],
+//                    "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                    "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                    "tourTicketType" => "single",
+//                    "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//                );
+//                $quantity = $_POST["tourSingleTicket"];
+//                $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+////                var_dump($ticketId);
+//                $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//                $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+//
+//
+//                if (!$orderItem) {
+//                    $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
+//                } else {
+//                    $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+//                }
+//            }
+//            else{
+//                $userId = $_SESSION['userId'];
+//                $order = $this->shoppingCartService->getOrderByUserId($userId);
+//                $newOrderItem = array(
+//                    "orderId" => $order,
+//                    "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                    "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                    "tourTicketType" => "single",
+//                    "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//                );
+//                $quantity = $_POST["tourSingleTicket"];
+//                $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+////                var_dump($ticketId);
+//                $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//                // Check if there is an existing order for the user
+//                if (!$order) {
+//                    // Create a new order for the user
+//                    $this->shoppingCartService->createOrder($userId);
+//                    $order = $this->shoppingCartService->getOrderByUserId($userId);
+//                }
+//            }
+//            // Add the tour to the order
+//            $newOrderItem = array(
+//                "orderId" => $order,
+//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                "tourTicketType" => "single",
+//                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//            );
+//            $quantity = $_POST["tourSingleTicket"];
 //            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-        } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
-            $order = $this->shoppingCartService->getOrderByUserId($userId);
-            // Check if there is an existing order for the user
-            if (!$order) {
-                // Create a new order for the user
-                $this->shoppingCartService->createOrder($userId);
-                $order = $this->shoppingCartService->getOrderByUserId($userId);
-            }
+//            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//            if (!$orderItem) {
+//                $this->shoppingCartService->createOrderItem($order, $ticketId, $quantity);
+//            } else {
+//                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+//            }
+
+//        }
+//        if (isset($_POST["addTourToCart"]) && empty($_SESSION['userId'])) {
+//            $uniqueId = uniqid();
+//            $_SESSION['uniqueId'] = $uniqueId;
+//
+//            // Check if shopping cart session variable exists, if not, create an empty array
+//            if (!isset($_SESSION['shoppingCart'])) {
+//                $_SESSION['shoppingCart'] = array();
+//            }
+//
+//            // Add the item to the shopping cart session variable
+//            $newOrderItem = [
+//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                "tourTicketType" => "single",
+//                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//                "tourSingleTicket" => htmlspecialchars($_POST["tourSingleTicket"])
+//            ];
+//
+//            $_SESSION['shoppingCart'][] = $newOrderItem;
+//
+//
+////            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+//        } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//            $order = $this->shoppingCartService->getOrderByUserId($userId);
+//            // Check if there is an existing order for the user
+//            if (!$order) {
+//                // Create a new order for the user
+//                $this->shoppingCartService->createOrder($userId);
+//                $order = $this->shoppingCartService->getOrderByUserId($userId);
+//            }
+//            // Add the tour to the order
+//            $newOrderItem = array(
+//                "orderId" => $order,
+//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+//                "tourTicketType" => "single",
+//                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+//            );
+//            $quantity = $_POST["tourSingleTicket"];
+//            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+//            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//            if (!$orderItem) {
+//                $this->shoppingCartService->createOrderItem($order, $ticketId, $quantity);
+//            } else {
+//                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+//                $this->shoppingCartService->updateTotalPrice($order);
+//            }
+//        }
+
+        if (isset($_POST["addTourToCart"]) && empty($_SESSION['userId']) && empty($_SESSION['orderId'])) {
+            $orderId = $this->shoppingCartService->createOrder(null);
+            $_SESSION['orderId'] = $orderId;
+            var_dump($_SESSION['orderId']);
+//            $order = $this->shoppingCartService->getOrderByOrderId($orderId);
             // Add the tour to the order
             $newOrderItem = array(
-                "orderId" => $order,
+                "orderId" => $orderId,
                 "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
                 "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
                 "tourTicketType" => "single",
@@ -117,11 +226,66 @@ class HistoryController extends EventController
             );
             $quantity = $_POST["tourSingleTicket"];
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId);
+//                var_dump($ticketId);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+
             if (!$orderItem) {
-                $this->shoppingCartService->createOrderItem($order, $ticketId, $quantity);
+                $this->shoppingCartService->createOrderItem($orderId, $ticketId, $quantity);
             } else {
                 $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+            }
+
+//            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+        } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['orderId']) && empty($_SESSION['userId'])) {
+            var_dump($_SESSION['orderId']);
+
+            $orderId = $this->shoppingCartService->getOrderByOrderId($_SESSION['orderId']);
+            // Add the tour to the order
+            $newOrderItem = array(
+                "orderId" => $orderId,
+                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+                "tourTicketType" => "single",
+                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+
+            );
+            $quantity = $_POST["tourSingleTicket"];
+            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+//                var_dump($ticketId);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+
+
+            if (!$orderItem) {
+                $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
+            } else {
+                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+            }
+        } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+            // Check if there is an existing order for the user
+            if (!$orderId) {
+                // Create a new order for the user
+                $this->shoppingCartService->createOrder($userId);
+                $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+            }
+            // Add the tour to the order
+            $newOrderItem = array(
+                "orderId" => $orderId,
+                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+                "tourTicketType" => "single",
+                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+            );
+            $quantity = $_POST["tourSingleTicket"];
+            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+            if (!$orderItem) {
+                $this->shoppingCartService->createOrderItem($orderId, $ticketId, $quantity);
+            } else {
+                $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
+                $this->shoppingCartService->updateTotalPrice($orderId);
             }
         }
 
@@ -131,27 +295,32 @@ class HistoryController extends EventController
     public function shoppingCart()
     {
 //        unset($_SESSION['shoppingCart']);
-
 //        $_SESSION['shoppingCart'] = array();
-        if (isset($_SESSION['shoppingCart'])) {
-//            $historyOrderItem = array();
-            var_dump($_SESSION['shoppingCart']);
-
-//            $historyOrderItem = $_SESSION['shoppingCart'];
-//            $allItemsInShoppingCarts = $_SESSION['shoppingCart'];
-            $allItemsInShoppingCarts = $this->shoppingCartService->damn($_SESSION['shoppingCart']);
-//            var_dump($historyOrderItem);
+//        if (isset($_SESSION['shoppingCart'])) {
+////            $historyOrderItem = array();
+//            var_dump($_SESSION['shoppingCart']);
+//
+////            $historyOrderItem = $_SESSION['shoppingCart'];
+////            $allItemsInShoppingCarts = $_SESSION['shoppingCart'];
 //            $allItemsInShoppingCarts = $this->shoppingCartService->damn($_SESSION['shoppingCart']);
-//            var_dump($allItemsInShoppingCarts);
-
-            $allRestaurantItems = array();
-        }
-        if(!empty($_SESSION['userId'])){
+////            var_dump($historyOrderItem);
+////            $allItemsInShoppingCarts = $this->shoppingCartService->damn($_SESSION['shoppingCart']);
+////            var_dump($allItemsInShoppingCarts);
+//
+//            $allRestaurantItems = array();
+//        }
+        if (!empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
 
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
             $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+        } else {
+            $orderId = $_SESSION['orderId'];
+            var_dump($orderId);
+            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
+            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
+            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
 
         if (isset($_POST['payNow'])) {
@@ -180,7 +349,7 @@ class HistoryController extends EventController
     {
         $historyEvent = $this->eventService->getEventByName('A Stroll Through History');
 
-        print_r($historyEvent);
+//        print_r($historyEvent);
     }
 
     private function getarrayAccordingToDate($historyTours)
@@ -204,12 +373,25 @@ class HistoryController extends EventController
     public function updateQuantity()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $orderItemId = $_POST['orderItemId'];
+//            $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
+//            $quantity = $_POST['quantity'];
+//            $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
+//            $this->shoppingCartService->updateTotalPrice($orderId);
             if (!empty($_SESSION['userId'])) {
                 $orderItemId = $_POST['orderItemId'];
+                var_dump($orderItemId);
                 $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
+                var_dump($orderId);
                 $quantity = $_POST['quantity'];
                 $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
                 $this->shoppingCartService->updateTotalPrice($orderId);
+            } else {
+                $orderItemId = $_POST['orderItemId'];
+                $quantity = $_POST['quantity'];
+                var_dump($orderItemId);
+
+                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
             }
             else{
                 $orderItemId = $_POST['orderItemId'];

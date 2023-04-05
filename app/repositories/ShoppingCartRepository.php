@@ -23,6 +23,22 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
+    public function getOrderByOrderId($orderId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE orderId = :orderId;");
+            $stmt->bindValue(':orderId', $orderId);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result['orderId'];
+
+        } catch (PDOException $e) {
+            // Handle the exception here
+            // For example, you could log the error message and return null
+            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+            return null;
+        }
+    }
 
     public function createOrder($userId)
     {
@@ -30,12 +46,15 @@ class ShoppingCartRepository extends EventRepository
             $stmt = $this->connection->prepare("INSERT INTO `order` (user_id, order_date, orderStatus) VALUES (:user_id, NOW(), 'open');");
             $stmt->bindValue(':user_id', $userId);
             $stmt->execute();
+            $lastInsertedId = $this->connection->lastInsertId();
+            return $lastInsertedId;
         } catch (PDOException $e) {
             // handle the error here, for example:
             echo "Error creating order: " . $e->getMessage();
             // or redirect to an error page
         }
     }
+
 
     public function getTicketId($newOrderItem)
     {
@@ -62,14 +81,15 @@ class ShoppingCartRepository extends EventRepository
         return $result['id'];
     }
 
-    public function createOrderItem($userId, $ticketId, $quantity)
+    public function createOrderItem($orderId, $ticketId, $quantity)
     {
         $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, historyTourTicketId, quantity) VALUES (:order_id, :historyTourTicketId, :quantity)");
-        $stmt->bindParam(':order_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':order_id', $orderId);
         $stmt->bindParam(':historyTourTicketId', $ticketId, PDO::PARAM_INT);
         $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
+            $this->updateTotalPrice($orderId);
             return $this->connection->lastInsertId();
         } else {
             return false;
@@ -87,6 +107,30 @@ class ShoppingCartRepository extends EventRepository
                                             JOIN language on  language.languageId = historytour.languageId
                                             WHERE `order`.user_id = :user_id");
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            $stmt->execute();
+            $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $historyOrderItem = array();
+            foreach ($dbRow as $row) {
+                $historyOrderItem[] = $this->createHistoryOrderItemObject($row);
+            }
+            return $historyOrderItem;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    public function getHistoryTourOrdersByOrderId($orderId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, historytourticket.ticket_type, historytourticket.price, language.name
+                                            FROM orderitem
+                                            JOIN historytourticket ON historytourticket.id = orderitem.historyTourTicketId
+                                            JOIN `order` ON `order`.orderId = orderitem.order_id
+                                            JOIN historytour on historytour.historyTourId = historytourticket.historyTourId
+                                            JOIN language on  language.languageId = historytour.languageId
+                                            WHERE `order`.orderId = :orderId");
+            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $historyOrderItem = array();
@@ -148,11 +192,16 @@ class ShoppingCartRepository extends EventRepository
         return $restaurantOrderItem;
     }
 
-    public function getOrderItemIdByTicketId($ticketId)
+    public function getOrderItemIdByTicketId($ticketId,$order)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT orderItemId FROM orderitem WHERE historyTourTicketId = :historyTourTicketId;");
+            $stmt = $this->connection->prepare("SELECT orderItemId 
+FROM orderitem 
+JOIN `Order` ON `Order`.orderid = orderitem.order_id
+WHERE historyTourTicketId = :historyTourTicketId AND `Order`.orderId = :orderId;
+;");
             $stmt->bindValue(':historyTourTicketId', $ticketId);
+            $stmt->bindValue(':orderId', $order);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result['orderItemId'];
@@ -184,6 +233,7 @@ class ShoppingCartRepository extends EventRepository
             $stmt = $this->connection->prepare("UPDATE orderitem SET quantity = :quantity WHERE orderItemId = :orderItemId");
             $stmt->bindParam(':quantity', $quantity);
             $stmt->bindParam(':orderItemId', $orderItemId);
+            var_dump($orderItemId);
 
             $stmt->execute();
             return true;
@@ -227,9 +277,9 @@ class ShoppingCartRepository extends EventRepository
 
             // Fetch the result
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
             // Output the order_id
             echo $result['order_id'];
+
         } catch (PDOException $e) {
             // Handle the exception here
             echo "Error: " . $e->getMessage();
@@ -256,7 +306,7 @@ class ShoppingCartRepository extends EventRepository
                           WHERE `Order`.orderId = :orderId');
 
             // Bind the parameter to a variable
-            $orderId = 1;
+//            $orderId = 13;
             $stmt->bindParam(':orderId', $orderId);
 
             // Execute the statement
@@ -288,6 +338,32 @@ class ShoppingCartRepository extends EventRepository
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
+    }
+    public function getTotalPriceByOrderId($orderId){
+        try {
+            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.orderId = :orderId');
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                echo $row['totalPrice'];
+            } else {
+                echo 'No results found';
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+    function updateOrderStatus($orderId, $newOrderStatus) {
+
+        $stmt = $this->connection->prepare('UPDATE `Order` SET orderStatus = :orderStatus WHERE orderId = :orderId');
+        $orderId =13;
+        $stmt->bindParam(':orderStatus', $newOrderStatus);
+        $stmt->bindParam(':orderId', $orderId);
+        $stmt->execute();
+
+
     }
 
 }
