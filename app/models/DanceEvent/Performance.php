@@ -64,10 +64,14 @@ class Performance implements JsonSerializable
     public function jsonSerialize() : mixed
     {
         return [
+            'id'=> $this->performanceId,
             'artists' => $this->artists,
             'date' => $this->date->format('Y-m-d'),
             'venue' => $this->venue->getLocationName(),
-            'session' => $this->session->getSessionName()
+            'session' => $this->session->getSessionName(),
+            'price'=> $this->totalPrice,
+            'startTime'=> $this->getDate()->format('H:i'),
+            'endTime'=> $this->getEndDateTime()->format('H:i'),
         ];
     }
 

@@ -44,7 +44,6 @@ class ApiController
         $data = json_decode($json);
         return $this->sanitize($data);
     }
-
     protected function sanitize($data)
     {
         if (is_object($data)) {

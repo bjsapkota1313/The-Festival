@@ -30,7 +30,7 @@ class DanceApiController extends ApiController
                 "message" => "Something went wrong while processing your delete request,Please try again later"
             );
             $this->sendHeaders();
-            //  $this->performanceService->deletePerformanceById(htmlspecialchars($_GET['id'])); //TODO: fix this
+              $this->performanceService->deletePerformanceById(htmlspecialchars($_GET['id']));
 
             echo json_encode($responseData);
         } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
@@ -61,10 +61,10 @@ class DanceApiController extends ApiController
                     "message" => $e->getMessage());
             }
             echo json_encode($responseData);
-        } else if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['artistId'])) {
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['artistId'])) {
             $this->sendHeaders();
-            $data = array();
-            echo json_encode($this->editArtist($data));
+            $artistDetails = $this->sanitize(json_decode($_POST['artistDetails']));
+            echo json_encode($this->editArtist($artistDetails, $_FILES));
         }
     }
 
@@ -125,14 +125,15 @@ class DanceApiController extends ApiController
         return $responseData;
     }
 
-    private function editArtist($artist): array
+    private function editArtist($artistDetails, $artistImages): array
     {
         $responseData = array(
             "success" => false,
             "message" => "Something went wrong while processing your Edit request for artist"
         );
         try {
-            if ($this->artistService->updateArtist($artist)) { //TODO: fix this
+            $artistImages = $this->getPostedArtistImages($artistImages);
+            if ($this->artistService->updateArtist($artistDetails, $artistImages)) {
                 $responseData = array(
                     "success" => true,
                     "message" => ""
@@ -169,12 +170,53 @@ class DanceApiController extends ApiController
                     "message" => ""
                 );
             }
-        } catch (NotAvailableException | InternalErrorException | DatabaseQueryException   $e) {
+        } catch (NotAvailableException|InternalErrorException|DatabaseQueryException   $e) {
             $responseData = array(
                 "success" => false,
                 "message" => $e->getMessage());
         }
         return $responseData;
+    }
+
+    private function getPostedArtistImages($files): ?array
+    {
+        if (empty($files)) {
+            return null;
+        }
+
+        $artistImages = array();
+        foreach ($files as $key => $file) {
+            switch ($key) {
+                case 'artistLogo':
+                case 'artistBanner':
+                case 'artistPortrait':
+                    $artistImages[$key] = $file;
+                    break;
+                case 'OtherArtistImages':
+                    $artistImages['artistOthers'] = $this->getOrganizedOtherArtistImages($file);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $artistImages;
+    }
+
+    private function getOrganizedOtherArtistImages($images): ?array
+    {
+        $imagesOthers = array();
+        for ($i = 0; $i < count($images['name']); $i++) {
+            $imagesObj = array(
+                'name' => $images['name'][$i],
+                'full_path' => $images['full_path'][$i],
+                'type' => $images['type'][$i],
+                'size' => $images['size'][$i],
+                'error' => $images['error'][$i],
+                'tmp_name' => $images['tmp_name'][$i]
+            );
+            $imagesOthers[] = $imagesObj;
+        }
+        return $imagesOthers;
     }
 
 }

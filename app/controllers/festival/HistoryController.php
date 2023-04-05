@@ -247,6 +247,7 @@ class HistoryController extends EventController
                 "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
                 "tourTicketType" => "single",
                 "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+
             );
             $quantity = $_POST["tourSingleTicket"];
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
@@ -294,7 +295,6 @@ class HistoryController extends EventController
     public function shoppingCart()
     {
 //        unset($_SESSION['shoppingCart']);
-
 //        $_SESSION['shoppingCart'] = array();
 //        if (isset($_SESSION['shoppingCart'])) {
 ////            $historyOrderItem = array();
@@ -391,6 +391,16 @@ class HistoryController extends EventController
                 $quantity = $_POST['quantity'];
                 var_dump($orderItemId);
 
+                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
+            }
+            else{
+                $orderItemId = $_POST['orderItemId'];
+                $quantity = $_POST['quantity'];
+                var_dump($orderItemId);
+//                print_r($_SESSION['shoppingCart']);
+//                var_dump($_POST);
+//                var_dump($orderItemId);
+//                var_dump($quantity);
                 $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
             }
         }

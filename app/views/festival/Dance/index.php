@@ -15,11 +15,11 @@
     </div>
 </div>
 <div class="px-4 my-5 text-center">
-    <?php if(!empty($danceEvent->getEventParagraphs()[0])): ?>
-    <h4 style="font-weight: 600"><?= $danceEvent->getEventParagraphs()[0]->getTitle() ?></h4>
-    <div class="col-lg-10 mx-auto">
-        <p class="lead mb-4"><?= $danceEvent->getEventParagraphs()[0]->getText() ?> </p>
-    </div>
+    <?php if (!empty($danceEvent->getEventParagraphs()[0])): ?>
+        <h4 style="font-weight: 600"><?= $danceEvent->getEventParagraphs()[0]->getTitle() ?></h4>
+        <div class="col-lg-10 mx-auto">
+            <p class="lead mb-4"><?= $danceEvent->getEventParagraphs()[0]->getText() ?> </p>
+        </div>
     <?php endif; ?>
 </div>
 <div class="is-layout-flow wp-block-group bs-carousel-incr">
@@ -257,8 +257,9 @@
                             ?>
                             <div class="my-3 ps-3">
                                 <div class=" MyContainer position-relative ps-4 ">
-                                    <div class="container d-flex align-items-center justify-content-center" data-performance='<?php echo json_encode($performance); ?>'>
-                                        <span><?=$performance->getDate()->format('H:i')?></span>
+                                    <div class="container d-flex align-items-center justify-content-center"
+                                         data-performance='<?= addslashes(json_encode($performance)) ?>'>
+                                        <span><?= $performance->getDate()->format('H:i') ?></span>
                                         <div class="line flex-grow-1 mx-2"></div>
                                     </div>
                                     <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists()) ?></label>
@@ -304,123 +305,11 @@
         </div>
     <?php } ?>
 </div>
+<?php require_once __DIR__.'/TicketModal.html'?>
+<script src="/Javascripts/festival/Dance/TicketModalPerformance.js" type="text/javascript"></script>
+<script src="/Javascripts/festival/Dance/HoveringThing.js" type="text/javascript"></script>
 <script src="/Javascripts/festival/Dance/Carousal.js" type="text/javascript"></script>
 </body>
-
-<!--<script>-->
-<!---->
-<!--    const containers = document.querySelectorAll('.MyContainer');-->
-<!---->
-<!--    containers.forEach(container => {-->
-<!--        let data = container.querySelector('.container').getAttribute('data-performance');-->
-<!--        const performance = JSON.parse(data);-->
-<!---->
-<!--        const artists = performance.artists // use a different variable name to avoid confusion with the 'artist' variable-->
-<!--        console.log(artists);-->
-<!--        const time = performance.date;-->
-<!--        const location = performance.venue;-->
-<!--        let description = artists;-->
-<!--        const label = container.querySelector('.container-fluid').textContent; // save the original label-->
-<!---->
-<!--        container.addEventListener('mouseover', () => {-->
-<!--            container.style.backgroundColor = 'red';-->
-<!--            container.style.height = '360px';-->
-<!---->
-<!--            // check the type of each variable before including it in the template string-->
-<!--            const artistString = getArtistName(performance.artists);-->
-<!--            const timeString = typeof time === 'object' ? time.toString() : time;-->
-<!--            const locationString = typeof location === 'object' ? location.name : location;-->
-<!---->
-<!--            description = `${artistString}<br>${timeString}<br>${locationString}`;-->
-<!--            container.querySelector('.container-fluid').innerHTML = description;-->
-<!--        });-->
-<!---->
-<!--        container.addEventListener('mouseout', () => {-->
-<!--            container.style.backgroundColor = '';-->
-<!--            container.style.height = '';-->
-<!---->
-<!--            container.querySelector('.container-fluid').textContent = label; // restore the original label-->
-<!--            description = artists;-->
-<!--        });-->
-<!--    });-->
-<!---->
-<!---->
-<!--    function getArtistName(artists){-->
-<!--        // if(artists)-->
-<!--        let artistName='';-->
-<!--        if(artists.length === 1)-->
-<!--            return artists[0].artistName;-->
-<!--        for (let i = 0; i < artists.length; i++) {-->
-<!--            artistName +='|'+ artists[i].artistName;-->
-<!--        }-->
-<!--        return artistName;-->
-<!--    }-->
-<!--</script>-->
-
-<script>
-    const containers = document.querySelectorAll('.MyContainer');
-
-    containers.forEach(container => {
-        const data = container.querySelector('.container').getAttribute('data-performance');
-        const performance = JSON.parse(data);
-        const artists = performance.artists;
-        const time = performance.date;
-        const location = performance.venue;
-        const label = container.querySelector('.container-fluid').textContent;
-
-        container.addEventListener('mouseenter', () => {
-            container.style.height = '360px';
-
-            const artistString = getArtistName(artists);
-            const timeString = typeof time === 'object' ? time.toString() : time;
-            const locationString = typeof location === 'object' ? location.name : location;
-
-            const description = document.createElement('div');
-            description.innerHTML = `
-        <br>${artistString}<br>${timeString}<br>${locationString}
-      `;
-
-            const bookButton = document.createElement('button');
-            bookButton.classList.add('btn', 'btn-primary', 'book-button');
-            bookButton.textContent = 'Book Now';
-            bookButton.style.position = 'absolute';
-            bookButton.style.top = '25%';
-            bookButton.style.left = '50%';
-            bookButton.style.transform = 'translate(-50%, -50%)';
-            description.appendChild(bookButton);
-
-            container.querySelector('.container-fluid').innerHTML = '';
-            container.querySelector('.container-fluid').appendChild(description);
-        });
-
-        container.addEventListener('mouseleave', () => {
-            container.style.height = '';
-            container.querySelector('.container-fluid').innerHTML = label;
-        });
-    });
-
-    function getArtistName(artists){
-        let artistName='';
-        if(artists.length === 1)
-            return artists[0].artistName;
-        for (let i = 0; i < artists.length; i++) {
-            artistName +='|'+ artists[i].artistName;
-        }
-        return artistName;
-    }
-</script>
-
-<style>
-    .book-button {
-        background-color: rgba(205, 53, 0, 1);
-        border: none;
-    }
-
-    .book-button:hover {
-        color: #ffb86c;
-        border: none;
-    }
-</style>
 
 
 

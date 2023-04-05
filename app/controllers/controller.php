@@ -1,9 +1,11 @@
 <?php
 require_once __DIR__ . '/../services/NavBarService.php';
+require_once __DIR__ . '/../models/ImageManager.php';
 
 abstract class Controller
 {
     private NavBarService $navBarService;
+    use ImageManager;
 
     public function __construct()
     {
@@ -50,7 +52,7 @@ abstract class Controller
         return true;
     }
 
-    protected function displayNavBar($title, $pathToCss=null): void
+    protected function displayNavBar($title, $pathToCss = null): void
     {
         $this->navBarService = new NavBarService();
         $navBarItems = $this->navBarService->getAllNavBarItems();
@@ -155,15 +157,6 @@ abstract class Controller
             }
         }
         return $processedImages;
-    }
-
-    private function checkValidImageOrNot($image): bool
-    {
-        $imageFileType = strtolower(pathinfo($image['name'], PATHINFO_EXTENSION));
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") {
-            return false;
-        }
-        return true;
     }
 }
 
