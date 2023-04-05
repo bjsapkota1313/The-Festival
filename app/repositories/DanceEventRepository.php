@@ -38,10 +38,22 @@ class DanceEventRepository extends EventRepository
             $danceEvent->setEventParagraphs($this->getEventParagraphsByEventID($dbRow['eventId']));
             $danceEvent->setEventImages($this->getEventImagesByEventId($dbRow['eventId']));
             $danceEvent->setEventVatPercentage($dbRow['vatPercentage']);
+            $danceEventPriceRange = $this->getMinimalAndMaximumPrice($dbRow['eventId']);
+            $danceEvent->setMinimalPrice($danceEventPriceRange['minimumPrice']);
+            $danceEvent->setMaximalPrice($danceEventPriceRange['maximumPrice']);
             return $danceEvent;
         } catch (Exception $e) {
             echo "Error while creating dance event instance: " . $e->getMessage();
         }
+    }
+    private function getMinimalAndMaximumPrice($eventId): array
+    {
+        $query = "SELECT MIN(performance.totalPrice) as minimumPrice, MAX(performance.totalPrice) as maximumPrice FROM performance WHERE performance.eventId = :eventId";
+        $result = $this->executeQuery($query, array(':eventId' => $eventId), false);
+        if (!empty($result)) {
+            return array('minimumPrice'=>$result['minimumPrice'],'maximumPrice'=>$result['maximumPrice']);
+        }
+        return array('minimumPrice'=>0, 'maximumPrice'=>0); // if there are no price only
     }
 
     public function deleteVenue($venueId): bool

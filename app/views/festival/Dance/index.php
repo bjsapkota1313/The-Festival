@@ -69,9 +69,8 @@
     <div class="card w-75 p-3 border-0" style="background-color:#D9D9D9;border-radius: 49px; ">
         <h4 class="text-center py-2" style="color:#CD3600; font-weight: bold;font-size: 36px; opacity: 1; ">PRICES</h4>
         <ul>
-
             <li class="list-group-item pb-3">
-                <pre>Regular Participant:           <strong>€60,00 - €110,00</strong></pre>
+                <pre>Regular Participant:           <strong>€<?= number_format($danceEvent->getMinimalPrice(),2)?> - €<?= number_format($danceEvent->getMaximalPrice(),2) ?></strong></pre>
             </li>
             <li class="list-group-item pb-3">
                 <pre>All-access Pass (28 July):     <strong>€125,00</strong>   <button class="button">Buy</button></pre>
