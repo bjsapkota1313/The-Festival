@@ -95,7 +95,7 @@ class DanceController extends eventController
         return $name;
     }
 
-    private function ticketSelection()
+    public function ticketSelection()
     {
         if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) { // check if button pressed and user has an account
             $userId = $_SESSION['userId'];
@@ -119,7 +119,8 @@ class DanceController extends eventController
                 // if user already has same performance ticket in the shopping cart, just update quantity
                 $this->shoppingCartService->updatePerformanceOrderItemByTicketId($performanceTicketId, $quantity);
             }
+            header('Location: /festival/history/shoppingCart');
         }
-        require __DIR__ . '/../../views/festival/Dance/TicketModal.html';
+
     }
 }

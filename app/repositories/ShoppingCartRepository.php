@@ -287,10 +287,7 @@ class ShoppingCartRepository extends EventRepository
             return $result['orderItemId'];
 
         } catch (PDOException $e) {
-            // Handle the exception here
-            // For example, you could log the error message and return null
-            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
-            return null;
+            echo "Error: " . $e->getMessage();
         }
     }
     public function getPerformanceTicketIdByPerformanceId($performanceId){
