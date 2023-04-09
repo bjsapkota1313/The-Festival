@@ -323,9 +323,6 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-
-
-    //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
     {
         $query = "UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture";
