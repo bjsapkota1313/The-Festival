@@ -33,5 +33,14 @@ class NavBarRepository extends Repository
             echo $e;
         }
     }
+//    public function AllFestivalEvents(){
+//        try {
+//            $stmt = $this->connection->prepare("SELECT eventName FROM event");
+//            $stmt->execute();
+//            return $stmt->fetchAll(PDO::FETCH_CLASS, 'NavBarItem');
+//        } catch (PDOException $e) {
+//            echo $e;
+//        }
+//    }
 
 }

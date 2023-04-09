@@ -106,7 +106,6 @@ class DanceController extends eventController
             $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
 //            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
             $quantity = $_POST['NoOfTickets'];
-
             if (empty($orderItem)) {
                 // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId
                 $this->shoppingCartService->createPerformanceOrderItem($orderId, $performanceTicketId, $quantity);
@@ -124,6 +123,7 @@ class DanceController extends eventController
             $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
 //            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
             $quantity = $_POST['NoOfTickets'];
+
 
             if (empty($orderItem)) {
                 // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId

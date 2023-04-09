@@ -5,6 +5,7 @@ class NavBarItem
     private int $navBarItemId;
     private string $pageUrl;
     private string $name;
+    private string $festivalName;
 
     /**
      * @return int
@@ -55,4 +56,21 @@ class NavBarItem
         $this->name = $name;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getFestivalName(): string
+    {
+        return $this->festivalName;
+    }
+
+    /**
+     * @param string $festivalName
+     */
+    public function setFestivalName(string $festivalName): void
+    {
+        $this->festivalName = $festivalName;
+    }
+
 }

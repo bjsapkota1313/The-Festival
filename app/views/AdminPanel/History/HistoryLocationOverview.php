@@ -53,13 +53,20 @@
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getCountry(); ?></td>
                             <td>
                                 <div class="d-inline-flex">
+<!--                                    <form method="POST">-->
+<!--                                        <input type="hidden" name="tourId"-->
+<!--                                               value="--><?//= $tourLocation->getHistoryTourLocationId() ?><!--">-->
+<!--                                        <button name="deleteHistoryLocation" class="btn btn-primary"><i-->
+<!--                                                    class="fa-solid fa-file-pen"></i></button>-->
+<!--                                        <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i-->
+<!--                                                    class="fa-solid fa-trash"></i></button>-->
+<!--                                    </form>-->
                                     <form method="POST">
-                                        <input type="hidden" name="tourId"
-                                               value="<?= $tourLocation->getHistoryTourLocationId() ?>">
-                                        <button name="deleteHistoryTour" class="btn btn-primary"><i
-                                                    class="fa-solid fa-file-pen"></i></button>
-                                        <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i
-                                                    class="fa-solid fa-trash"></i></button>
+                                        <input type="hidden" name="deleteTourLocationId" value="<?= $tourLocation->getHistoryTourLocationId() ?>">
+                                        <button type="submit" name="deleteHistoryLocation" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+
+                                        <input type="hidden" name="updateTourLocationId" value="<?= $tourLocation->getHistoryTourLocationId() ?>">
+                                        <button type="submit" name="updateHistoryLocation" class="btn btn-primary"><i class="fa-solid fa-file-pen"></i></button>
                                     </form>
                                 </div>
                             </td>

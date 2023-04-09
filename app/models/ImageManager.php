@@ -9,7 +9,7 @@ trait ImageManager
     function moveImageToSpecifiedDirectory($image, $directory): void
     {
         if (!move_uploaded_file($image['tmp_name'], $directory)) {
-            throw new uploadFileFailedException("File upload Failed");
+//            throw new uploadFileFailedException("File upload Failed");
         }
     }
 

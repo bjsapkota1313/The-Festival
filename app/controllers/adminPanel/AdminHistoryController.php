@@ -24,6 +24,10 @@ class AdminHistoryController extends AdminPanelController
         if (empty($tourLocations)) {
             $errorMessage['tourLocation'] = "No location found in system";
         }
+        if(isset($_POST['deleteHistoryLocation'])){
+            $selectedLocationId = $_POST['deleteTourLocationId'];
+            $this->historyService->deleteHistoryTourLocation($selectedLocationId);
+        }
         require_once __DIR__ . '/../../views/AdminPanel/History/HistoryLocationOverview.php';
     }
 
@@ -47,7 +51,6 @@ class AdminHistoryController extends AdminPanelController
             $this->updateHistoryTourByTourId($selectedTourId);
             // perform update action here
         }
-
         require_once __DIR__ . '/../../views/AdminPanel/History/HistoryTourOverview.php';
     }
     public function updateHistoryTourByTourId($selectedTourId){
@@ -55,24 +58,39 @@ class AdminHistoryController extends AdminPanelController
         $this->displaySideBar($title);
 
         $getSelectedTourById = $this->historyService->getHistoryTourById($selectedTourId);
+//        if(isset($_POST['updateTourLocation'])){
+//            $updateHistoryTour = array(
+//                'updateTourLanguage' => htmlspecialchars($_POST['updateTourLanguage']),
+//                'updateTourDate' => date('Y-m-d', strtotime($_POST['updateTourDate'])),
+//                'updateTourTime' => date('H:i:s', strtotime($_POST['updateTourTime'])),
+//            );
+//            $this->historyService->updateHistoryTourByTourId($getSelectedTourById,$updateHistoryTour);
+//        }
+
+        require_once __DIR__ . '/../../views/AdminPanel/History/UpdateHistoryTour.php';
+    }
+    public function update(){
         if(isset($_POST['updateTourLocation'])){
+            $selectedTourId = $_POST['updateTourLocation'];
             $updateHistoryTour = array(
                 'updateTourLanguage' => htmlspecialchars($_POST['updateTourLanguage']),
                 'updateTourDate' => date('Y-m-d', strtotime($_POST['updateTourDate'])),
                 'updateTourTime' => date('H:i:s', strtotime($_POST['updateTourTime'])),
             );
-            $this->historyService->updateHistoryTourByTourId(37,$updateHistoryTour);
+            $this->historyService->updateHistoryTourByTourId($selectedTourId,$updateHistoryTour);
+            header('Location: /admin/historyTours');
         }
-
-        require_once __DIR__ . '/../../views/AdminPanel/History/UpdateHistoryTour.php';
     }
+
     public function addHistoryTourLocation()
     {
         $title = 'Add Tour Location';
-        $this->displaySideBar($title);
-        if (isset($_POST['addNewTourLocation'])) {
-            $this->insertNewTourLocation();
-        }
+      //  $this->displaySideBar($title);
+        $errorMessage['Submit'] = $this->addHistoryTourSubmitted();
+
+//        if (isset($_POST['addNewTourLocation'])) {
+//            $this->insertNewTourLocation();
+//        }
         require_once __DIR__ . '/../../views/AdminPanel/History/AddHistoryLocation.php';
     }
 
@@ -85,24 +103,35 @@ class AdminHistoryController extends AdminPanelController
             'tourStreetNumber' => htmlspecialchars($_POST['tourStreetNumber']),
             'tourPostCode' => htmlspecialchars($_POST['tourPostCode']),
             'tourCity' => htmlspecialchars($_POST['tourCity']),
+            'tourLocationName' => htmlspecialchars($_POST['tourLocationName']),
         );
         $this->historyService->insertNewTourLocation($newTourLocation);
     }
+    private function addHistoryTourSubmitted()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addNewTourLocation'])) {
+            $sanitizedInput = $this->checkFieldsFilledAndSantizeInput($_POST, ['addNewTourLocation']);
+            $validImages = $this->processImagesWithFiles($_FILES, ['others']);
+            if (is_string($sanitizedInput)) { // check if the controller sends some error message or not
+                return $sanitizedInput;
+            } else if (is_string($validImages)) {
+                return $validImages;
+            } else {
+                try {
+                    $dbResult = $this->historyService->insertNewTourLocation($sanitizedInput, $validImages);
+                    if ($dbResult) {
+                        header("location: /admin/history/tourLocations");
+                        exit();
+                    } else {
+                        return "Error while adding the artist,Please try again";
+                    }
+                } catch (DatabaseQueryException|uploadFileFailedException $e) {
+                    return $e->getMessage();
+                }
+            }
+        }
+    }
 
-//    public function addHistoryTour()
-//    {
-//        $title = 'Add History Tour';
-//        $this->displaySideBar($title);
-//
-//        if (isset($_POST['addNewHistoryTour'])) {
-//            $eventDate = DateTime::createFromFormat('Y-m-d', $_POST['newTourDate'])->format('Y-m-d');
-//            $language = $_POST['newTourLanguage'];
-//            $timeTable = $_POST['newTourTime'];
-//            $this->historyService->newTourData($eventDate,$language,$timeTable);
-//        }
-//
-//        require_once __DIR__ . '/../../views/AdminPanel/History/AddHistoryTour.php';
-//    }
     public function addHistoryTour()
     {
         $title = 'Add History Tour';

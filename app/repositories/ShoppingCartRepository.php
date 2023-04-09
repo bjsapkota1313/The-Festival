@@ -162,7 +162,6 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
-
     public function getPerformanceOrdersByOrderId($orderId)
     {
         try {
@@ -190,7 +189,6 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
-
     private function createHistoryOrderItemObject($row)
     {
         $historyOrderItem = new HistoryTourOrderItem();
