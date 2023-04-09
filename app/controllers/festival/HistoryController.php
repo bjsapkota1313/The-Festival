@@ -137,15 +137,30 @@ class HistoryController extends EventController
                 $this->shoppingCartService->createOrder($userId);
                 $orderId = $this->shoppingCartService->getOrderByUserId($userId);
             }
-            // Add the tour to the order
-            $newOrderItem = array(
-                "orderId" => $orderId,
-                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
-                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
-                "tourTicketType" => "single",
-                "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
-            );
-            $quantity = $_POST["tourSingleTicket"];
+            if(empty($_POST["tourSingleTicket"])){
+                // Add the tour to the order
+                $newOrderItem = array(
+                    "orderId" => $orderId,
+                    "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+                    "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+                    "tourTicketType" => "family",
+                    "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+                );
+                $quantity = 4;
+                var_dump($newOrderItem);
+            }
+            else{
+                // Add the tour to the order
+                $newOrderItem = array(
+                    "orderId" => $orderId,
+                    "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
+                    "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
+                    "tourTicketType" => "single",
+                    "TourLanguage" => htmlspecialchars($_POST["TourLanguage"]),
+                );
+                $quantity = $_POST["tourSingleTicket"];
+            }
+
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
             $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
             if (!$orderItem) {
@@ -195,7 +210,9 @@ class HistoryController extends EventController
             $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
 
-        if (isset($_POST['payNow'])) {
+        if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
 //            $this->shoppingCartService->updateTotalPrice(13);
 
             // Get payment parameters from form submission
@@ -204,11 +221,11 @@ class HistoryController extends EventController
             $redirectUrl = $_POST["redirectUrl"];
             $webhookUrl = $_POST["webhookUrl"];
 
+            //delete expired payment
+            $this->shoppingCartService->deletePayment();
+
             // Create Mollie payment
-            $payment = $this->shoppingCartService->createPayment($amount, $description, $redirectUrl, $webhookUrl);
-
-            echo "<script>window.location.replace('" . $payment->getCheckoutUrl() . "');</script>";
-
+            $payment = $this->shoppingCartService->createPayment($userId,$orderId,$amount, $description, $redirectUrl, $webhookUrl);
         }
 
         require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
@@ -294,6 +311,9 @@ class HistoryController extends EventController
             $userId = $_SESSION['userId'];
             $this->shoppingCartService->getTotalPriceByUserId($userId);
         }
+    }
+    public function te(){
+        require_once __DIR__ . '/../../views/ShoppingCart/shoppingCart.php';
     }
 }
 //        if (isset($_POST["addTourToCart"])) {
