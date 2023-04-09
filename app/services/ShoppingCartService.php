@@ -107,7 +107,7 @@ class ShoppingCartService
 
     public function getOrderIdByOrderItemId($orderItemId)
     {
-        $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
+       return  $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
     }
 
     public function updateTotalPrice($orderId)
@@ -124,6 +124,14 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
+    public function getPaymentStatusFromMollie($paymentCode){
+        $payment = $this->mollie->payments->get($paymentCode);
+        return $payment->status;
+    }
+    public function getPaymentMethod($paymentCode){
+        $payment = $this->mollie->payments->get($paymentCode);
+        return $payment->method;
+    }
 
     /**
      * @throws ApiException
@@ -132,7 +140,6 @@ class ShoppingCartService
     public function createPayment($userId, $orderId, $amount, $description, $redirectUrl, $webhookUrl)
     {
         $paymentId = $this->shoppingCartRepository->getPaymentIdByOrderId($orderId);
-
         if (!$paymentId) {
             $payment = $this->mollie->payments->create([
                 "amount" => [
@@ -140,42 +147,53 @@ class ShoppingCartService
                     "value" => $amount,
                 ],
                 "description" => "Order #{$userId}",
-                "redirectUrl" => $redirectUrl,
+                "redirectUrl" => $redirectUrl ."?orderID=" . $orderId,
                 "webhookUrl" => $webhookUrl,
             ]);
             $checkoutUrl = $payment->getCheckoutUrl();
-            $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl,);
+            $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl);
         }
         $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
         $checkoutUrl = $this->shoppingCartRepository->getCheckoutUrl($orderId);
-//        var_dump($checkoutUrl);
+////        var_dump($checkoutUrl);
         $test = $this->shoppingCartRepository->getPaymentCode($orderId);
-        var_dump($test);
-
-        $payment = $this->mollie->payments->get($test);
-        $paymenthoho = $test;
 
 
-        if ($payment->isPaid() || $payment->isAuthorized()) {
-            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'paid');
-        } elseif ($payment->isCanceled()) {
-            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'canceled');
-        } elseif ($payment->isExpired()) {
-            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'expired');
-            /*
-             * The order is expired.
-             */
-        } elseif ($payment->isPending()) {
-            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'pending');
-            /*
-             * The order is pending.
-             */
-        }
+        echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
+//
+//
+//        if ($payment->isPaid() || $payment->isAuthorized()) {
+//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'paid');
+//        } elseif ($payment->isCanceled()) {
+//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'canceled');
+//        } elseif ($payment->isExpired()) {
+//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'expired');
+//            /*
+//             * The order is expired.
+//             */
+//        } elseif ($payment->isPending()) {
+//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'pending');
+//            /*
+//             * The order is pending.
+//             */
+//        }
 //        $checkoutUrl = $payment->getCheckoutUrl();
 //        $_SESSION['checkoutUrl'] = $checkoutUrl;
 
-//        echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
 
+
+    }
+    public function updatePaymentStatus($paymentCode, $newPaymentStatus){
+        $this->shoppingCartRepository->updatePaymentStatus($paymentCode, $newPaymentStatus);
+    }
+    public function changePaymentToPaid($paymentCode,$orderId){
+        $this->updatePaymentStatus($paymentCode,"Paid");
+        $paymentMethod= $this->getPaymentMethod($paymentCode);
+        $this->shoppingCartRepository->updatePaymentMethod($orderId,$paymentMethod); //TODO IT here
+
+    }
+    public function getPaymentCodeByOrderId($orderId){
+        return $this->shoppingCartRepository->getPaymentCode($orderId);
     }
 
     public function damn($historyOrder)
