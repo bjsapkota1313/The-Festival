@@ -180,21 +180,7 @@ class HistoryController extends EventController
         $allRestaurantItems="";
         $allPerformanceItems="";
         $totalPrice="";
-//        unset($_SESSION['shoppingCart']);
-//        $_SESSION['shoppingCart'] = array();
-//        if (isset($_SESSION['shoppingCart'])) {
-////            $historyOrderItem = array();
-//            var_dump($_SESSION['shoppingCart']);
-//
-////            $historyOrderItem = $_SESSION['shoppingCart'];
-////            $allItemsInShoppingCarts = $_SESSION['shoppingCart'];
-//            $allItemsInShoppingCarts = $this->shoppingCartService->damn($_SESSION['shoppingCart']);
-////            var_dump($historyOrderItem);
-////            $allItemsInShoppingCarts = $this->shoppingCartService->damn($_SESSION['shoppingCart']);
-////            var_dump($allItemsInShoppingCarts);
-//
-//            $allRestaurantItems = array();
-//        }
+
         if (!empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
 
@@ -207,6 +193,7 @@ class HistoryController extends EventController
             var_dump($orderId);
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
+            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
             $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
 

@@ -60,6 +60,9 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getHistoryTourOrdersByOrderId($orderId);
 
     }
+    public function getPerformanceOrdersByOrderId($orderId){
+        return $this->shoppingCartRepository->getPerformanceOrdersByOrderId($orderId);
+    }
 
     public function getOrderItemIdByTicketId($ticketId, $order)
     {
