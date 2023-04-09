@@ -180,7 +180,6 @@ class HistoryController extends EventController
         $allRestaurantItems="";
         $allPerformanceItems="";
         $totalPrice="";
-
         if (!empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
 
