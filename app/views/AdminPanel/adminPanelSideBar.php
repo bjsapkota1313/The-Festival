@@ -46,7 +46,7 @@
             </ul>
         </li>
         <li>
-            <a href="/admin/homepage/edithomepage" >
+            <a href="/admin/homepage/edithomepage">
                 <i class="fas fa-home-alt" style="color: #ffffff;"></i>
                 <span class="link_name">Edit Home Page</span>
             </a>
@@ -107,22 +107,7 @@
                 <span class="link_name">Info Pages</span>
             </a>
             <ul class="sub-menu blank">
-                <li><a class="link_name" >Manage Info Page</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="iocn-link">
-                <a href="#">
-                    <i class='bx bx-plug'></i>
-                    <span class="link_name">Plugins</span>
-                </a>
-                <i class='bx bxs-chevron-down arrow'></i>
-            </div>
-            <ul class="sub-menu">
-                <li><a class="link_name" href="#">Plugins</a></li>
-                <li><a href="#">UI Face</a></li>
-                <li><a href="#">Pigments</a></li>
-                <li><a href="#">Box Icons</a></li>
+                <li><a class="link_name">Manage Info Page</a></li>
             </ul>
         </li>
         <li>
@@ -155,13 +140,18 @@
                     <img src="https://i.ibb.co/7bQQYkX/avatar.png" alt="profileImg">
                 </div>
                 <div class="name-job">
-                    <div class="profile_name">Bijay</div>
-                    <div class="job">Adminstrator</div>
+                    <div class="profile_name"><?= $loggedUser->getFirstName() ?></div>
+                    <div class="job"><?= Roles::getLabel($loggedUser->getRole()) ?></div>
                 </div>
-                <i class='bx bx-log-out'></i>
+                <form method="POST">
+                    <button type="submit" class="btn" name="btnLogout">
+                        <i class='bx bx-log-out'></i>
+                    </button>
+                </form>
             </div>
         </li>
     </ul>
+
 </div>
 <script>
     let arrow = document.querySelectorAll(".arrow");

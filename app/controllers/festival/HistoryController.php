@@ -102,7 +102,7 @@ class HistoryController extends EventController
                 $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
             }
 //            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-        } else if (isset($_POST["addTourToCart"]) && !empty($_COOKIE['orderId']) && empty($_SESSION['userId'])) {
+        } else if (isset($_POST["addTourToCart"]) && !empty($_COOKIE['orderId']) && empty($_SESSION['loggedUser'])) {
 //            var_dump($_SESSION['orderId']);
 
             $orderId = $this->shoppingCartService->getOrderByOrderId($_COOKIE['orderId']);
