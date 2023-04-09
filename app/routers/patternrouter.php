@@ -52,7 +52,6 @@ class PatternRouter
         $api = false;
         $festival = false; // checking if it is a festival route or not
         $adminPanel = false; // checking if it is an admin panel route or not
-        $shoppingCart = false; // checking if it is a shopping cart route or not
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
             $api = true;
@@ -60,13 +59,9 @@ class PatternRouter
             $uri = substr($uri, 9);
             $festival = true;
         }
-         else if (str_starts_with($uri, "admin/")) {
+        else if (str_starts_with($uri, "admin/")) {
             $uri = substr($uri, 6);
             $adminPanel = true;
-        }
-        else if (str_starts_with($uri, "shoppingCart/")) {
-            $uri = substr($uri, 13);
-            $shoppingCart = true;
         }
 
         // set default controller/method
@@ -105,11 +100,8 @@ class PatternRouter
         else if ($festival) {
             $filename = __DIR__ . '/../controllers/festival/' . $controllerName . '.php';
         }
-        else if($shoppingCart) {
-            $filename = __DIR__ . '/../controllers/shoppingCart/' . $controllerName . '.php';
-        }
         else if ($adminPanel) {
-             $controllerName='Admin'.$controllerName;
+            $controllerName='Admin'.$controllerName;
             $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php'; // makking all admin panel controllers start with Admin
         }
 

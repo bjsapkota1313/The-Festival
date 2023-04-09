@@ -82,7 +82,6 @@ class HistoryController extends EventController
             $orderId = $this->shoppingCartService->createOrder(null);
             setcookie('orderId', $orderId, time() + (86400 * 30), "/");
 
-            var_dump($_SESSION['orderId']);
 //            $order = $this->shoppingCartService->getOrderByOrderId($orderId);
             // Add the tour to the order
             $newOrderItem = array(
@@ -173,7 +172,7 @@ class HistoryController extends EventController
 
         require __DIR__ . '/../../views/festival/History/ticketSelection.php';
     }
-
+    
     public function shoppingCart()
     {
         $allItemsInShoppingCarts="";
@@ -216,7 +215,6 @@ class HistoryController extends EventController
 
         require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
     }
-
     public function getAllHistoryTourLocation()
     {
         $allTourLocation = $this->historyService->getAllHistoryTourLocation();
