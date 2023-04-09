@@ -190,7 +190,7 @@
                                     <form method="post">
                                         <input type="hidden" name="amount" value="<?php echo $this->getTotalPrice() ?>">
                                         <input type="hidden" name="description" value="Test">
-                                        <input type="hidden" name="redirectUrl" value="https://example.com/redirect">
+                                        <input type="hidden" name="redirectUrl" value="http://localhost/festival/ShoppingCart/paymentRedirect">
                                         <input type="hidden" name="webhookUrl" value="https://example.com/webhook">
                                         <button type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice() ?></button>
                                     </form>

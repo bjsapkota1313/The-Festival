@@ -162,6 +162,7 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
+
     public function getPerformanceOrdersByOrderId($orderId)
     {
         try {
@@ -306,18 +307,19 @@ class ShoppingCartRepository extends EventRepository
                                                     FROM orderitem 
                                                     JOIN `Order` ON `Order`.orderid = orderitem.order_id
                                                     WHERE performanceTicketId = :performanceTicketId AND `Order`.orderId = :orderId;
-                                                ;");
+                                                ");
             $stmt->bindValue(':performanceTicketId', $ticketId);
             $stmt->bindValue(':orderId', $order);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result['orderItemId'];
-
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
     }
-    public function getPerformanceTicketIdByPerformanceId($performanceId){
+
+    public function getPerformanceTicketIdByPerformanceId($performanceId)
+    {
         try {
             $stmt = $this->connection->prepare("SELECT performanceTicketId 
                                                     FROM performanceTicket 
@@ -384,7 +386,6 @@ class ShoppingCartRepository extends EventRepository
             $stmt = $this->connection->prepare("UPDATE orderitem SET quantity = :quantity WHERE orderItemId = :orderItemId");
             $stmt->bindParam(':quantity', $quantity);
             $stmt->bindParam(':orderItemId', $orderItemId);
-            var_dump($orderItemId);
 
             $stmt->execute();
             return true;
@@ -429,7 +430,7 @@ class ShoppingCartRepository extends EventRepository
             // Fetch the result
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             // Output the order_id
-            echo $result['order_id'];
+            return $result['order_id'];
 
         } catch (PDOException $e) {
             // Handle the exception here
@@ -465,18 +466,15 @@ class ShoppingCartRepository extends EventRepository
             // Execute the statement
             $stmt->execute();
 
-            // Check if any rows were affected
-            if ($stmt->rowCount() > 0) {
-                echo 'Total price updated successfully!';
-            } else {
-                echo 'No rows were updated.';
-            }
+            // Check if any rows were affecte
         } catch (PDOException $e) {
             echo 'Database error: ' . $e->getMessage();
         }
 
     }
-    public function insertPaymentDetail($userId, $orderId, $status, $paymentCode, $webhookURL){
+
+    public function insertPaymentDetail($userId, $orderId, $status, $paymentCode, $webhookURL)
+    {
         try {
             $stmt = $this->connection->prepare("INSERT INTO payment (userId, orderId, paymentStatus, paymentCode, webhookURL, requestDate) VALUES (:userId, :orderId, :paymentStatus, :paymentCode, :webhookURL, :requestDate)");
             $stmt->bindParam(':userId', $userId);
@@ -486,7 +484,7 @@ class ShoppingCartRepository extends EventRepository
             $stmt->bindParam(':webhookURL', $webhookURL);
             date_default_timezone_set("Europe/Amsterdam");
             $today = date("Y-m-d H:i:s");
-            $stmt->bindParam(':requestDate',$today );
+            $stmt->bindParam(':requestDate', $today);
             $stmt->execute();
             return $this->connection->lastInsertId();
 
@@ -495,8 +493,10 @@ class ShoppingCartRepository extends EventRepository
             echo "Error updating order item: " . $e->getMessage();
         }
     }
-    public function deletePayment(){
-        try{
+
+    public function deletePayment()
+    {
+        try {
             $stmt = $this->connection->prepare("DELETE FROM payment
                                                     WHERE paymentStatus = 'open' AND requestDate < DATE_SUB(NOW(), INTERVAL 15 MINUTE);");
             $stmt->bindParam(':paymentId', $paymentId);
@@ -506,7 +506,9 @@ class ShoppingCartRepository extends EventRepository
             echo "Error updating order item: " . $e->getMessage();
         }
     }
-    public function getPaymentIdByOrderId($orderId){
+
+    public function getPaymentIdByOrderId($orderId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT paymentId FROM payment WHERE orderId = :orderId and paymentStatus = "open"');
             $stmt->bindParam(':orderId', $orderId);
@@ -559,15 +561,17 @@ class ShoppingCartRepository extends EventRepository
         }
     }
 
-    function updatePaymentStatus($orderId, $newPaymentStatus)
+    function updatePaymentStatus($paymentCode, $newPaymentStatus)
     {
 
         $stmt = $this->connection->prepare('UPDATE payment SET paymentStatus = :paymentStatus WHERE paymentCode = :paymentCode');
         $stmt->bindParam(':paymentStatus', $newPaymentStatus);
-        $stmt->bindParam(':paymentCode', $orderId);
+        $stmt->bindParam(':paymentCode', $paymentCode);
         $stmt->execute();
     }
-    public function getOrderStatus($orderId){
+
+    public function getOrderStatus($orderId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT paymentStatus FROM payment WHERE orderId = :orderId');
             $stmt->bindParam(':orderId', $orderId);
@@ -582,7 +586,9 @@ class ShoppingCartRepository extends EventRepository
             throw new Exception('Error: ' . $e->getMessage());
         }
     }
-    public function getCheckoutUrl($orderId){
+
+    public function getCheckoutUrl($orderId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT webhookURL FROM payment WHERE orderId = :orderId and paymentStatus = "open"');
             $stmt->bindParam(':orderId', $orderId);
@@ -597,7 +603,9 @@ class ShoppingCartRepository extends EventRepository
             throw new Exception('Error: ' . $e->getMessage());
         }
     }
-    public function getPaymentCode($orderId){
+
+    public function getPaymentCode($orderId)
+    {
         try {
             $stmt = $this->connection->prepare('SELECT paymentCode FROM payment WHERE orderId = :orderId');
             $stmt->bindParam(':orderId', $orderId);
@@ -610,6 +618,19 @@ class ShoppingCartRepository extends EventRepository
             }
         } catch (PDOException $e) {
             throw new Exception('Error: ' . $e->getMessage());
+        }
+    }
+
+
+    public function updatePaymentMethod($orderID, $paymentMethod)
+    {
+        try {
+            $stmt = $this->connection->prepare('UPDATE payment SET paymentMethod = :paymentMethod WHERE orderId = :orderId');
+            $stmt->bindParam(':paymentMethod', $paymentMethod);
+            $stmt->bindParam(':orderId', $orderID);
+            $stmt->execute();
+        } catch (PDOException $e) {
+
         }
     }
 
