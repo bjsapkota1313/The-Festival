@@ -4,7 +4,6 @@
  *
  * See: https://docs.mollie.com/guides/webhooks
  */
-$shoppingCartService = new ShoppingCartService();
 
 try {
     /*
@@ -13,6 +12,7 @@ try {
      * See: https://www.mollie.com/dashboard/developers/api-keys
      */
     require "../initialize.php";
+
     /*
      * Retrieve the payment's current state.
      */
@@ -22,7 +22,7 @@ try {
     /*
      * Update the order in the database.
      */
-    $shoppingCartService->updateOrderStatus(13, $payment->status);
+    database_write($orderId, $payment->status);
 
     if ($payment->isPaid() && ! $payment->hasRefunds() && ! $payment->hasChargebacks()) {
         /*
@@ -46,7 +46,6 @@ try {
          * The payment is expired.
          */
     } elseif ($payment->isCanceled()) {
-        $shoppingCartService->updateOrderStatus(13, "canceled");
         /*
          * The payment has been canceled.
          */
