@@ -56,6 +56,7 @@ abstract class Controller
     {
         $this->navBarService = new NavBarService();
         $navBarItems = $this->navBarService->getAllNavBarItems();
+//        $allTheEvents = $this->navBarService->AllFestivalEvents();
         require_once __DIR__ . '/../views/HomeNavBar.php';
     }
 

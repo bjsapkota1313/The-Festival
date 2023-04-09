@@ -203,39 +203,112 @@ WHERE historytour.historyTourId = :historyTourId;");
         }
         return $images;
     }
+    public function deleteHistoryTourLocation($selectedLocationId){
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM historytourlocation WHERE historyTourLocationId = :historyTourLocationId");
+            $stmt->bindParam(':historyTourLocationId', $selectedLocationId);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
 
+//    public function insertNewTourLocation($newTourLocation)
+//    {
+//        // Prepare and execute first query
+//        $stmt1 = $this->connection->prepare("INSERT INTO address (streetName, country, houseNumber, postCode, city) VALUES (:streetName, :country, :houseNumber, :postCode, :city)");
+//
+//        $stmt1->bindValue(':streetName', $newTourLocation["tourStreetName"]);
+//        $stmt1->bindValue(':country', $newTourLocation['tourCountry']);
+//        $stmt1->bindValue(':houseNumber', $newTourLocation["tourStreetNumber"]);
+//        $stmt1->bindValue(':postCode', $newTourLocation["tourPostCode"]);
+//        $stmt1->bindValue(':city', $newTourLocation["tourCity"]);
+//
+//        $stmt1->execute();
+//
+//        // Get the last inserted ID from the previous query
+//        $address_id = $this->connection->lastInsertId();
+//
+//        // Prepare and execute second query
+//        $stmt2 = $this->connection->prepare("INSERT INTO location (locationName, addressId) VALUES (:locationName, :addressId)");
+//
+//        $stmt2->bindValue(':locationName', $newTourLocation["tourLocationName"]);
+//        $stmt2->bindValue(':addressId', $address_id);
+//
+//        $stmt2->execute();
+//
+//        // Get the last inserted ID from the previous query
+//        $location_id = $this->connection->lastInsertId();
+//
+//        // Prepare and execute third query
+//        $query = "INSERT INTO historyTourLocation (locationId,locationInformation,historyP1,historyP2) VALUES ( :locationId, :locationInformation,:historyP1,:historyP2)";
+//        $historyLocationId = $this->executeQuery($query, array(':locationId' =>$location_id, ':locationInformation' => $newTourLocation['locationInformation'], ':historyP1' => $newTourLocation['tourDescription1'], ':historyP2' => $newTourLocation['tourDescription2']), false, true);
+//        if (!is_numeric($historyLocationId)) {
+//            throw new DatabaseQueryException("Error while inserting tour location");
+//        }
+//        foreach ($newTourLocation['others'] as $key => $imageId) {
+//            $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $imageId, 'Other');
+//        }
+//        $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $newTourLocation['banner'], 'banner');
+//
+//        return true;
+//    }
     public function insertNewTourLocation($newTourLocation)
     {
-        // Prepare and execute first query
-        $stmt1 = $this->connection->prepare("INSERT INTO address (streetName, country, houseNumber, postCode, city) VALUES (:streetName, :country, :houseNumber, :postCode, :city)");
+        $address_id = $this->insertAddress($newTourLocation);
+        $location_id = $this->insertLocation($newTourLocation, $address_id);
+        $historyLocationId = $this->insertHistoryTourLocation($newTourLocation, $location_id);
+        $this->insertHistoryTourImages($newTourLocation, $historyLocationId);
+        return true;
+    }
 
-        $stmt1->bindValue(':streetName', $newTourLocation["tourStreetName"]);
-        $stmt1->bindValue(':country', $newTourLocation['tourCountry']);
-        $stmt1->bindValue(':houseNumber', $newTourLocation["tourStreetNumber"]);
-        $stmt1->bindValue(':postCode', $newTourLocation["tourPostCode"]);
-        $stmt1->bindValue(':city', $newTourLocation["tourCity"]);
+    private function insertAddress($newTourLocation)
+    {
+        $stmt = $this->connection->prepare("INSERT INTO address (streetName, country, houseNumber, postCode, city) VALUES (:streetName, :country, :houseNumber, :postCode, :city)");
+        $stmt->bindValue(':streetName', $newTourLocation["tourStreetName"]);
+        $stmt->bindValue(':country', $newTourLocation['tourCountry']);
+        $stmt->bindValue(':houseNumber', $newTourLocation["tourStreetNumber"]);
+        $stmt->bindValue(':postCode', $newTourLocation["tourPostCode"]);
+        $stmt->bindValue(':city', $newTourLocation["tourCity"]);
+        $stmt->execute();
+        return $this->connection->lastInsertId();
+    }
 
-        $stmt1->execute();
+    private function insertLocation($newTourLocation, $address_id)
+    {
+        $stmt = $this->connection->prepare("INSERT INTO location (locationName, addressId) VALUES (:locationName, :addressId)");
+        $stmt->bindValue(':locationName', $newTourLocation["tourLocationName"]);
+        $stmt->bindValue(':addressId', $address_id);
+        $stmt->execute();
+        return $this->connection->lastInsertId();
+    }
 
-        // Get the last inserted ID from the previous query
-        $address_id = $this->connection->lastInsertId();
+    private function insertHistoryTourLocation($newTourLocation, $location_id)
+    {
+        $query = "INSERT INTO historyTourLocation (locationId,locationInformation,historyP1,historyP2) VALUES ( :locationId, :locationInformation,:historyP1,:historyP2)";
+        $historyLocationId = $this->executeQuery($query, array(':locationId' =>$location_id, ':locationInformation' => $newTourLocation['locationInformation'], ':historyP1' => $newTourLocation['tourDescription1'], ':historyP2' => $newTourLocation['tourDescription2']), false, true);
+        if (!is_numeric($historyLocationId)) {
+            throw new DatabaseQueryException("Error while inserting tour location");
+        }
+        return $historyLocationId;
+    }
 
-        // Prepare and execute second query
-        $stmt2 = $this->connection->prepare("INSERT INTO location (locationName, addressId) VALUES (:locationName, :addressId)");
+    private function insertHistoryTourImages($newTourLocation, $historyLocationId)
+    {
+        foreach ($newTourLocation['others'] as $key => $imageId) {
+            $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $imageId, 'Other');
+        }
+        $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $newTourLocation['banner'], 'banner');
+    }
 
-        $stmt2->bindValue(':locationName', 'test');
-        $stmt2->bindValue(':addressId', $address_id);
-
-        $stmt2->execute();
-
-        // Get the last inserted ID from the previous query
-        $location_id = $this->connection->lastInsertId();
-
-        // Prepare and execute third query
-        $stmt3 = $this->connection->prepare("INSERT INTO historyTourLocation (locationId) VALUES (:locationId)");
-        $stmt3->bindValue(':locationId', $location_id);
-
-        $stmt3->execute();
+    private function insertHistoryTourImageWithArtistIdAndImageId($historyTourLocationId, $imageId, $tourLocationImage)
+    {
+        $query = "INSERT INTO historyTourImage (historyTourLocationId,imageId,tourLocationImage) VALUES (:historyTourLocationId,:imageId,:tourLocationImage)";
+        if (!$this->executeQuery($query, array(':historyTourLocationId' => $historyTourLocationId, ':imageId' => $imageId, ':tourLocationImage' => $tourLocationImage))) {
+            // since it is an insert query so execute Query will return false if it was not inserted successFully
+            throw new DatabaseQueryException("Error while inserting history location image");
+        } // if it is false we have an error
     }
 
     public function checkEventDateExistence($eventDate)

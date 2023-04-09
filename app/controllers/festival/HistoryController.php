@@ -172,7 +172,7 @@ class HistoryController extends EventController
 
         require __DIR__ . '/../../views/festival/History/ticketSelection.php';
     }
-    
+
     public function shoppingCart()
     {
         $allItemsInShoppingCarts="";

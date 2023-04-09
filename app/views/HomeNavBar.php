@@ -43,8 +43,17 @@
                         <a class="nav-link" style="font-size: 20px;" aria-current="page" href="<?= $navBarItem->getNavBarUrl() ?>"><?=$navBarItem->getNavName() ?></a>
                     </li>
                     <?php }?>
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="btn btn-light dropdown-toggle"  style="font-size: 20px;" href="#" role="button" id="accountSettings" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                            Festivals-->
+<!--                        </a>-->
+<!--                        <ul class="dropdown-menu" id="accountSettingsLinks">-->
+<!--                            --><?php //foreach ( $allTheEvents as $allTheEvent){?>
+<!--                            <li><a class="dropdown-item" href="/manageAccount" id="manageAccountLink">--><?//=$allTheEvent->getEventName?><!--</a></li>-->
+<!--                            --><?php //}?>
+<!--                        </ul>-->
+<!--                    </li>-->
                 </ul>
-
                 <ul class="nav navbar-nav flex-row justify-content-center flex-nowrap">
                     <li class="nav-item">
                         <a href="#" class="btn btn-light" role="button">

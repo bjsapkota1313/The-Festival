@@ -189,35 +189,6 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
-
-    public function getPerformanceOrdersByOrderId($orderId)
-    {
-        try {
-            $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, location.locationName, artist.artistName, performance.totalPrice, performancesession.sessionName
-                                                    FROM orderitem
-                                                    JOIN performanceTicket pt1 ON pt1.performanceTicketId = orderitem.performanceTicketId
-                                                    JOIN performance ON pt1.performanceId = performance.performanceId
-                                                    JOIN participatingartist on participatingartist.performanceId = performance.performanceId
-                                                    JOIN artist ON artist.artistId = participatingartist.artistId
-                                                    JOIN `order` ON `order`.orderId = orderitem.order_id
-                                                    JOIN location ON location.locationId = performance.venueId
-                                                    JOIN performancesession on performancesession.performanceSessionId = performance.SessionId
-                                                    WHERE `order`.orderId = :orderId;");
-            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
-            $stmt->execute();
-            $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $performanceOrderItem = array();
-            foreach ($dbRow as $row) {
-                $performanceOrderItem[] = $this->createPerformanceOrderItemObject($row);
-            }
-            return $performanceOrderItem;
-
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
-
     private function createHistoryOrderItemObject($row)
     {
         $historyOrderItem = new HistoryTourOrderItem();

@@ -19,4 +19,7 @@ class NavBarService
     {
         return $this->navBarRepository->updateNavBarName($navBarName, $id);
     }
+    public function AllFestivalEvents(){
+        return $this->navBarRepository->AllFestivalEvents();
+    }
 }
