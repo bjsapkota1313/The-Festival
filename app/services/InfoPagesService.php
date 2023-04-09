@@ -61,8 +61,11 @@ class InfoPagesService
             }
             $this->navBarService->editNavBarItem($navBarId,$infoPageTitle);
         }
-
         return true;
+    }
+    public function getInfoPageByTitle($title): ?InfoPage
+    {
+        return $this->infoPagesRepository->getInfoPageByTitle($title);
     }
 
 }

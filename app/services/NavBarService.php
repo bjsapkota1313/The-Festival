@@ -46,5 +46,8 @@ class NavBarService
     {
         return $this->navBarRepository->editNavBarItem($id, $navBarName);
     }
+    public function getNavBarIdByTitle($infoPageId){
+        return $this->navBarRepository->getNavBarIdByTitle($infoPageId);
+    }
 
 }

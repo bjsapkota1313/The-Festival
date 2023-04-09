@@ -86,5 +86,16 @@ class NavBarRepository extends Repository
         ];
         return $this->executeQuery($query, $params);
     }
+    public function getNavBarIdByTitle($title){
+        $query = "SELECT navBarItemId FROM navbar WHERE name = :name";
+        $params = [
+            ':name' => $title
+        ];
+        $dbResult = $this->executeQuery($query, $params);
+        if(empty($dbResult)){
+            return null;
+        }
+        return $dbResult[0]['navBarItemId'];
+    }
 
 }

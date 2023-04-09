@@ -87,5 +87,20 @@ class InfoPagesRepository extends Repository
         ];
         $this->executeQuery($query, $params);
     }
+    public function getInfoPageByTitle($title): ?InfoPage
+    {
+        $navBarId = $this->navBarItemService->getNavBarIdByTitle($title);
+        $query="SELECT infoPageId, navBarItemId,pageContent FROM infoPage WHERE navBarItemId = :navBarId";
+        $params = [
+            ':navBarId' => $navBarId
+        ];
+        $dbResult = $this->executeQuery($query, $params);
+        if(empty($dbResult)){
+            return null;
+        }
+        $dbRow = $dbResult[0];
+        $navBarItem = $this->navBarItemService->getNavBarItemById($dbRow['navBarItemId']);
+        return new InfoPage($dbRow['infoPageId'], $navBarItem, $dbRow['pageContent']);
+    }
 
 }
