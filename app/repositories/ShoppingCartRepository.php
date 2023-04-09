@@ -162,6 +162,33 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
+    public function getPerformanceOrdersByOrderId($orderId)
+    {
+        try {
+            $stmt = $this->connection->prepare("SELECT orderItem.orderItemId, orderitem.quantity, location.locationName, artist.artistName, performance.totalPrice, performancesession.sessionName
+                                                    FROM orderitem
+                                                    JOIN performanceTicket pt1 ON pt1.performanceTicketId = orderitem.performanceTicketId
+                                                    JOIN performance ON pt1.performanceId = performance.performanceId
+                                                    JOIN participatingartist on participatingartist.performanceId = performance.performanceId
+                                                    JOIN artist ON artist.artistId = participatingartist.artistId
+                                                    JOIN `order` ON `order`.orderId = orderitem.order_id
+                                                    JOIN location ON location.locationId = performance.venueId
+                                                    JOIN performancesession on performancesession.performanceSessionId = performance.SessionId
+                                                    WHERE `order`.orderId = :orderId;");
+            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
+            $stmt->execute();
+            $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $performanceOrderItem = array();
+            foreach ($dbRow as $row) {
+                $performanceOrderItem[] = $this->createPerformanceOrderItemObject($row);
+            }
+            return $performanceOrderItem;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
 
     private function createHistoryOrderItemObject($row)
     {
@@ -307,6 +334,23 @@ class ShoppingCartRepository extends EventRepository
             return null;
         }
     }
+//    public function getPerformanceTicketIdByPerformanceId($performanceId){
+//        try {
+//            $stmt = $this->connection->prepare("SELECT performanceTicketId
+//                                                    FROM performanceTicket
+//                                                    WHERE performanceId = :performanceId;");
+//            $stmt->bindValue(':performanceId', $performanceId);
+//            $stmt->execute();
+//            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+//            return $result['performanceTicketId'];
+//
+//        } catch (PDOException $e) {
+//            // Handle the exception here
+//            // For example, you could log the error message and return null
+//            error_log("Error fetching order for user ID $userId: " . $e->getMessage());
+//            return null;
+//        }
+//    }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
@@ -408,7 +452,7 @@ class ShoppingCartRepository extends EventRepository
                             FROM orderItem
                             LEFT JOIN historytourticket ON orderItem.historyTourTicketId = historytourticket.id
                             LEFT JOIN restaurantticket ON orderItem.restaurantTicketId = restaurantticket.restaurantTicketId
-                            LEFT JOIN performanceticket ON orderItem.performanceTicketId = performanceticket.performanceTicket
+                            LEFT JOIN performanceticket ON orderItem.performanceTicketId = performanceticket.performanceTicketId
                             LEFT JOIN performance on performance.performanceId = performanceticket.performanceId
                             WHERE orderItem.order_id = :orderId
                           )
@@ -431,6 +475,52 @@ class ShoppingCartRepository extends EventRepository
             echo 'Database error: ' . $e->getMessage();
         }
 
+    }
+    public function insertPaymentDetail($userId, $orderId, $status, $paymentCode, $webhookURL){
+        try {
+            $stmt = $this->connection->prepare("INSERT INTO payment (userId, orderId, paymentStatus, paymentCode, webhookURL, requestDate) VALUES (:userId, :orderId, :paymentStatus, :paymentCode, :webhookURL, :requestDate)");
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->bindParam(':paymentStatus', $status);
+            $stmt->bindParam(':paymentCode', $paymentCode);
+            $stmt->bindParam(':webhookURL', $webhookURL);
+            date_default_timezone_set("Europe/Amsterdam");
+            $today = date("Y-m-d H:i:s");
+            $stmt->bindParam(':requestDate',$today );
+            $stmt->execute();
+            return $this->connection->lastInsertId();
+
+        } catch (PDOException $e) {
+            // Handle the error
+            echo "Error updating order item: " . $e->getMessage();
+        }
+    }
+    public function deletePayment(){
+        try{
+            $stmt = $this->connection->prepare("DELETE FROM payment
+                                                    WHERE paymentStatus = 'open' AND requestDate < DATE_SUB(NOW(), INTERVAL 15 MINUTE);");
+            $stmt->bindParam(':paymentId', $paymentId);
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // Handle the error
+            echo "Error updating order item: " . $e->getMessage();
+        }
+    }
+    public function getPaymentIdByOrderId($orderId){
+        try {
+            $stmt = $this->connection->prepare('SELECT paymentId FROM payment WHERE orderId = :orderId and paymentStatus = "open"');
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['paymentId'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
     }
 
     public function getTotalPriceByUserId($userId)
@@ -469,16 +559,58 @@ class ShoppingCartRepository extends EventRepository
         }
     }
 
-    function updateOrderStatus($orderId, $newOrderStatus)
+    function updatePaymentStatus($orderId, $newPaymentStatus)
     {
 
-        $stmt = $this->connection->prepare('UPDATE `Order` SET orderStatus = :orderStatus WHERE orderId = :orderId');
-        $orderId = 13;
-        $stmt->bindParam(':orderStatus', $newOrderStatus);
-        $stmt->bindParam(':orderId', $orderId);
+        $stmt = $this->connection->prepare('UPDATE payment SET paymentStatus = :paymentStatus WHERE paymentCode = :paymentCode');
+        $stmt->bindParam(':paymentStatus', $newPaymentStatus);
+        $stmt->bindParam(':paymentCode', $orderId);
         $stmt->execute();
-
-
+    }
+    public function getOrderStatus($orderId){
+        try {
+            $stmt = $this->connection->prepare('SELECT paymentStatus FROM payment WHERE orderId = :orderId');
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['paymentStatus'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception('Error: ' . $e->getMessage());
+        }
+    }
+    public function getCheckoutUrl($orderId){
+        try {
+            $stmt = $this->connection->prepare('SELECT webhookURL FROM payment WHERE orderId = :orderId and paymentStatus = "open"');
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['webhookURL'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception('Error: ' . $e->getMessage());
+        }
+    }
+    public function getPaymentCode($orderId){
+        try {
+            $stmt = $this->connection->prepare('SELECT paymentCode FROM payment WHERE orderId = :orderId');
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return $row['paymentCode'];
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            throw new Exception('Error: ' . $e->getMessage());
+        }
     }
 
 }

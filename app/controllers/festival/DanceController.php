@@ -94,10 +94,47 @@ class DanceController extends eventController
         }
         return $name;
     }
-
     public function ticketSelection()
     {
-        if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) { // check if button pressed and user has an account
+        if(isset($_POST['addPerformanceToCart']) && empty($_SESSION['userId']) && empty($_COOKIE['orderId'])){
+            $newOrderId = $this->shoppingCartService->createOrder(null);
+            setcookie('orderId', $newOrderId, time() + (86400 * 30), "/");
+            $orderId = $this->shoppingCartService->getOrderByOrderId($newOrderId); // get orderId by user Id
+
+            $performanceId = $_POST['performanceId']; // passed performanceId from ticket selection
+            $performanceTicketId = $this->shoppingCartService->getPerformanceTicketIdByPerformanceId($performanceId); // get performanceTicketId having performance Id
+            $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
+//            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+            $quantity = $_POST['NoOfTickets'];
+
+            if (!$orderItem) {
+                // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId
+                $this->shoppingCartService->createPerformanceOrderItem($orderId, $performanceTicketId, $quantity);
+            } else {
+                // if user already has same performance ticket in the shopping cart, just update quantity
+                $this->shoppingCartService->updatePerformanceOrderItemByTicketId($performanceTicketId, $quantity);
+            }
+
+            header('Location: /festival/history/shoppingCart');
+        }
+        else if(isset($_POST['addPerformanceToCart']) && !empty($_COOKIE['orderId']) && empty($_SESSION['userId'])){
+            $orderId = $this->shoppingCartService->getOrderByOrderId($_COOKIE['orderId']);
+            $performanceId = $_POST['performanceId']; // passed performanceId from ticket selection
+            $performanceTicketId = $this->shoppingCartService->getPerformanceTicketIdByPerformanceId($performanceId); // get performanceTicketId having performance Id
+            $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
+//            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
+            $quantity = $_POST['NoOfTickets'];
+
+            if (!$orderItem) {
+                // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId
+                $this->shoppingCartService->createPerformanceOrderItem($orderId, $performanceTicketId, $quantity);
+            } else {
+                // if user already has same performance ticket in the shopping cart, just update quantity
+                $this->shoppingCartService->updatePerformanceOrderItemByTicketId($performanceTicketId, $quantity);
+            }
+            header('Location: /festival/history/shoppingCart');
+        }
+        else if (isset($_POST['addPerformanceToCart']) && !empty($_SESSION['userId'])) { // check if button pressed and user has an account
             $userId = $_SESSION['userId'];
             $orderId = $this->shoppingCartService->getOrderByUserId($userId); // get orderId by user Id
             // Check if there is an existing order for the user
@@ -121,6 +158,6 @@ class DanceController extends eventController
             }
             header('Location: /festival/history/shoppingCart');
         }
-
     }
+    
 }

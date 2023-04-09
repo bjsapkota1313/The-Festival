@@ -1,5 +1,6 @@
 <?php
 
+use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 
 require_once __DIR__ . '/../repositories/ShoppingCartRepository.php';
@@ -12,11 +13,14 @@ class ShoppingCartService
     private $mollie;
 
 
+    /**
+     * @throws ApiException
+     */
     public function __construct()
     {
         $this->shoppingCartRepository = new ShoppingCartRepository();
         $this->mollie = new MollieApiClient();
-        $this->mollie->setApiKey('test_Ds3fz4U9vNKxzCfVvVHJT2sgW5ECD8');
+        $this->mollie->setApiKey('test_pWakjcMGpJvgppb92Jb7D2NvvDhB5n');
     }
 
     public function getOrderByUserId($userId)
@@ -38,7 +42,9 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->createOrderItem($orderId, $ticketId, $quantity);
     }
-    public function createPerformanceOrderItem($orderId, $ticketId, $quantity){
+
+    public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
+    {
         return $this->shoppingCartRepository->createPerformanceOrderItem($orderId, $ticketId, $quantity);
     }
 
@@ -48,28 +54,39 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getHistoryTourOrdersByUserId($userId);
 
     }
-    public function getHistoryTourOrdersByOrderId($orderId){
+
+    public function getHistoryTourOrdersByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getHistoryTourOrdersByOrderId($orderId);
 
     }
-
-    public function getOrderItemIdByTicketId($ticketId,$order)
-    {
-        return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId,$order);
+    public function getPerformanceOrdersByOrderId($orderId){
+        return $this->shoppingCartRepository->getPerformanceOrdersByOrderId($orderId);
     }
-    public function getPerformanceOrderItemIdByTicketId($ticketId,$order){
-        return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId,$order);
+
+    public function getOrderItemIdByTicketId($ticketId, $order)
+    {
+        return $this->shoppingCartRepository->getOrderItemIdByTicketId($ticketId, $order);
+    }
+
+    public function getPerformanceOrderItemIdByTicketId($ticketId, $order)
+    {
+        return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId, $order);
     }
 
     public function updateOrderItemByTicketId($ticketId, $quantity)
     {
         return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
     }
-    public function getPerformanceTicketIdByPerformanceId($performanceId){
+
+    public function getPerformanceTicketIdByPerformanceId($performanceId)
+    {
         return $this->shoppingCartRepository->getPerformanceTicketIdByPerformanceId($performanceId);
 
     }
-    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity){
+
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity)
+    {
         return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity);
     }
 
@@ -102,24 +119,63 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getTotalPriceByUserId($userId);
     }
+
     public function getTotalPriceByOrderId($orderId)
     {
         return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
 
-    public function createPayment($amount, $description, $redirectUrl, $webhookUrl)
+    /**
+     * @throws ApiException
+     * @throws Exception
+     */
+    public function createPayment($userId, $orderId, $amount, $description, $redirectUrl, $webhookUrl)
     {
-        $payment = $this->mollie->payments->create([
-            "amount" => [
-                "currency" => "EUR",
-                "value" => $amount
-            ],
-            "description" => $description,
-            "redirectUrl" => $redirectUrl,
-            "webhookUrl" => $webhookUrl
-        ]);
+        $paymentId = $this->shoppingCartRepository->getPaymentIdByOrderId($orderId);
 
-        return $payment;
+        if (!$paymentId) {
+            $payment = $this->mollie->payments->create([
+                "amount" => [
+                    "currency" => "EUR",
+                    "value" => $amount,
+                ],
+                "description" => "Order #{$userId}",
+                "redirectUrl" => $redirectUrl,
+                "webhookUrl" => $webhookUrl,
+            ]);
+            $checkoutUrl = $payment->getCheckoutUrl();
+            $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl,);
+        }
+        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
+        $checkoutUrl = $this->shoppingCartRepository->getCheckoutUrl($orderId);
+//        var_dump($checkoutUrl);
+        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
+        var_dump($test);
+
+        $payment = $this->mollie->payments->get($test);
+        $paymenthoho = $test;
+
+
+        if ($payment->isPaid() || $payment->isAuthorized()) {
+            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'paid');
+        } elseif ($payment->isCanceled()) {
+            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'canceled');
+        } elseif ($payment->isExpired()) {
+            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'expired');
+            /*
+             * The order is expired.
+             */
+        } elseif ($payment->isPending()) {
+            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'pending');
+            /*
+             * The order is pending.
+             */
+        }
+//        $checkoutUrl = $payment->getCheckoutUrl();
+//        $_SESSION['checkoutUrl'] = $checkoutUrl;
+
+//        echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
+
     }
 
     public function damn($historyOrder)
@@ -134,11 +190,12 @@ class ShoppingCartService
     public function deleteSessionShoppingCartItem($historyOrder, $selectedId)
     {
         foreach ($historyOrder as $item) {
-            if($selectedId == $item->getOrderItemId()){
+            if ($selectedId == $item->getOrderItemId()) {
                 unset($historyOrder[$item]);
             }
         }
     }
+
     public function updateSessionShoppingCartItem($historyOrder, $selectedId, $quantity)
     {
         foreach ($historyOrder as $item) {
@@ -165,13 +222,22 @@ class ShoppingCartService
 
         return $historyOrderItem;
     }
-    public function getOrderByOrderId($orderId){
+
+    public function getOrderByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getOrderByOrderId($orderId);
     }
-    public function updateOrderStatus($orderId, $newOrderStatus) {
-        return $this->shoppingCartRepository->updateOrderStatus($orderId,$newOrderStatus);
+
+    public function updateOrderStatus($orderId, $newOrderStatus)
+    {
+        return $this->shoppingCartRepository->updateOrderStatus($orderId, $newOrderStatus);
     }
-    public function getPerformanceOrdersByUserId($userId){
+    public function deletePayment(){
+        return $this->shoppingCartRepository->deletePayment();
+    }
+
+    public function getPerformanceOrdersByUserId($userId)
+    {
         return $this->shoppingCartRepository->getPerformanceOrdersByUserId($userId);
     }
 //    public function createShoppingCartSession($historyOrder){
