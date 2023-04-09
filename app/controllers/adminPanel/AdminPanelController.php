@@ -1,4 +1,7 @@
 <?php
+
+use JetBrains\PhpStorm\NoReturn;
+
 require_once __DIR__.'/../controller.php';
 require_once __DIR__.'/../../services/EventService.php';
  abstract class AdminPanelController extends Controller
@@ -41,7 +44,7 @@ require_once __DIR__.'/../../services/EventService.php';
          $directory = strtolower(substr(get_class($this), 5, -10));
          return "/image/Festival/$directory/".$imageName;
      }
-     private function displayUnauthorisedAccess(): void
+     #[NoReturn] protected function displayUnauthorisedAccess(): void
      {
          require_once __DIR__ ."/../../views/AdminPanel/NotAllowedPage.php";
          exit();  // exit the controller if user is not admin

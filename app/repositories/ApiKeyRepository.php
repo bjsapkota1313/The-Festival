@@ -9,7 +9,7 @@ class ApiKeyRepository extends Repository
         parent::__construct();
     }
 
-    public function getAllApiKeys()
+    public function getAllApiKeys(): ?array
     {
         $query = "SELECT apikey.apiKeyId,apikey.key,apikey.UsedBy,apikey.purpose, apikey.createdOn FROM apikey ";
         $result = $this->executeQuery($query);
@@ -27,10 +27,7 @@ class ApiKeyRepository extends Repository
     {
         $query = "SELECT apikey.apiKeyId FROM apikey WHERE apikey.key = :key";
         $result = $this->executeQuery($query, [':key' => $key]);
-        if (!empty($result)) {
-            return true;
-        }
-        return false;
+        return !empty($result);
     }
 
     public function createApiKey($data)
