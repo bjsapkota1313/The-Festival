@@ -19,4 +19,32 @@ class NavBarService
     {
         return $this->navBarRepository->updateNavBarName($navBarName, $id);
     }
+    public function getNavBarItemById($id){
+        return $this->navBarRepository->getNavBarItemById($id);
+    }
+
+    /**
+     * @throws InternalErrorException
+     */
+    public function addNavBarAndGetId($navBarName): int
+    {
+        return $this->navBarRepository->addNavBarAndGetId($navBarName);
+    }
+    public function doesNavBarItemExist($navBarName): bool
+    {
+        return $this->navBarRepository->doesNavBarItemExist($navBarName);
+    }
+    public function deleteNavBarItem($id): bool
+    {
+        return $this->navBarRepository->deleteNavBarItem($id);
+    }
+    public function hasNavBarSameDetails( $id,$navBarName): bool
+    {
+        return $this->navBarRepository->hasNavBarSameDetails( $id,$navBarName);
+    }
+    public function editNavBarItem($id,$navBarName): bool
+    {
+        return $this->navBarRepository->editNavBarItem($id, $navBarName);
+    }
+
 }

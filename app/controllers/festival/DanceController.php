@@ -46,7 +46,7 @@ class DanceController extends eventController
                 if (empty($selectedArtist)) {
                     $this->display404PageNotFound();
                 }
-                $this->displayNavBar($selectedArtist->getArtistName());
+                $this->displayNavBar($selectedArtist->getArtistName(),"/css/festival/Dance/ArtistPage.css");
                 try {
                     $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistId, 6);
                     if (empty($artistAlbums)) {
