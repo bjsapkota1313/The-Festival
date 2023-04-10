@@ -184,6 +184,11 @@
                                         <input type="hidden" name="webhookUrl" value="https://example.com/webhook">
                                         <button id="payButton" type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice(); ?></button>
                                     </form>
+                                    <?php if (!empty($errorMessage)): ?>
+                                        <div class="alert alert-danger" role="alert">
+                                            <?php echo $errorMessage; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>

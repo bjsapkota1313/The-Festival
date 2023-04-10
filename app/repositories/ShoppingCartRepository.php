@@ -64,7 +64,7 @@ class ShoppingCartRepository extends EventRepository
     public function decreasePerformanceTicketQuantityByOrderId($orderId){
         try {
             $stmt = $this->connection->prepare("UPDATE performance 
-                                                        SET totalTickets = totalTickets - (
+                                                        SET availableTickets = availableTickets - (
                                                         SELECT COUNT(orderitem.performanceTicketId)
                                                         FROM performanceticket
                                                         JOIN orderitem ON orderitem.performanceTicketId = performanceticket.performanceTicketId
@@ -145,11 +145,15 @@ class ShoppingCartRepository extends EventRepository
 
     public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
-        $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, historyTourTicketId, quantity, vatId) VALUES (:order_id, :historyTourTicketId, :quantity, :vatId)");
+                // Check if there are enough available tickets
+        $availableTickets = $this->checkTourAvailableTicket($ticketId);
+        if ($availableTickets === null || $availableTickets < $quantity) {
+            throw new Exception('Not enough available tickets. Only ' . $availableTickets . ' tickets available.');
+        }
+        $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, historyTourTicketId, quantity) VALUES (:order_id, :historyTourTicketId, :quantity)");
         $stmt->bindParam(':order_id', $orderId);
         $stmt->bindParam(':historyTourTicketId', $ticketId, PDO::PARAM_INT);
         $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-        $stmt->bindValue(':vatId', 1);
 
         if ($stmt->execute()) {
             $this->updateTotalPrice($orderId);
@@ -161,11 +165,14 @@ class ShoppingCartRepository extends EventRepository
 
     public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
     {
-        $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, performanceTicketId, quantity, vatId) VALUES (:order_id, :performanceTicketId, :quantity, :vatId)");
+        $availableTickets = $this->checkPerformanceAvailableTicket($ticketId);
+        if ($availableTickets === null || $availableTickets < $quantity) {
+            throw new Exception('Not enough available tickets. Only ' . $availableTickets . ' tickets available.');
+        }
+        $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, performanceTicketId, quantity) VALUES (:order_id, :performanceTicketId, :quantity)");
         $stmt->bindParam(':order_id', $orderId);
         $stmt->bindParam(':performanceTicketId', $ticketId, PDO::PARAM_INT);
         $stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
-        $stmt->bindValue(':vatId', 2);
 
         if ($stmt->execute()) {
             $this->updateTotalPrice($orderId);
@@ -447,11 +454,11 @@ class ShoppingCartRepository extends EventRepository
 //    }
     public function updateTourOrderItemByTicketId($ticketId, $quantity)
     {
-//        // Check if there are enough available tickets
-//        $availableTickets = $this->checkTourAvailableTicket($ticketId);
-//        if ($availableTickets === null || $availableTickets < $quantity) {
-//            throw new Exception('Not enough available tickets.');
-//        }
+        // Check if there are enough available tickets
+        $availableTickets = $this->checkTourAvailableTicket($ticketId);
+        if ($availableTickets === null || $availableTickets < $quantity) {
+            throw new Exception('Not enough available tickets.');
+        }
 
         try {
             $stmt = $this->connection->prepare("UPDATE orderItem SET quantity = quantity + :quantity WHERE historyTourTicketId = :historyTourTicketId");
@@ -664,15 +671,14 @@ class ShoppingCartRepository extends EventRepository
     }
     public function checkTourAvailableTicket($ticketId){
         try {
-            $stmt = $this->connection->prepare('select distinct availablehistorytour
+            $stmt = $this->connection->prepare('select availablehistorytour
                                                     from historytour
                                                     JOIN historytourticket on historytourticket.historyTourId = historytour.historyTourId
-                                                    JOIN orderitem on orderitem.historyTourTicketId = historytourticket.id
-                                                    WHERE orderitem.historytourticketId = :historytourticketId;');
-            $stmt->bindParam(':historytourticketId', $ticketId);
+                                                    where historytourticket.id = :id;');
+            $stmt->bindParam(':id', $ticketId);
             $stmt->execute();
 
-            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
                 return $row['availablehistorytour'];
             } else {
@@ -684,15 +690,14 @@ class ShoppingCartRepository extends EventRepository
     }
     public function checkPerformanceAvailableTicket($ticketId){
         try {
-            $stmt = $this->connection->prepare('select DISTINCT availableTickets
+            $stmt = $this->connection->prepare('select availableTickets
                                                     from performance
                                                     JOIN performanceticket on performanceticket.performanceTicketId = performance.performanceId
-                                                    JOIN orderitem on orderitem.performanceTicketId = performanceticket.performanceTicketId
-                                                    WHERE orderitem.performanceTicketId = :performanceTicketId;');
+                                                    WHERE performanceticket.performanceTicketId = :performanceTicketId;');
             $stmt->bindParam(':performanceTicketId', $ticketId);
             $stmt->execute();
 
-            $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
                 return $row['availableTickets'];
             } else {

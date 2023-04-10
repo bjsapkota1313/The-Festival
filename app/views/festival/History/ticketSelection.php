@@ -3,7 +3,12 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h2 class="panel-title text-center">Book your tour</h2>
-<!--                <h3 class="panel-title text-center">dd</h3>-->
+                <?php if (!empty($errorMessage)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $errorMessage; ?>
+                    </div>
+                <?php endif; ?>
+                <!--                <h3 class="panel-title text-center">dd</h3>-->
             </div>
             <div class="panel-body">
                 <form method="POST">

@@ -41,6 +41,7 @@ class ShoppingCartService
     public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
 //        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
+//        var_dump($ticketId);
 //        if($availableQuantity < $quantity){
 //            return false;
 //        }
@@ -64,7 +65,9 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getHistoryTourOrdersByOrderId($orderId);
 
     }
-    public function getPerformanceOrdersByOrderId($orderId){
+
+    public function getPerformanceOrdersByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getPerformanceOrdersByOrderId($orderId);
     }
 
@@ -89,9 +92,9 @@ class ShoppingCartService
 
     }
 
-    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity,$orderId)
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity, $orderId)
     {
-        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity,$orderId);
+        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity, $orderId);
     }
 
     public function updateQuantity($itemId, $quantity)
@@ -111,7 +114,7 @@ class ShoppingCartService
 
     public function getOrderIdByOrderItemId($orderItemId)
     {
-       return  $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
+        return $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
     }
 
     public function updateTotalPrice($orderId)
@@ -128,15 +131,21 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
-    public function getPaymentStatusFromMollie($paymentCode){
+
+    public function getPaymentStatusFromMollie($paymentCode)
+    {
         $payment = $this->mollie->payments->get($paymentCode);
         return $payment->status;
     }
-    public function getPaymentMethod($paymentCode){
+
+    public function getPaymentMethod($paymentCode)
+    {
         $payment = $this->mollie->payments->get($paymentCode);
         return $payment->method;
     }
-    public function checkTourAvailableTicket($orderId){
+
+    public function checkTourAvailableTicket($orderId)
+    {
         return $this->shoppingCartRepository->checkTourAvailableTicket($orderId);
     }
 
@@ -154,7 +163,7 @@ class ShoppingCartService
                     "value" => $amount,
                 ],
                 "description" => "Order #{$userId}",
-                "redirectUrl" => $redirectUrl ."?orderID=" . $orderId,
+                "redirectUrl" => $redirectUrl . "?orderID=" . $orderId,
                 "webhookUrl" => $webhookUrl,
             ]);
             $checkoutUrl = $payment->getCheckoutUrl();
@@ -169,18 +178,24 @@ class ShoppingCartService
         echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
 
     }
-    public function updatePaymentStatus($paymentCode, $newPaymentStatus){
+
+    public function updatePaymentStatus($paymentCode, $newPaymentStatus)
+    {
         $this->shoppingCartRepository->updatePaymentStatus($paymentCode, $newPaymentStatus);
     }
-    public function changePaymentToPaid($paymentCode,$orderId){
-        $this->updatePaymentStatus($paymentCode,"Paid");
-        $paymentMethod= $this->getPaymentMethod($paymentCode);
-        $this->shoppingCartRepository->updatePaymentMethod($orderId,$paymentMethod); //TODO IT here
+
+    public function changePaymentToPaid($paymentCode, $orderId)
+    {
+        $this->updatePaymentStatus($paymentCode, "Paid");
+        $paymentMethod = $this->getPaymentMethod($paymentCode);
+        $this->shoppingCartRepository->updatePaymentMethod($orderId, $paymentMethod); //TODO IT here
         $this->shoppingCartRepository->closeOrder($orderId);
         $this->shoppingCartRepository->decreasePerformanceTicketQuantityByOrderId($orderId);
         $this->shoppingCartRepository->decreaseHistoryTourTicketQuantityByOrderId($orderId);
     }
-    public function getPaymentCodeByOrderId($orderId){
+
+    public function getPaymentCodeByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getPaymentCode($orderId);
     }
 
@@ -238,7 +253,9 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->updateOrderStatus($orderId, $newOrderStatus);
     }
-    public function deletePayment(){
+
+    public function deletePayment()
+    {
         return $this->shoppingCartRepository->deletePayment();
     }
 

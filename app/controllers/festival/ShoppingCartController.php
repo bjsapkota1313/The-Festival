@@ -73,7 +73,7 @@ class ShoppingCartController extends EventController
             $paymentStatus = $this->shoppingCartService->getPaymentStatusFromMollie($paymentCode);
             if ($paymentStatus == "paid") {
                 $this->shoppingCartService->changePaymentToPaid($paymentCode, $orderId);
-//                include __DIR__ . '/../../views/ShoppingCart/paymentSuccess.php';
+                include __DIR__ . '/../../views/ShoppingCart/paymentSuccess.php';
             } else {
                 include __DIR__ . '/../../views/ShoppingCart/paymentError.php.php';
             }
@@ -130,8 +130,11 @@ class ShoppingCartController extends EventController
             $orderId = $_SESSION['orderId'];
             $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
+        else if(empty($totalPrice)){
+            $totalPrice="";
+        }
 //        header('Content-Type: application/json');
-        echo json_encode($totalPrice);
+        echo $totalPrice;
 //        var_dump($totalPrice);
 
 //        return $totalPrice;
