@@ -13,8 +13,6 @@
             </div>
             <div class="panel-body">
                 <form method="POST">
-                    <input id="autocomplete" placeholder="Enter Tour address" onFocus="geolocate()" type="text"
-                           class="form-control">
                     <div id="address">
                         <div class="row">
                             <div class="col-md-6">
@@ -39,16 +37,6 @@
                             <div class="col-md-6">
                                 <label class="form-label" for="tourTime">Tour Time</label>
                                 <input type="time" name="newTourTime" id="newTourTime" class="form-control" onchange="updateDuration()">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="control-label">Post Code</label>
-                                <input class="form-control" id="postal_code" name="tourPostCode"disabled="true">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">Country</label>
-                                <input class="form-control" id="country" name="tourCountry" disabled="true">
                             </div>
                         </div>
                     </div>

@@ -74,10 +74,9 @@
                 <i class='bx bxs-chevron-down arrow'></i>
             </div>
             <ul class="sub-menu">
-                <li><a class="link_name" href="#">Posts</a></li>
-                <li><a href="#">Web Design</a></li>
-                <li><a href="#">Login Form</a></li>
-                <li><a href="#">Card Design</a></li>
+                <li><a class="link_name" href="#">Category</a></li>
+                <li><a href="/admin/history/historyTours">History Tour</a></li>
+                <li><a href="/admin/history/tourLocations">Tour Location</a></li>
             </ul>
         </li>
         <li>

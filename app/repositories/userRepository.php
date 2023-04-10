@@ -181,7 +181,7 @@ class UserRepository extends Repository
         }
     }
 
-    public function registerUser($newUser)
+    public function registerUser($newUser, $orderId)
     {
         try {
             $stmt = $this->connection->prepare("INSERT into User (firstName, lastName, dateOfBirth, email, password, picture, role) VALUES (:firstName, :lastName, :dateOfBirth, :email, :password, :picture, :role)");
@@ -193,11 +193,24 @@ class UserRepository extends Repository
             $stmt->bindValue(':picture', $newUser['picture']);
             $stmt->bindValue(':role', Roles::getLabel($newUser['role']));
             $stmt->execute();
+            $this->updateOrderTableWithNewUserId($this->connection->lastInsertId(), $orderId);
+        } catch (PDOException $e) {
+            echo $e;
+        }
+    }
+    public function updateOrderTableWithNewUserId($userId, $orderId){
+        try {
+            $stmt = $this->connection->prepare("UPDATE `Order` SET user_id = :user_id WHERE orderId = :orderId");
+            $stmt->bindValue(':user_id', $userId);
+            $stmt->bindValue(':orderId', $orderId);
+            $stmt->execute();
             if ($stmt->rowCount() == 0) {
                 return false;
             }
-            return true;
-
+            else{
+                unset($_SESSION['orderId']); // expire the session variable
+                return true;
+            }
         } catch (PDOException $e) {
             echo $e;
         }

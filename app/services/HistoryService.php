@@ -166,9 +166,9 @@ class HistoryService
         return $languageId;
     }
 
-    public function deleteTest($selectedTourId)
+    public function deleteHistoryTour($selectedTourId)
     {
-        $this->repository2->deleteTest($selectedTourId);
+        $this->repository2->deleteHistoryTour($selectedTourId);
     }
 
     public function updateHistoryTourByTourId($selectedTourId, $updateHistoryTour)

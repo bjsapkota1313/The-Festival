@@ -80,7 +80,7 @@ class UserService
         return $this->repository->getUserPictureById($id);
     }
 
-    public function registerUser($newUser): bool
+    public function registerUser($newUser,$orderId)
     {
         $plainPassword = $newUser['password'];
         $newUser['password'] = $this->hashPassword($plainPassword);
@@ -90,7 +90,7 @@ class UserService
         } else {
             $newUser['picture'] = DEFAULT_AVATAR; // default image
         }
-        return $this->repository->registerUser($newUser);
+        $this->repository->registerUser($newUser,$orderId);
     }
 
     public function checkUserExistenceByEmail($email)
@@ -112,6 +112,22 @@ class UserService
     public function deleteDataForgotPassword($email, $tokenExpiration): void
     {
         $this->repository->deleteDataForgotPassword($email, $tokenExpiration);
+    }
+    public function captchaVerification(&$systemMessage)
+    {
+        $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
+        $response = $_POST['g-recaptcha-response'];
+        $remoteip = $_SERVER['REMOTE_ADDR'];
+        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
+        $data = file_get_contents($url);
+        $row = json_decode($data);
+        if ($row->success== "true") {
+            return true;
+//            $this->registerValidUser($systemMessage);
+        } else {
+            $systemMessage = "you are a robot";
+            return false;
+        }
     }
 
     /**

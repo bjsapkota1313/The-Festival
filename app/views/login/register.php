@@ -91,12 +91,11 @@
                                         Register
                                     </button>
                                 </div>
-                                <div class="d-flex flex-row align-items-center mb-4">
-                                    <div class="form-outline flex-fill mb-0">
-                                        <label class="form-label"
-                                               for="form3Example4c"><?php echo $systemMessage; ?></label>
+                                <?php if (!empty($errorMessage)) : ?>
+                                    <div class="alert alert-danger" role="alert">
+                                        <?php echo $errorMessage; ?>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </form>
                         </div>
                     </div>

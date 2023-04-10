@@ -57,6 +57,11 @@
                     <button type="submit" class=" btn-AddToCart" name="addPerformanceToCart"
                     >Add to cart  <i class="fa-solid fa-circle-arrow-right"></i>
                     </button>
+                    <?php if (!empty($errorMessage)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $errorMessage; ?>
+                    </div>
+                    <?php endif; ?>
                     <style>
                         .btn-AddToCart {
                             width: 330px;

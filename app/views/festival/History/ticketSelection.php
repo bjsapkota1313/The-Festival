@@ -3,7 +3,12 @@
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h2 class="panel-title text-center">Book your tour</h2>
-<!--                <h3 class="panel-title text-center">dd</h3>-->
+                <?php if (!empty($errorMessage)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $errorMessage; ?>
+                    </div>
+                <?php endif; ?>
+                <!--                <h3 class="panel-title text-center">dd</h3>-->
             </div>
             <div class="panel-body">
                 <form method="POST">
@@ -59,12 +64,8 @@
                             <label class="control-label">Buy Family Ticket</label>
                             <div class="col-md-6">
                                 <div>
-                                    <button type="submit" name="tourFamilyTicket" class="btn btn-outline-dark">Family Ticket</button>
-                                    <input type="hidden" name="tourTicketType" value="family">
-                                    <input type="hidden" name="quantity" value="4">
-<!--                                    <button type="submit" name="tourFamilyTicket"-->
-<!--                                            class="btn btn-outline-dark">Family Ticket-->
-<!--                                    </button>-->
+                                    <input type="checkbox" class="btn-check" name="tourFamilyTicket" id="btn-check-outlined" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-check-outlined">Family Ticket</label><br>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +134,7 @@
 <!--    document.getElementById('tour-date-display').textContent = tourDate;-->
 <!--    document.getElementById('tour-time-display').textContent = tourTime;-->
 <!--</script>-->
+
 
 
 

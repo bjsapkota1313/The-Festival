@@ -40,6 +40,11 @@ require_once __DIR__ . '/../header2.php';
                                 <button class="register-btn btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" name="registerSubmit" type="submit">Create Account</button>
                             </div>
                         </form>
+                        <form class="register-form" action="/login/resetPasswordViaEmail" method="POST">
+                            <div class="d-grid">
+                                <button class="register-btn btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" name="registerSubmit" type="submit">Forgot Password?</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

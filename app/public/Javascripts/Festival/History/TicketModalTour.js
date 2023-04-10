@@ -22,6 +22,9 @@ for (let i = 0; i < languagesArray.length; i++) {
     }
 }
 
+
+
+
 document.getElementById('tour-date').value = tourDate;
 document.getElementById('tour-time').value = tourTime;
 
