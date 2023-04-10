@@ -73,6 +73,12 @@ abstract class Controller
     {
         return htmlspecialchars($input);
     }
+    protected  function logoutUser(): void
+    {
+        unset($_SESSION["loggedUser"]);
+        header("location: /login");
+        die();
+    }
 
     protected function display404PageNotFound(): void
     {

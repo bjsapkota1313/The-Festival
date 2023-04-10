@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../repositories/userRepository.php';
-require_once __DIR__ . '/../models/user.php';
 require __DIR__ . '/../PHPMailer/Exception.php';
 require __DIR__ . '/../PHPMailer/SMTP.php';
 require __DIR__ . '/../PHPMailer/PHPMailer.php';
@@ -168,7 +167,6 @@ class UserService
         }
     }
 
-//TODO: Storing and dleting Image while Editing and deleting pic
 
     /**
      * @throws uploadFileFailedException

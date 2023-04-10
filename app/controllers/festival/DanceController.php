@@ -46,7 +46,7 @@ class DanceController extends eventController
                 if (empty($selectedArtist)) {
                     $this->display404PageNotFound();
                 }
-                $this->displayNavBar($selectedArtist->getArtistName());
+                $this->displayNavBar($selectedArtist->getArtistName(),"/css/festival/Dance/ArtistPage.css");
                 try {
                     $artistAlbums = $this->spotifyService->getArtistAlbumsWithLimit($artistId, 6);
                     if (empty($artistAlbums)) {
@@ -124,7 +124,6 @@ class DanceController extends eventController
             $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart
 //            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
             $quantity = $_POST['NoOfTickets'];
-
 
             if (!$orderItem) {
                 // if user does not have ticket that user puts into shopping cart then create new orderItem with performanceTicketId

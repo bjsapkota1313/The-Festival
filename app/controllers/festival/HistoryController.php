@@ -194,7 +194,6 @@ class HistoryController extends EventController
 //
 //        require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
 //    }
-
     public function getAllHistoryTourLocation()
     {
         $allTourLocation = $this->historyService->getAllHistoryTourLocation();

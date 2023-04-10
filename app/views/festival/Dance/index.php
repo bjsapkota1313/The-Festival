@@ -70,7 +70,7 @@
         <h4 class="text-center py-2" style="color:#CD3600; font-weight: bold;font-size: 36px; opacity: 1; ">PRICES</h4>
         <ul>
             <li class="list-group-item pb-3">
-                <pre>Regular Participant:           <strong>€<?= number_format($danceEvent->getMinimalPrice(),2)?> - €<?= number_format($danceEvent->getMaximalPrice(),2) ?></strong></pre>
+                <pre>Regular Participant:           <strong>€<?= number_format($danceEvent->getMinimalPrice(), 2) ?> - €<?= number_format($danceEvent->getMaximalPrice(), 2) ?></strong></pre>
             </li>
             <li class="list-group-item pb-3">
                 <pre>All-access Pass (28 July):     <strong>€125,00</strong>   <button class="button">Buy</button></pre>
@@ -84,193 +84,34 @@
         </ul>
     </div>
 </div>
-<div class="container-fluid ps-3">
-    <div class="container-fluid ps-5">
-        <div class="container-fluid ps-5">
-            <span class="align-left ps-5"><button class="button" data-bs-toggle="collapse"
-                                                  data-bs-target="#FilterArtist" style="height:48px;!important; "><i
-                            class="fa-solid fa-bars"></i>  Filter</button></span>
-        </div>
-        <div class="collapse" id="FilterArtist">
-            <div class="container d-flex justify-content-center align-items-center" id="filterContainer"
-                 style="display: none;">
-                <div class="card ps-4 mx-auto"
-                     style="border:7px solid rgba(205, 53, 0, 1); border-radius:49px; width:2000px;">
-                    <div class="row md-auto pb-4 pt-5">
-                        <div class="col-4 ps-4">
-                            <h5 class="text-center" style="color: rgba(205, 53, 0, 1);font-size:40px;">
-                                ARTIST</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="hardwell">
-                                <label class="form-check-label" for="hardwell">
-                                    Hardwell
-                                </label>
-                            </div>
+<div class="container-fluid">
+    <h2 class="text-center"> Performances Ticket</h2>
+</div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="armin">
-                                <label class="form-check-label" for="armin">
-                                    Armin van Buuren
-                                </label>
+<div class=" container-fluid  pt-5 ps-5" id="performanceContainer">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <?php foreach ($groupedPerformances as $date => $specificDatePerformances) { ?>
+            <div class="col">
+                <button class="lblButton w-100" disabled><?= $date ?></button>
+                <?php foreach ($specificDatePerformances as $performance) {
+                    ?>
+                    <div class="my-3 ps-3">
+                        <div class=" MyContainer position-relative ps-4 ">
+                            <div class="container d-flex align-items-center justify-content-center"
+                                 data-performance='<?= addslashes(json_encode($performance)) ?>'>
+                                <span><?= $performance->getDate()->format('H:i') ?></span>
+                                <div class="line flex-grow-1 mx-2"></div>
                             </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="garrix">
-                                <label class="form-check-label" for="garrix">
-                                    Martin Garrix
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="tiesto">
-                                <label class="form-check-label" for="tiesto">
-                                    Tiësto
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="romero">
-                                <label class="form-check-label" for="romero">
-                                    Nicky Romero
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="afrojack">
-                                <label class="form-check-label" for="afrojack">
-                                    Afrojack
-                                </label>
-                            </div>
-
-                        </div>
-                        <div class="col-4">
-                            <h5 class="text-center" style="color: rgba(205, 53, 0, 1);font-size:40px; ">
-                                VENUE</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check1">
-                                <label class="form-check-label" for="check1">
-                                    <a href="#" class="link">Club Stalker</a>
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check2">
-                                <label class="form-check-label" for="check2">
-                                    <a href="#" class="link">Caprera ..</a>
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check3">
-                                <label class="form-check-label" for="check3">
-                                    <a href="#" class="link">Jopenkerk</a>
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check4">
-                                <label class="form-check-label" for="check4">
-                                    <a href="#" class="link">Lichtfabriek</a>
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check5">
-                                <label class="form-check-label" for="check5">
-                                    <a href="#" class="link">Club Ruis</a>
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="check6">
-                                <label class="form-check-label" for="check6">
-                                    <a href="#" class="link">XO the Club</a>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <h5 class="text-center" style="color: rgba(205, 53, 0, 1);font-size:40px;">
-                                STYLE</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="danceCheckbox">
-                                <label class="form-check-label" for="danceCheckbox">
-                                    Dance
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="houseCheckbox">
-                                <label class="form-check-label" for="houseCheckbox">
-                                    House
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="tranceCheckbox">
-                                <label class="form-check-label" for="tranceCheckbox">
-                                    Trance
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="technoCheckbox">
-                                <label class="form-check-label" for="technoCheckbox">
-                                    Techno
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="electronicCheckbox">
-                                <label class="form-check-label" for="electronicCheckbox">
-                                    Electronic
-                                </label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="minimalCheckbox">
-                                <label class="form-check-label" for="minimalCheckbox">
-                                    Minimal
-                                </label>
-                            </div>
+                            <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists()) ?></label>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col">
-            <span class="float-start">
-                <button class="btnRemoveFilter" type="reset">Remove filters</button>
-            </span>
-                            <span class="float-end">
-                <button class="btnApplyFilter">Apply filters</button>
-            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class=" container-fluid  pt-5 ps-5" id="performanceContainer">
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <?php foreach ($groupedPerformances as $date => $specificDatePerformances) { ?>
-                    <div class="col">
-                        <button class="lblButton w-100" disabled><?= $date ?></button>
-                        <?php foreach ($specificDatePerformances as $performance) {
-                            ?>
-                            <div class="my-3 ps-3">
-                                <div class=" MyContainer position-relative ps-4 ">
-                                    <div class="container d-flex align-items-center justify-content-center"
-                                         data-performance='<?= addslashes(json_encode($performance)) ?>'>
-                                        <span><?= $performance->getDate()->format('H:i') ?></span>
-                                        <div class="line flex-grow-1 mx-2"></div>
-                                    </div>
-                                    <label class="container-fluid d-flex align-items-center justify-content-center"><?= $this->formatArtistName($performance->getArtists()) ?></label>
-                                </div>
-                            </div>
 
-                        <?php } ?>
-                    </div>
                 <?php } ?>
             </div>
-        </div>
+        <?php } ?>
     </div>
+</div>
+</div>
 </div>
 <div class="container-fluid pt-5">
     <?php if (!empty($danceEvent->getEventParagraphs()[1])) {
@@ -304,7 +145,7 @@
         </div>
     <?php } ?>
 </div>
-<?php require_once __DIR__.'/TicketModal.html'?>
+<?php require_once __DIR__ . '/TicketModal.html' ?>
 <script src="/Javascripts/festival/Dance/TicketModalPerformance.js" type="text/javascript"></script>
 <script src="/Javascripts/festival/Dance/HoveringThing.js" type="text/javascript"></script>
 <script src="/Javascripts/festival/Dance/Carousal.js" type="text/javascript"></script>

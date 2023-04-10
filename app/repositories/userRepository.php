@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/repository.php';
-require_once __DIR__ . '/../models/user.php';
+require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../Models/Roles.php';
 
 class UserRepository extends Repository
@@ -336,9 +336,6 @@ class UserRepository extends Repository
             echo $e;
         }
     }
-
-
-    //Todo: update user with password make one method implemnt pic
     function updateUserV2($updatedUser)
     {
         $query = "UPDATE User SET role=:role, firstName=:firstName, lastName=:lastName, dateOfBirth=:dateOfBirth, email=:email, picture=:picture";
