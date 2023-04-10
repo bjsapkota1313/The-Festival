@@ -49,8 +49,6 @@
 
                                         <input type="hidden" name="updateTourId" value="<?= $historyTour->getHistoryTourId() ?>">
                                         <button type="submit" name="updateHistoryTour" class="btn btn-primary"><i class="fa-solid fa-file-pen"></i></button>
-
-
                                     </form>
                                 </div>
                             </td>

@@ -77,26 +77,26 @@ class LoginController extends Controller
                 $errorMessage = "Please fill out your password";
             }
             else{
-                $this->captchaVerification($errorMessage);
+                $this->userService->captchaVerification($errorMessage);
             }
         }
         require __DIR__ . '/../views/login/register.php';
     }
 
-    private function captchaVerification(&$systemMessage)
-    {
-        $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
-        $response = $_POST['g-recaptcha-response'];
-        $remoteip = $_SERVER['REMOTE_ADDR'];
-        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
-        $data = file_get_contents($url);
-        $row = json_decode($data);
-        if ($row->success== "true") {
-            $this->registerValidUser($systemMessage);
-        } else {
-            $systemMessage = "you are a robot";
-        }
-    }
+//    private function captchaVerification(&$systemMessage)
+//    {
+//        $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
+//        $response = $_POST['g-recaptcha-response'];
+//        $remoteip = $_SERVER['REMOTE_ADDR'];
+//        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
+//        $data = file_get_contents($url);
+//        $row = json_decode($data);
+//        if ($row->success== "true") {
+//            $this->registerValidUser($systemMessage);
+//        } else {
+//            $systemMessage = "you are a robot";
+//        }
+//    }
 
     private function registerValidUser(&$systemMessage)
     {

@@ -9,7 +9,7 @@
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-md-between">
             <h4 class="pb-2">Tour Location Overview</h4>
-            <a class="btn btn-primary" href="/admin/dance/addArtist">Add New Bigay</a>
+            <a class="btn btn-primary" href="/admin/history/addHistoryTourLocation">Add New Tour Location</a>
         </div>
         <div class="table-responsive-sm">
             <table class="table table-striped">
@@ -53,14 +53,6 @@
                             <td><?= $tourLocation->getTourLocation()->getAddress()->getCountry(); ?></td>
                             <td>
                                 <div class="d-inline-flex">
-<!--                                    <form method="POST">-->
-<!--                                        <input type="hidden" name="tourId"-->
-<!--                                               value="--><?//= $tourLocation->getHistoryTourLocationId() ?><!--">-->
-<!--                                        <button name="deleteHistoryLocation" class="btn btn-primary"><i-->
-<!--                                                    class="fa-solid fa-file-pen"></i></button>-->
-<!--                                        <button href="/admin/manageusers/deleteUser/" class="btn btn-danger ms-3"><i-->
-<!--                                                    class="fa-solid fa-trash"></i></button>-->
-<!--                                    </form>-->
                                     <form method="POST">
                                         <input type="hidden" name="deleteTourLocationId" value="<?= $tourLocation->getHistoryTourLocationId() ?>">
                                         <button type="submit" name="deleteHistoryLocation" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
