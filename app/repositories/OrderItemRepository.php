@@ -54,7 +54,7 @@ class OrderItemRepository extends EventRepository
         $orderItem->setEvent($this->getEventAccordingToOrderItem($dbRow)); // cannot be null
         $ticketType = $this->getTicketType($dbRow);
         if (is_array($ticketType)) { // only if History Tour
-            $orderItem->setTicketType($ticketType['ticketType']);
+            $orderItem->setEventTicketType($ticketType['ticketType']);
             $orderItem->setPrice($ticketType['ticketType']);
         }
         else{

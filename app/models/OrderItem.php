@@ -7,22 +7,22 @@ class OrderItem implements \JsonSerializable
     private string $price;
     private object $event; // so it can store any object of Events like performance /A stroll Through History etc
     private float $vatPercentage;
-    private ?string $ticketType;
+    private ?string $eventTicketType;
 
     /**
      * @return string|null
      */
-    public function getTicketType(): ?string
+    public function getEventTicketType(): ?string
     {
-        return $this->ticketType;
+        return $this->eventTicketType;
     }
 
     /**
-     * @param string|null $ticketType
+     * @param string|null eventTicketType
      */
-    public function setTicketType(?string $ticketType): void
+    public function setEventTicketType(?string $eventTicketType): void
     {
-        $this->ticketType = $ticketType;
+        $this->eventTicketType = $eventTicketType;
     }
 
     /**
@@ -137,7 +137,7 @@ class OrderItem implements \JsonSerializable
                 'tourDate' => $this->getEvent()->getTourDate()->format('Y-m-d'),
                 'time' => $this->getEvent()->getTime()->format('H:i:s'),
                 'price' => $this->price,
-                'TicketType' => $this->ticketType,
+                'TicketType' => $this->getEventTicketType(),
             );
         }
     }
