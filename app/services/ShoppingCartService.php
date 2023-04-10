@@ -40,10 +40,10 @@ class ShoppingCartService
 
     public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
-        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
-        if($availableQuantity < $quantity){
-            return false;
-        }
+//        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
+//        if($availableQuantity < $quantity){
+//            return false;
+//        }
         return $this->shoppingCartRepository->createTourOrderItem($orderId, $ticketId, $quantity);
     }
 
