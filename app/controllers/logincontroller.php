@@ -77,7 +77,9 @@ class LoginController extends Controller
                 $errorMessage = "Please fill out your password";
             }
             else{
-                $this->userService->captchaVerification($errorMessage);
+                if($this->userService->captchaVerification($errorMessage)){
+                    $this->registerValidUser($errorMessage);
+                }
             }
         }
         require __DIR__ . '/../views/login/register.php';

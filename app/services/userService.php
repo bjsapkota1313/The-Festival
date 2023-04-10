@@ -122,9 +122,11 @@ class UserService
         $data = file_get_contents($url);
         $row = json_decode($data);
         if ($row->success== "true") {
-            $this->registerValidUser($systemMessage);
+            return true;
+//            $this->registerValidUser($systemMessage);
         } else {
             $systemMessage = "you are a robot";
+            return false;
         }
     }
 
