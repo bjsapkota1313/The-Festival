@@ -130,7 +130,7 @@ class EventRepository extends repository
     private function getTimetableIDByInsertingTimeWithDateId($time, $eventDateId)
     {
         $query = "SELECT timeTableId FROM timetable WHERE time = :time AND eventDateId = :eventDateId";
-        $result = $this->executeQuery($query, array(':time' => $time,':eventDateId'=>$eventDateId), false);
+        $result = $this->executeQuery($query, array(':time' => $time, ':eventDateId' => $eventDateId), false);
         if (empty($result)) {
             $query = "INSERT INTO timetable (time,eventDateId) VALUES (:time,:eventDateId)";
             $executedResult = $this->executeQuery($query, array(':time' => $time, ':eventDateId' => $eventDateId), false, true);
@@ -315,5 +315,17 @@ class EventRepository extends repository
             ':city' => $address->getCity(), ':country' => $address->getCountry(), ':addressId' => $address->getAddressId(),
             ':houseNumberAdditional' => $address->getHouseNumberAdditional());
         return $this->executeQuery($query, $params);
+    }
+
+    protected function getVatPercentageByEventName($eventName)
+    {
+        $query = "SELECT vat.vatPercentage FROM event 
+                     join vat on event.vatId = event.vatId
+                     WHERE eventName = :eventName";
+        $result = $this->executeQuery($query, array(':eventName' => $eventName), false);
+        if (!empty($result)) {
+            return $result['vatPercentage'];
+        }
+        return null;
     }
 }

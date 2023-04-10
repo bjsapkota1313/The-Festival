@@ -24,7 +24,19 @@ class OrdersController extends ApiController
             $this->respondWithError(401, 'API key is invalid');
             return;
         }
-        $orders = $this->orderService->getAllOrders();
+        try{
+            $orders = $this->orderService->getAllOrders();
+            if(empty($orders)){
+                $this->respondWithError(204, 'No orders  in the db');
+                return;
+            }
+            $this->respond($orders);
+        }
+        catch (InternalErrorException $e){
+            $this->respondWithError(500, $e->getMessage());
+            return;
+        }
+
 
     }
 
