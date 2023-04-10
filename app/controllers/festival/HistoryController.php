@@ -173,6 +173,48 @@ class HistoryController extends EventController
         require __DIR__ . '/../../views/festival/History/ticketSelection.php';
     }
 
+    public function shoppingCart()
+    {
+        $allItemsInShoppingCarts="";
+        $allRestaurantItems="";
+        $allPerformanceItems="";
+        $totalPrice="";
+        if (!empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+
+            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
+            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
+            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+        } else {
+            $orderId = $_COOKIE['orderId'];
+            var_dump($orderId);
+            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
+            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
+            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
+            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+        }
+
+        if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
+            $userId = $_SESSION['userId'];
+            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+//            $this->shoppingCartService->updateTotalPrice(13);
+
+            // Get payment parameters from form submission
+            $amount = number_format($_POST["amount"], 2, '.', '');
+            $description = $_POST["description"];
+            $redirectUrl = $_POST["redirectUrl"];
+            $webhookUrl = $_POST["webhookUrl"];
+
+            //delete expired payment
+            $this->shoppingCartService->deletePayment();
+
+            // Create Mollie payment
+            $payment = $this->shoppingCartService->createPayment($userId,$orderId,$amount, $description, $redirectUrl, $webhookUrl);
+        }
+
+        require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
+    }
     public function getAllHistoryTourLocation()
     {
         $allTourLocation = $this->historyService->getAllHistoryTourLocation();

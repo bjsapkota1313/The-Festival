@@ -8,7 +8,8 @@
 </div>
 <body onload="locate('<?php echo $location . ' ' . $locationPostCode; ?>')">
     <h1 class="detailHeader"><?= $historyTourLocationObject->getLocationName() ?></h1><br>
-<div class="detailMainContainer">
+    <?php echo print_r($historyTourLocationObject) ?>
+    <div class="detailMainContainer">
     <h2> About</h2>
     <div class="detailContainer">
             <div class="detailParagraph">

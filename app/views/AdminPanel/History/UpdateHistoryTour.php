@@ -2,7 +2,7 @@
     <div class="container pb-3 pt-3">
         <div class="row">
             <div class="col-md-12">
-                <h1><?= $title ?></h1>
+<!--                <h1>--><?//= $title ?><!--</h1>-->
             </div>
         </div>
     </div>
@@ -12,7 +12,7 @@
                 <h2 class="panel-title">Update Tour Address</h2>
             </div>
             <div class="panel-body">
-                <form method="POST">
+                <form method="POST" action="/admin/history/update">
                     <div id="updateTour">
                         <div class="row">
                             <div class="col-md-6">
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3" name="updateTourLocation" >Submit</button>
+                    <button type="submit" class="btn btn-primary mt-3" name="updateTourLocation" value="<?= $getSelectedTourById->getHistoryTourId() ?>" >Submit</button>
                 </form>
             </div>
         </div>

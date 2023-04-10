@@ -1,15 +1,23 @@
 <?php
 require_once __DIR__ . '/../repositories/HistoryPageRepository.php';
+require_once __DIR__ . '/../models/ImageManager.php';
+require_once __DIR__ . '/../services/EventService.php';
+require_once __DIR__ . '/../services/ImageService.php';
 
 class HistoryService
 {
+    use ImageManager;
+
     private $repository;
     private $repository2;
+    private $imageuploadDirectory = __DIR__ . "/../public/image/Festival/History/";
+    private $imageService;
 
     public function __construct()
     {
         $this->repository = new HistoryPageRepository();
         $this->repository2 = new HistoryEventRepository();
+        $this->imageService = new ImageService();
 
     }
 
@@ -50,10 +58,40 @@ class HistoryService
 
     }
 
-    public function insertNewTourLocation($newTourLocation)
+//    public function insertNewTourLocation($newTourLocation, $validImages)
+//    {
+//        return $this->repository2->insertNewTourLocation($newTourLocation, $validImages);
+//    }
+
+    public function insertNewTourLocation($newTourLocation, $validImages): bool
     {
-        return $this->repository2->insertNewTourLocation($newTourLocation);
+        // checking if the artist already exists in the database or not
+//        if ($this->repository2->artistExistenceInDatabase($newTourLocation['artistName'], $newTourLocation['artistDescription'])) {
+//            throw new DatabaseQueryException("Artist With same name and description already exists");
+//        }
+        $newImagesNamesOthers['others'] = $this->getImagesNameByMovingToDirectory($validImages['others'], $this->imageuploadDirectory);
+        unset($validImages['others']); // removing others array images after updating
+        $newImagesNames = $this->getImagesNameByMovingToDirectory($validImages, $this->imageuploadDirectory);
+        $allImagesNames = array_merge($newImagesNames, $newImagesNamesOthers); // merging  arrays
+        $imagesWithId = $this->insertImagesreturnID($allImagesNames);
+        return $this->repository2->insertNewTourLocation(array_merge($newTourLocation, $imagesWithId));
     }
+    public function insertImagesReturnID($images): array
+    {
+        $imagesID = [];
+        foreach ($images as $key => $image) {
+            if (is_array($image)) {
+                foreach ($image as $key2 => $image2) {
+                    $imagesID[$key][$key2] = $this->imageService->insertImageAndGetId($image2);
+                }
+            } else {
+                $insertedID = $this->imageService->insertImageAndGetId($image);
+                $imagesID[$key] = $insertedID;
+            }
+        }
+        return $imagesID;
+    }
+
 
     public function insertNewHistoryTour($newHistoryTour)
     {
@@ -136,5 +174,8 @@ class HistoryService
     public function updateHistoryTourByTourId($selectedTourId, $updateHistoryTour)
     {
         $this->repository2->updateHistoryTourByTourId($selectedTourId,$updateHistoryTour);
+    }
+    public function deleteHistoryTourLocation($selectedLocationId){
+        $this->repository2->deleteHistoryTourLocation($selectedLocationId);
     }
 }
