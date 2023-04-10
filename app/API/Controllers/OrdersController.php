@@ -1,14 +1,16 @@
 <?php
 require_once __DIR__ . '/ApiController.php';
 require_once __DIR__ . '/../../Services/ApiKeyService.php';
-
+require_once __DIR__ . '/../../services/OrderService.php';
 class OrdersController extends ApiController
 {
     private $apiKeyService;
+    private $orderService;
 
     public function __construct()
     {
         $this->apiKeyService = new ApiKeyService();
+        $this->orderService = new OrderService();
     }
 
     public function index()
@@ -22,6 +24,7 @@ class OrdersController extends ApiController
             $this->respondWithError(401, 'API key is invalid');
             return;
         }
+        $orders = $this->orderService->getAllOrders();
 
     }
 
