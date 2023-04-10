@@ -56,29 +56,28 @@ class LoginController extends Controller
                 // displayView shows the contents of views/login/index.php
                 $this->displayView("Wrong Credentials. Try again.");
             }
-        } 
+        }
         // if the user is visiting the login page normally, show her the login page!
         else {
             // displayView shows the contents of views/login/index.php
             $this->displayView(null);
         }
     }
-
     public function registerUser()
     {
-        $systemMessage = "";
+        $errorMessage = "";
         if (isset($_POST["registerBtn"])) {
             if (empty($_POST["firstName"])) {
-                $systemMessage = "Please fill out your first name";
+                $errorMessage = "Please fill out your first name";
             } else if (empty($_POST["lastName"])) {
-                $systemMessage = "Please fill out your last name";
+                $errorMessage = "Please fill out your last name";
             } else if (empty($_POST["email"])) {
-                $systemMessage = "Please fill out your email";
+                $errorMessage = "Please fill out your email";
             } else if (empty($_POST["password"])) {
-                $systemMessage = "Please fill out your password";
+                $errorMessage = "Please fill out your password";
             }
             else{
-                $this->captchaVerification($systemMessage);
+                $this->captchaVerification($errorMessage);
             }
         }
         require __DIR__ . '/../views/login/register.php';
@@ -112,25 +111,33 @@ class LoginController extends Controller
 
     private function createNewUser(&$systemMessage)
     {
-        $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
-        $parsedDate = $this->parseDateOfBirth($birthDate);
-       if(is_string($parsedDate)) {
-           $systemMessage = $parsedDate;
-       }
-        else {
+//        $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
+//        $parsedDate = $this->parseDateOfBirth($birthDate);
+//        print_r($birthDate);
+//       if(is_string($parsedDate)) {
+//           $systemMessage = $parsedDate;
+//       }
+//        else {
             $newUser = array(
                 "firstName" => htmlspecialchars($_POST["firstName"]),
                 "lastName" => htmlspecialchars($_POST["lastName"]),
-                "dateOfBirth" => $birthDate,
+                "dateOfBirth" => htmlspecialchars($_POST["dateOfBirth"]),
                 "email" => htmlspecialchars($_POST["email"]),
                 "password" => htmlspecialchars($_POST["password"]),
                 "picture" => $_FILES['createUserImage'],
                 "role" => Roles::customer()
             );
-            $this->userService->registerUser($newUser);
+            if(empty($_SESSION['orderId'])){
+                $orderId = null;
+            }
+            else{
+                $orderId = $_SESSION['orderId'];
+            }
+            var_dump($orderId);
+            $this->userService->registerUser($newUser, $orderId);
             $systemMessage = "registration was successful! You can log in with your credential.";
         }
-    }
+//    }
     /**
      * @throws Exception
      */

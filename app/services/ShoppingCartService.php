@@ -38,9 +38,14 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getTicketId($test);
     }
 
-    public function createOrderItem($orderId, $ticketId, $quantity)
+    public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
-        return $this->shoppingCartRepository->createOrderItem($orderId, $ticketId, $quantity);
+//        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
+//        var_dump($ticketId);
+//        if($availableQuantity < $quantity){
+//            return false;
+//        }
+        return $this->shoppingCartRepository->createTourOrderItem($orderId, $ticketId, $quantity);
     }
 
     public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
@@ -60,7 +65,9 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getHistoryTourOrdersByOrderId($orderId);
 
     }
-    public function getPerformanceOrdersByOrderId($orderId){
+
+    public function getPerformanceOrdersByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getPerformanceOrdersByOrderId($orderId);
     }
 
@@ -74,9 +81,9 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId, $order);
     }
 
-    public function updateOrderItemByTicketId($ticketId, $quantity)
+    public function updateTourOrderItemByTicketId($ticketId, $quantity)
     {
-        return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
+        return $this->shoppingCartRepository->updateTourOrderItemByTicketId($ticketId, $quantity);
     }
 
     public function getPerformanceTicketIdByPerformanceId($performanceId)
@@ -85,9 +92,9 @@ class ShoppingCartService
 
     }
 
-    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity)
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity, $orderId)
     {
-        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity);
+        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity, $orderId);
     }
 
     public function updateQuantity($itemId, $quantity)
@@ -107,7 +114,7 @@ class ShoppingCartService
 
     public function getOrderIdByOrderItemId($orderItemId)
     {
-       return  $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
+        return $this->shoppingCartRepository->getOrderIdByOrderItemId($orderItemId);
     }
 
     public function updateTotalPrice($orderId)
@@ -124,13 +131,22 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getTotalPriceByOrderId($orderId);
     }
-    public function getPaymentStatusFromMollie($paymentCode){
+
+    public function getPaymentStatusFromMollie($paymentCode)
+    {
         $payment = $this->mollie->payments->get($paymentCode);
         return $payment->status;
     }
-    public function getPaymentMethod($paymentCode){
+
+    public function getPaymentMethod($paymentCode)
+    {
         $payment = $this->mollie->payments->get($paymentCode);
         return $payment->method;
+    }
+
+    public function checkTourAvailableTicket($orderId)
+    {
+        return $this->shoppingCartRepository->checkTourAvailableTicket($orderId);
     }
 
     /**
@@ -147,52 +163,39 @@ class ShoppingCartService
                     "value" => $amount,
                 ],
                 "description" => "Order #{$userId}",
-                "redirectUrl" => $redirectUrl ."?orderID=" . $orderId,
+                "redirectUrl" => $redirectUrl . "?orderID=" . $orderId,
                 "webhookUrl" => $webhookUrl,
             ]);
             $checkoutUrl = $payment->getCheckoutUrl();
             $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl);
         }
-        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
+//        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
         $checkoutUrl = $this->shoppingCartRepository->getCheckoutUrl($orderId);
 ////        var_dump($checkoutUrl);
-        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
+//        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
 
 
         echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
-//
-//
-//        if ($payment->isPaid() || $payment->isAuthorized()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'paid');
-//        } elseif ($payment->isCanceled()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'canceled');
-//        } elseif ($payment->isExpired()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'expired');
-//            /*
-//             * The order is expired.
-//             */
-//        } elseif ($payment->isPending()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'pending');
-//            /*
-//             * The order is pending.
-//             */
-//        }
-//        $checkoutUrl = $payment->getCheckoutUrl();
-//        $_SESSION['checkoutUrl'] = $checkoutUrl;
-
-
 
     }
-    public function updatePaymentStatus($paymentCode, $newPaymentStatus){
+
+    public function updatePaymentStatus($paymentCode, $newPaymentStatus)
+    {
         $this->shoppingCartRepository->updatePaymentStatus($paymentCode, $newPaymentStatus);
     }
-    public function changePaymentToPaid($paymentCode,$orderId){
-        $this->updatePaymentStatus($paymentCode,"Paid");
-        $paymentMethod= $this->getPaymentMethod($paymentCode);
-        $this->shoppingCartRepository->updatePaymentMethod($orderId,$paymentMethod); //TODO IT here
 
+    public function changePaymentToPaid($paymentCode, $orderId)
+    {
+        $this->updatePaymentStatus($paymentCode, "Paid");
+        $paymentMethod = $this->getPaymentMethod($paymentCode);
+        $this->shoppingCartRepository->updatePaymentMethod($orderId, $paymentMethod); //TODO IT here
+        $this->shoppingCartRepository->closeOrder($orderId);
+        $this->shoppingCartRepository->decreasePerformanceTicketQuantityByOrderId($orderId);
+        $this->shoppingCartRepository->decreaseHistoryTourTicketQuantityByOrderId($orderId);
     }
-    public function getPaymentCodeByOrderId($orderId){
+
+    public function getPaymentCodeByOrderId($orderId)
+    {
         return $this->shoppingCartRepository->getPaymentCode($orderId);
     }
 
@@ -250,7 +253,9 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->updateOrderStatus($orderId, $newOrderStatus);
     }
-    public function deletePayment(){
+
+    public function deletePayment()
+    {
         return $this->shoppingCartRepository->deletePayment();
     }
 
