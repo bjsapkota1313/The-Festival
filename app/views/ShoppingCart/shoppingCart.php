@@ -175,14 +175,14 @@
 
                                     <div class="d-flex justify-content-between mb-5">
                                         <h5 class="text-uppercase">Total price</h5>
-                                        <h5 id="totalPrice"><?php echo $this->getTotalPrice() ?></h5>
+                                        <h5 id="totalPrice"><?php echo $this->getTotalPrice(); ?></h5>
                                     </div>
                                     <form method="post">
-                                        <input type="hidden" name="amount" value="<?php echo $this->getTotalPrice() ?>">
+                                        <input type="hidden" name="amount" value="<?php echo $this->getTotalPrice(); ?>">
                                         <input type="hidden" name="description" value="Test">
                                         <input type="hidden" name="redirectUrl" value="http://localhost/festival/ShoppingCart/paymentRedirect">
                                         <input type="hidden" name="webhookUrl" value="https://example.com/webhook">
-                                        <button id="payButton" type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice() ?></button>
+                                        <button id="payButton" type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice(); ?></button>
                                     </form>
                                 </div>
                             </div>
@@ -237,6 +237,7 @@
         xhr.onload = function() {
             if (xhr.status === 200) {
                 var totalPrice = xhr.responseText;
+                console.log('Total price is: ' + totalPrice); // Add this line
                 document.getElementById('totalPrice').innerHTML = totalPrice;
                 document.getElementById('payButton').innerHTML = 'Pay ' + totalPrice;
             }
@@ -266,9 +267,12 @@
                     console.log('Item deleted successfully!');
                     // Remove the item from the DOM
                     var itemContainer = document.getElementById('orderItemContainer' + itemId);
-                    console.log(itemId);
-                    console.log(itemContainer);
-                    itemContainer.parentNode.removeChild(itemContainer);
+                    var ticketContainer = itemContainer.parentNode;
+                    ticketContainer.removeChild(itemContainer);
+                    // Check if there are any remaining items in the ticket container
+                    if (ticketContainer.querySelectorAll('.row').length === 0) {
+                        ticketContainer.parentNode.removeChild(ticketContainer);
+                    }
                 }
                 else {
                     console.log('Error deleting item!');

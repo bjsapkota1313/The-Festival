@@ -38,9 +38,13 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getTicketId($test);
     }
 
-    public function createOrderItem($orderId, $ticketId, $quantity)
+    public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
-        return $this->shoppingCartRepository->createOrderItem($orderId, $ticketId, $quantity);
+        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
+        if($availableQuantity < $quantity){
+            return false;
+        }
+        return $this->shoppingCartRepository->createTourOrderItem($orderId, $ticketId, $quantity);
     }
 
     public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
@@ -74,9 +78,9 @@ class ShoppingCartService
         return $this->shoppingCartRepository->getPerformanceOrderItemIdByTicketId($ticketId, $order);
     }
 
-    public function updateOrderItemByTicketId($ticketId, $quantity)
+    public function updateTourOrderItemByTicketId($ticketId, $quantity)
     {
-        return $this->shoppingCartRepository->updateOrderItemByTicketId($ticketId, $quantity);
+        return $this->shoppingCartRepository->updateTourOrderItemByTicketId($ticketId, $quantity);
     }
 
     public function getPerformanceTicketIdByPerformanceId($performanceId)
@@ -85,9 +89,9 @@ class ShoppingCartService
 
     }
 
-    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity)
+    public function updatePerformanceOrderItemByTicketId($ticketId, $quantity,$orderId)
     {
-        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity);
+        return $this->shoppingCartRepository->updatePerformanceOrderItemByTicketId($ticketId, $quantity,$orderId);
     }
 
     public function updateQuantity($itemId, $quantity)
@@ -132,6 +136,9 @@ class ShoppingCartService
         $payment = $this->mollie->payments->get($paymentCode);
         return $payment->method;
     }
+    public function checkTourAvailableTicket($orderId){
+        return $this->shoppingCartRepository->checkTourAvailableTicket($orderId);
+    }
 
     /**
      * @throws ApiException
@@ -170,7 +177,8 @@ class ShoppingCartService
         $paymentMethod= $this->getPaymentMethod($paymentCode);
         $this->shoppingCartRepository->updatePaymentMethod($orderId,$paymentMethod); //TODO IT here
         $this->shoppingCartRepository->closeOrder($orderId);
-
+        $this->shoppingCartRepository->decreasePerformanceTicketQuantityByOrderId($orderId);
+        $this->shoppingCartRepository->decreaseHistoryTourTicketQuantityByOrderId($orderId);
     }
     public function getPaymentCodeByOrderId($orderId){
         return $this->shoppingCartRepository->getPaymentCode($orderId);

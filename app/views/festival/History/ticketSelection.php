@@ -59,12 +59,8 @@
                             <label class="control-label">Buy Family Ticket</label>
                             <div class="col-md-6">
                                 <div>
-                                    <button type="submit" name="tourFamilyTicket" class="btn btn-outline-dark">Family Ticket</button>
-                                    <input type="hidden" name="tourTicketType" value="family">
-                                    <input type="hidden" name="quantity" value="4">
-<!--                                    <button type="submit" name="tourFamilyTicket"-->
-<!--                                            class="btn btn-outline-dark">Family Ticket-->
-<!--                                    </button>-->
+                                    <input type="checkbox" class="btn-check" name="tourFamilyTicket" id="btn-check-outlined" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-check-outlined">Family Ticket</label><br>
                                 </div>
                             </div>
                         </div>
@@ -133,6 +129,7 @@
 <!--    document.getElementById('tour-date-display').textContent = tourDate;-->
 <!--    document.getElementById('tour-time-display').textContent = tourTime;-->
 <!--</script>-->
+
 
 
 

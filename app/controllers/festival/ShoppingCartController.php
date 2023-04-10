@@ -24,13 +24,15 @@ class ShoppingCartController extends EventController
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
-            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+//            $totalPrice = $this->getTotalPrice();
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
         } else {
             $orderId = $_SESSION['orderId'] ?? '';
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
-            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//            $totalPrice = $this->getTotalPrice();
         }
         if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
@@ -71,7 +73,7 @@ class ShoppingCartController extends EventController
             $paymentStatus = $this->shoppingCartService->getPaymentStatusFromMollie($paymentCode);
             if ($paymentStatus == "paid") {
                 $this->shoppingCartService->changePaymentToPaid($paymentCode, $orderId);
-                include __DIR__ . '/../../views/ShoppingCart/paymentSuccess.php';
+//                include __DIR__ . '/../../views/ShoppingCart/paymentSuccess.php';
             } else {
                 include __DIR__ . '/../../views/ShoppingCart/paymentError.php.php';
             }
@@ -98,14 +100,40 @@ class ShoppingCartController extends EventController
         }
     }
 
+//    public function getTotalPrice()
+//    {
+//        $totalPrice="";
+//        if (!empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+//        } else if (!empty($_SESSION['orderId'])) {
+//            $orderId = $_SESSION['orderId'];
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//        }
+//    }
+//    public function getTotalPrice()
+//    {
+//        if (!empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//            return $this->shoppingCartService->getTotalPriceByUserId($userId);
+//        } else if (!empty($_SESSION['orderId'])) {
+//            $orderId = $_SESSION['orderId'];
+//            return $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//        }
+//    }
     public function getTotalPrice()
     {
         if (!empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
-            $this->shoppingCartService->getTotalPriceByUserId($userId);
+            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
         } else if (!empty($_SESSION['orderId'])) {
             $orderId = $_SESSION['orderId'];
-            $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
+//        header('Content-Type: application/json');
+        echo json_encode($totalPrice);
+//        var_dump($totalPrice);
+
+//        return $totalPrice;
     }
 }
