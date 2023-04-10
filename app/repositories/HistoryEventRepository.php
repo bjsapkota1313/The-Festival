@@ -214,46 +214,6 @@ WHERE historytour.historyTourId = :historyTourId;");
         }
     }
 
-//    public function insertNewTourLocation($newTourLocation)
-//    {
-//        // Prepare and execute first query
-//        $stmt1 = $this->connection->prepare("INSERT INTO address (streetName, country, houseNumber, postCode, city) VALUES (:streetName, :country, :houseNumber, :postCode, :city)");
-//
-//        $stmt1->bindValue(':streetName', $newTourLocation["tourStreetName"]);
-//        $stmt1->bindValue(':country', $newTourLocation['tourCountry']);
-//        $stmt1->bindValue(':houseNumber', $newTourLocation["tourStreetNumber"]);
-//        $stmt1->bindValue(':postCode', $newTourLocation["tourPostCode"]);
-//        $stmt1->bindValue(':city', $newTourLocation["tourCity"]);
-//
-//        $stmt1->execute();
-//
-//        // Get the last inserted ID from the previous query
-//        $address_id = $this->connection->lastInsertId();
-//
-//        // Prepare and execute second query
-//        $stmt2 = $this->connection->prepare("INSERT INTO location (locationName, addressId) VALUES (:locationName, :addressId)");
-//
-//        $stmt2->bindValue(':locationName', $newTourLocation["tourLocationName"]);
-//        $stmt2->bindValue(':addressId', $address_id);
-//
-//        $stmt2->execute();
-//
-//        // Get the last inserted ID from the previous query
-//        $location_id = $this->connection->lastInsertId();
-//
-//        // Prepare and execute third query
-//        $query = "INSERT INTO historyTourLocation (locationId,locationInformation,historyP1,historyP2) VALUES ( :locationId, :locationInformation,:historyP1,:historyP2)";
-//        $historyLocationId = $this->executeQuery($query, array(':locationId' =>$location_id, ':locationInformation' => $newTourLocation['locationInformation'], ':historyP1' => $newTourLocation['tourDescription1'], ':historyP2' => $newTourLocation['tourDescription2']), false, true);
-//        if (!is_numeric($historyLocationId)) {
-//            throw new DatabaseQueryException("Error while inserting tour location");
-//        }
-//        foreach ($newTourLocation['others'] as $key => $imageId) {
-//            $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $imageId, 'Other');
-//        }
-//        $this->insertHistoryTourImageWithArtistIdAndImageId($historyLocationId, $newTourLocation['banner'], 'banner');
-//
-//        return true;
-//    }
     public function insertNewTourLocation($newTourLocation)
     {
         $address_id = $this->insertAddress($newTourLocation);
@@ -464,18 +424,30 @@ WHERE historytour.historyTourId = :historyTourId;");
 
     public function insertNewTourTest($languageId, $timeTableId)
     {
-        $stmt = $this->connection->prepare("INSERT INTO historytour (eventId, languageId, timeTableId) VALUES (:eventId, :languageId, :timeTableId)");
-        $stmt->bindValue(':eventId', 1);
-        $stmt->bindValue(':languageId', $languageId);
-        $stmt->bindValue(':timeTableId', $timeTableId);
-        $stmt->execute();
+        try{
+            $stmt = $this->connection->prepare("INSERT INTO historytour (eventId, languageId, timeTableId) VALUES (:eventId, :languageId, :timeTableId)");
+            $stmt->bindValue(':eventId', 1);
+            $stmt->bindValue(':languageId', $languageId);
+            $stmt->bindValue(':timeTableId', $timeTableId);
+            $stmt->execute();
+        }
+        catch (PDOException $e) {
+            echo $e;
+        }
+
     }
 
-    public function deleteTest($selectedTourId)
+    public function deleteHistoryTour($selectedTourId)
     {
-        $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
-        $stmt->bindValue(':historyTourId', $selectedTourId);
-        $stmt->execute();
+        try{
+            $stmt = $this->connection->prepare("DELETE FROM historytour WHERE historyTourId = :historyTourId;");
+            $stmt->bindValue(':historyTourId', $selectedTourId);
+            $stmt->execute();
+        }
+        catch (PDOException $e) {
+            echo $e;
+        }
+
     }
 
     public function getSelectedTourById($selectedTourId)

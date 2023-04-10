@@ -19,12 +19,11 @@ class AdminHistoryController extends AdminPanelController
         $title = 'Tour Location';
         $this->displaySideBar($title);
         $historyEvent = $this->eventService->getEventByName('A Stroll Through History');
-//        $tourLocations = $historyEvent->getHistoryTours()->getHistoryTourLocations();
         $tourLocations = $this->historyService->getAllHistoryTourLocation();
         if (empty($tourLocations)) {
             $errorMessage['tourLocation'] = "No location found in system";
         }
-        if(isset($_POST['deleteHistoryLocation'])){
+        if (isset($_POST['deleteHistoryLocation'])) {
             $selectedLocationId = $_POST['deleteTourLocationId'];
             $this->historyService->deleteHistoryTourLocation($selectedLocationId);
         }
@@ -44,40 +43,51 @@ class AdminHistoryController extends AdminPanelController
         }
         if (isset($_POST['deleteHistoryTour'])) {
             $selectedTourId = $_POST['deleteTourId'];
-            $this->historyService->deleteTest($selectedTourId);
+            $this->historyService->deleteHistoryTour($selectedTourId);
 
         } elseif (isset($_POST['updateHistoryTour'])) {
             $selectedTourId = $_POST['updateTourId'];
             $this->updateHistoryTourByTourId($selectedTourId);
-            // perform update action here
+
         }
         require_once __DIR__ . '/../../views/AdminPanel/History/HistoryTourOverview.php';
     }
-    public function updateHistoryTourByTourId($selectedTourId){
+
+    public function updateHistoryTourByTourId($selectedTourId)
+    {
         $title = 'Update History Tour';
         $this->displaySideBar($title);
 
         $getSelectedTourById = $this->historyService->getHistoryTourById($selectedTourId);
-//        if(isset($_POST['updateTourLocation'])){
-//            $updateHistoryTour = array(
-//                'updateTourLanguage' => htmlspecialchars($_POST['updateTourLanguage']),
-//                'updateTourDate' => date('Y-m-d', strtotime($_POST['updateTourDate'])),
-//                'updateTourTime' => date('H:i:s', strtotime($_POST['updateTourTime'])),
-//            );
-//            $this->historyService->updateHistoryTourByTourId($getSelectedTourById,$updateHistoryTour);
-//        }
 
         require_once __DIR__ . '/../../views/AdminPanel/History/UpdateHistoryTour.php';
     }
-    public function update(){
-        if(isset($_POST['updateTourLocation'])){
+
+    public function editTourLocation()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['tourLocation'])) {
+            $tourLocation = $this->historyService->getHistoryTourLocationByLocationId($_GET['tourLocation']);
+            if (empty($tourLocation)) {
+                $this->display404PageNotFound();
+                exit();
+            }
+
+            $title = 'Edit ' . $tourLocation->getLocationName();
+            $this->displaySideBar($title);
+            require_once __DIR__ . '/../../views/AdminPanel/History/EditHistoryLocation.php.php';
+        }
+    }
+
+    public function update()
+    {
+        if (isset($_POST['updateTourLocation'])) {
             $selectedTourId = $_POST['updateTourLocation'];
             $updateHistoryTour = array(
                 'updateTourLanguage' => htmlspecialchars($_POST['updateTourLanguage']),
                 'updateTourDate' => date('Y-m-d', strtotime($_POST['updateTourDate'])),
                 'updateTourTime' => date('H:i:s', strtotime($_POST['updateTourTime'])),
             );
-            $this->historyService->updateHistoryTourByTourId($selectedTourId,$updateHistoryTour);
+            $this->historyService->updateHistoryTourByTourId($selectedTourId, $updateHistoryTour);
             header('Location: /admin/historyTours');
         }
     }
@@ -85,7 +95,7 @@ class AdminHistoryController extends AdminPanelController
     public function addHistoryTourLocation()
     {
         $title = 'Add Tour Location';
-      //  $this->displaySideBar($title);
+        //  $this->displaySideBar($title);
         $errorMessage['Submit'] = $this->addHistoryTourSubmitted();
 
 //        if (isset($_POST['addNewTourLocation'])) {
@@ -107,6 +117,7 @@ class AdminHistoryController extends AdminPanelController
         );
         $this->historyService->insertNewTourLocation($newTourLocation);
     }
+
     private function addHistoryTourSubmitted()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['addNewTourLocation'])) {
@@ -138,6 +149,7 @@ class AdminHistoryController extends AdminPanelController
         $this->displaySideBar($title);
 
         if (isset($_POST['addNewHistoryTour'])) {
+            $this->checkUserInputs();
             $eventDate = DateTime::createFromFormat('Y-m-d', $_POST['newTourDate'])->format('Y-m-d');
             $language = $_POST['newTourLanguage'];
             $timeTable = $_POST['newTourTime'];
@@ -154,7 +166,18 @@ class AdminHistoryController extends AdminPanelController
         require_once __DIR__ . '/../../views/AdminPanel/History/AddHistoryTour.php';
     }
 
+    public function checkUserInputs()
+    {
+        if (empty($_POST['newTourDate'])) {
 
-
-
+            return "Please enter a date";
+        }
+        if (empty($_POST['newTourLanguage'])) {
+            return "Please select a language";
+        }
+        if (empty($_POST['newTourTime'])) {
+            return "Please select a time";
+        }
+        return true;
+    }
 }
