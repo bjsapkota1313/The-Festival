@@ -137,7 +137,7 @@
         <li>
             <div class="profile-details">
                 <div class="profile-content">
-                    <img src="https://i.ibb.co/7bQQYkX/avatar.png" alt="profileImg">
+                    <img src="<?=$imagePath?>" alt="profileImg" style="height: 50px; width 50px; border-radius: 50%">
                 </div>
                 <div class="name-job">
                     <div class="profile_name"><?= $loggedUser->getFirstName() ?></div>

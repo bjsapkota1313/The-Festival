@@ -19,7 +19,8 @@ abstract class AdminPanelController extends Controller
     protected function displaySideBar($title, $pathToCss = null): void
     {
         // if user is logged in  then only this method get called
-        $loggedUser = unserialize(serialize($_SESSION["loggedUser"]));
+         $loggedUser = unserialize(serialize($_SESSION["loggedUser"]));
+        $imagePath ="/image/".$loggedUser->getPicture();
         if(isset($_POST['btnLogout'] ) && $_SERVER['REQUEST_METHOD'] === 'POST'){
             $this->logoutUser();
         }
