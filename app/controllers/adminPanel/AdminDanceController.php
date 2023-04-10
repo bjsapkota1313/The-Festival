@@ -19,6 +19,10 @@ class AdminDanceController extends AdminPanelController
         $this->danceEventService = new DanceEventService();
         $this->performanceService = new PerformanceService();
     }
+    public function index()
+    {
+        $this->performances();
+    }
 
     public function artists()
     {

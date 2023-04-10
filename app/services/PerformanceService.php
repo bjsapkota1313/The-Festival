@@ -56,7 +56,7 @@ class PerformanceService
     }
 
     public function deletePerformanceById($performanceId): bool
-    { //TODO:check if the ticket has been sold or not before deleting the performance
+    {
         return $this->performanceRepository->deletePerformance($performanceId);
     }
 

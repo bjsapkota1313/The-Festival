@@ -2,7 +2,6 @@
 require_once __DIR__ . '/AdminPanelController.php';
 require_once __DIR__ . '/../../models/Exceptions/DatabaseQueryException.php';
 require_once __DIR__ . '/../../services/restaurantService.php';
-require_once __DIR__ . '/../../models/user.php';
 require_once __DIR__ . '/../../models/restaurant.php';
 require_once __DIR__ . '/../controller.php';
 require_once __DIR__ . '/../../services/pageService.php';

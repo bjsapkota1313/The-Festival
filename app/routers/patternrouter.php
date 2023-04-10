@@ -52,6 +52,7 @@ class PatternRouter
         $api = false;
         $festival = false; // checking if it is a festival route or not
         $adminPanel = false; // checking if it is an admin panel route or not
+        $home = false; // checking if it is a home route or not
         if (str_starts_with($uri, "api/")) {
             $uri = substr($uri, 4);
             $api = true;
@@ -88,6 +89,8 @@ class PatternRouter
         if (!isset($explodedUri[1]) || empty($explodedUri[1])) {
             $explodedUri[1] = $defaultmethod;
         }
+
+
         // $methodName becomes "about"
         $methodName = $explodedUri[1];
 
@@ -113,6 +116,10 @@ class PatternRouter
                 // create a new instance from the class controllerName.
                 // $controllerObj = new $controllerName();
                 $controllerObj = new $controllerName;
+                if( strcasecmp($explodedUri[0],$defaultcontroller)==0 && strcasecmp($explodedUri[1], $defaultmethod) !== 0){
+                    $methodName='loadInfoPages';
+                    $queries= $explodedUri[1]; // loading InfoPages
+                }
                 // call the methodName in the class controllerName
                 $controllerObj->{$methodName}($queries);
                 // $controllerObj->$methodName();
