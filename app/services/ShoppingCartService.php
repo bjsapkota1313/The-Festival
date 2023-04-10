@@ -190,6 +190,7 @@ class ShoppingCartService
         $this->updatePaymentStatus($paymentCode,"Paid");
         $paymentMethod= $this->getPaymentMethod($paymentCode);
         $this->shoppingCartRepository->updatePaymentMethod($orderId,$paymentMethod); //TODO IT here
+        $this->shoppingCartRepository->closeOrder($orderId);
 
     }
     public function getPaymentCodeByOrderId($orderId){

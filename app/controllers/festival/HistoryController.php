@@ -43,35 +43,7 @@ class HistoryController extends EventController
 
         require __DIR__ . '/../../views/festival/History/detail.php';
     }
-//    public function ticketSelection(){ //working code
-//        if(empty($_SESSION['userId'])){
-//            $_SESSION['userId'] = null;
-//        }
-//        $userId = $_SESSION['userId'];
-//
-//        if (isset($_POST["addTourToCart"])) {
-//            $order = $this->shoppingCartService->getOrderByUserId($userId);
-//            // Check if there is an existing order for the user
-//            if (!$order) {
-//                // Create a new order for the user
-//                $this->shoppingCartService->createOrder($userId);
-//                $order = $this->shoppingCartService->getOrderByUserId($userId);
-//            }
-//
-//            // Add the tour to the order
-//            $newOrderItem = array(
-//                "orderId" => $order,
-//                "tourTicketDate" => htmlspecialchars($_POST["tourTicketDate"]),
-//                "tourTicketTime" => htmlspecialchars($_POST["tourTicketTime"]),
-//                "tourTicketType" => "single",
-//                "TourLanguage" => "english",
-//            );
-//            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-//            $this->shoppingCartService->createOrderItem($order,$ticketId,12);
-//        }
-//
-//        require __DIR__ . '/../../views/festival/History/ticketSelection.php';
-//    }
+
 
     public function ticketSelection()
     {
@@ -94,7 +66,7 @@ class HistoryController extends EventController
             $quantity = $_POST["tourSingleTicket"];
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
 //                var_dump($ticketId);
-            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId, $orderId);
 
             if (!$orderItem) {
                 $this->shoppingCartService->createOrderItem($orderId, $ticketId, $quantity);
@@ -118,7 +90,7 @@ class HistoryController extends EventController
             $quantity = $_POST["tourSingleTicket"];
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
 //                var_dump($ticketId);
-            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId, $orderId);
             $this->shoppingCartService->updateTotalPrice($_COOKIE['orderId']);
 
 
@@ -136,7 +108,7 @@ class HistoryController extends EventController
                 $this->shoppingCartService->createOrder($userId);
                 $orderId = $this->shoppingCartService->getOrderByUserId($userId);
             }
-            if(empty($_POST["tourSingleTicket"])){
+            if (empty($_POST["tourSingleTicket"])) {
                 // Add the tour to the order
                 $newOrderItem = array(
                     "orderId" => $orderId,
@@ -147,8 +119,7 @@ class HistoryController extends EventController
                 );
                 $quantity = 4;
                 var_dump($newOrderItem);
-            }
-            else{
+            } else {
                 // Add the tour to the order
                 $newOrderItem = array(
                     "orderId" => $orderId,
@@ -161,7 +132,7 @@ class HistoryController extends EventController
             }
 
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId,$orderId);
+            $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId, $orderId);
             if (!$orderItem) {
                 $this->shoppingCartService->createOrderItem($orderId, $ticketId, $quantity);
             } else {
@@ -173,58 +144,52 @@ class HistoryController extends EventController
         require __DIR__ . '/../../views/festival/History/ticketSelection.php';
     }
 
-    public function shoppingCart()
-    {
-        $allItemsInShoppingCarts="";
-        $allRestaurantItems="";
-        $allPerformanceItems="";
-        $totalPrice="";
-        if (!empty($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
+//    public function shoppingCart()
+//    {
+//        $allItemsInShoppingCarts = "";
+//        $allRestaurantItems = "";
+//        $allPerformanceItems = "";
+//        $totalPrice = "";
+//        if (!empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//
+//            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
+//            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+//            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
+//        } else {
+//            $orderId = $_COOKIE['orderId'];
+//            var_dump($orderId);
+//            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
+//            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
+//            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
+//            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//        }
+//
+//        if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
+////            $this->shoppingCartService->updateTotalPrice(13);
+//
+//            // Get payment parameters from form submission
+//            $amount = number_format($_POST["amount"], 2, '.', '');
+//            $description = $_POST["description"];
+//            $redirectUrl = $_POST["redirectUrl"];
+//            $webhookUrl = $_POST["webhookUrl"];
+//
+//            //delete expired payment
+//            $this->shoppingCartService->deletePayment();
+//
+//            // Create Mollie payment
+//            $payment = $this->shoppingCartService->createPayment($userId, $orderId, $amount, $description, $redirectUrl, $webhookUrl);
+//        }
+//
+//        require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
+//    }
 
-            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
-            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
-            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
-            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
-        } else {
-            $orderId = $_COOKIE['orderId'];
-            var_dump($orderId);
-            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
-            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
-            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
-            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
-        }
-
-        if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
-            $orderId = $this->shoppingCartService->getOrderByUserId($userId);
-//            $this->shoppingCartService->updateTotalPrice(13);
-
-            // Get payment parameters from form submission
-            $amount = number_format($_POST["amount"], 2, '.', '');
-            $description = $_POST["description"];
-            $redirectUrl = $_POST["redirectUrl"];
-            $webhookUrl = $_POST["webhookUrl"];
-
-            //delete expired payment
-            $this->shoppingCartService->deletePayment();
-
-            // Create Mollie payment
-            $payment = $this->shoppingCartService->createPayment($userId,$orderId,$amount, $description, $redirectUrl, $webhookUrl);
-        }
-
-        require_once __DIR__ . '/../../views/AdminPanel/History/shoppingCart.php';
-    }
     public function getAllHistoryTourLocation()
     {
         $allTourLocation = $this->historyService->getAllHistoryTourLocation();
-    }
-
-    public function test()
-    {
-        $historyEvent = $this->eventService->getEventByName('A Stroll Through History');
-
-//        print_r($historyEvent);
     }
 
     private function getarrayAccordingToDate($historyTours)
@@ -245,60 +210,38 @@ class HistoryController extends EventController
         return $groupedHistoryTours;
     }
 
-    public function updateQuantity()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//    public function updateQuantity()
+//    {
+//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //            $orderItemId = $_POST['orderItemId'];
+//            var_dump($orderItemId);
 //            $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
+//            var_dump($orderId);
 //            $quantity = $_POST['quantity'];
 //            $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
 //            $this->shoppingCartService->updateTotalPrice($orderId);
-            if (!empty($_SESSION['userId'])) {
-                $orderItemId = $_POST['orderItemId'];
-                var_dump($orderItemId);
-                $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
-                var_dump($orderId);
-                $quantity = $_POST['quantity'];
-                $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
-                $this->shoppingCartService->updateTotalPrice($orderId);
-            } else {
-                $orderItemId = $_POST['orderItemId'];
-                $quantity = $_POST['quantity'];
-                var_dump($orderItemId);
+//        }
+//    }
+//
+//    public function deleteOrderItem()
+//    {
+//        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//            $orderItemId = $_POST['orderItemId'];
+//            $this->shoppingCartService->deleteOrderItem($orderItemId);
+//        }
+//    }
+//
+//    public function getTotalPrice()
+//    {
+//        if (!empty($_SESSION['userId'])) {
+//            $userId = $_SESSION['userId'];
+//            $this->shoppingCartService->getTotalPriceByUserId($userId);
+//        } else if (!empty($_SESSION['userId'])) {
+//            $orderId = $_COOKIE['orderId'];
+//            $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+//        }
+//    }
 
-                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
-            }
-//            else{
-//                $orderItemId = $_POST['orderItemId'];
-//                $quantity = $_POST['quantity'];
-//                var_dump($orderItemId);
-////                print_r($_SESSION['shoppingCart']);
-////                var_dump($_POST);
-////                var_dump($orderItemId);
-////                var_dump($quantity);
-//                $this->shoppingCartService->updateSessionShoppingCartItem(unserialize(serialize($_SESSION['shoppingCart'])), $orderItemId, $quantity);
-//            }
-        }
-    }
-
-    public function deleteOrderItem()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $orderItemId = $_POST['orderItemId'];
-            $this->shoppingCartService->deleteOrderItem($orderItemId);
-        }
-    }
-
-    public function getTotalPrice()
-    {
-        if (!empty($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
-            $this->shoppingCartService->getTotalPriceByUserId($userId);
-        }
-    }
-    public function te(){
-        require_once __DIR__ . '/../../views/ShoppingCart/shoppingCart.php';
-    }
 }
 //        if (isset($_POST["addTourToCart"])) {
 //            if (empty($_SESSION['userId']) && empty($_SESSION['orderId'])) {

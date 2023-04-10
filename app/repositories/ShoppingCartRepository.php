@@ -11,7 +11,7 @@ class ShoppingCartRepository extends EventRepository
     public function getOrderByUserId($userId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE user_id = :user_id;");
+            $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE user_id = :user_id and orderStatus = 'open';");
             $stmt->bindValue(':user_id', $userId);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -28,7 +28,7 @@ class ShoppingCartRepository extends EventRepository
     public function getOrderByOrderId($orderId)
     {
         try {
-            $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE orderId = :orderId;");
+            $stmt = $this->connection->prepare("SELECT orderId FROM `order` WHERE orderId = :orderId and orderStatus = 'open';");
             $stmt->bindValue(':orderId', $orderId);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -122,7 +122,7 @@ class ShoppingCartRepository extends EventRepository
                                             JOIN `order` ON `order`.orderId = orderitem.order_id
                                             JOIN historytour on historytour.historyTourId = historytourticket.historyTourId
                                             JOIN language on  language.languageId = historytour.languageId
-                                            WHERE `order`.user_id = :user_id");
+                                            WHERE `order`.user_id = :user_id and `order`.orderStatus = 'open'");
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,6 +132,17 @@ class ShoppingCartRepository extends EventRepository
             }
             return $historyOrderItem;
 
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+    public function closeOrder($orderId){
+        try {
+            $stmt = $this->connection->prepare("UPDATE `order` SET orderStatus = 'closed' WHERE orderId = :orderId");
+            $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
+            $stmt->execute();
+            return true;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             return false;
@@ -147,7 +158,7 @@ class ShoppingCartRepository extends EventRepository
                                             JOIN `order` ON `order`.orderId = orderitem.order_id
                                             JOIN historytour on historytour.historyTourId = historytourticket.historyTourId
                                             JOIN language on  language.languageId = historytour.languageId
-                                            WHERE `order`.orderId = :orderId");
+                                            WHERE `order`.orderId = :orderId and `order`.orderStatus = 'open'");
             $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -174,7 +185,7 @@ class ShoppingCartRepository extends EventRepository
                                                     JOIN `order` ON `order`.orderId = orderitem.order_id
                                                     JOIN location ON location.locationId = performance.venueId
                                                     JOIN performancesession on performancesession.performanceSessionId = performance.SessionId
-                                                    WHERE `order`.orderId = :orderId;");
+                                                    WHERE `order`.orderId = :orderId and `order`.orderStatus = 'open';");
             $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -208,7 +219,7 @@ class ShoppingCartRepository extends EventRepository
                                             JOIN restaurantticket ON restaurantticket.restaurantTicketId = orderitem.restaurantTicketId
                                             JOIN `order` ON `order`.orderId = orderitem.order_id
                                             JOIN restaurant on restaurant.id = restaurantticket.restaurantId
-                                            WHERE `order`.user_id = :user_id;");
+                                            WHERE `order`.user_id = :user_id and `order`.orderStatus = 'open' and `order`.orderStatus = 'open';");
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -248,7 +259,7 @@ class ShoppingCartRepository extends EventRepository
                                                     JOIN `order` ON `order`.orderId = orderitem.order_id
                                                     JOIN location ON location.locationId = performance.venueId
                                                     JOIN performancesession on performancesession.performanceSessionId = performance.SessionId
-                                                    WHERE `order`.user_id = :user_id;");
+                                                    WHERE `order`.user_id = :user_id and `order`.orderStatus = 'open';");
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
             $dbRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -393,6 +404,18 @@ class ShoppingCartRepository extends EventRepository
             return false;
         }
     }
+    public function deletePaidOrder($orderId){
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM `Order` WHERE orderId = :orderId");
+            $stmt->bindParam(':orderId', $orderId);
+            $stmt->execute();
+            return true;
+        } catch (PDOException $e) {
+            // Handle any exceptions or errors that occurred during the update
+            error_log("Error updating quantity: " . $e->getMessage());
+            return false;
+        }
+    }
 
     public function deleteOrderItem($orderItemId)
     {
@@ -526,15 +549,15 @@ class ShoppingCartRepository extends EventRepository
     public function getTotalPriceByUserId($userId)
     {
         try {
-            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.user_Id = :userId');
+            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.user_Id = :userId and `Order`.orderStatus = "open"');
             $stmt->bindParam(':userId', $userId);
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
-                echo $row['totalPrice'];
+                return $row['totalPrice'];
             } else {
-                echo 'No results found';
+                return null;
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -544,15 +567,15 @@ class ShoppingCartRepository extends EventRepository
     public function getTotalPriceByOrderId($orderId)
     {
         try {
-            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.orderId = :orderId');
+            $stmt = $this->connection->prepare('SELECT totalPrice FROM `Order` WHERE `Order`.orderId = :orderId and `Order`.orderStatus = "open"');
             $stmt->bindParam(':orderId', $orderId);
             $stmt->execute();
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
-                echo $row['totalPrice'];
+                return $row['totalPrice'];
             } else {
-                echo 'No results found';
+                return null;
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
