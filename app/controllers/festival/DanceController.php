@@ -96,9 +96,10 @@ class DanceController extends eventController
     }
     public function ticketSelection()
     {
-        if(isset($_POST['addPerformanceToCart']) && empty($_SESSION['userId']) && empty($_COOKIE['orderId'])){
+        if(isset($_POST['addPerformanceToCart']) && empty($_SESSION['userId']) && empty($_SESSION['orderId'])){
             $newOrderId = $this->shoppingCartService->createOrder(null);
-            setcookie('orderId', $newOrderId, time() + (86400 * 30), "/");
+            $_SESSION['orderId'] = $newOrderId;
+//            setcookie('orderId', $newOrderId, time() + (86400 * 30), "/");
             $orderId = $this->shoppingCartService->getOrderByOrderId($newOrderId); // get orderId by user Id
 
             $performanceId = $_POST['performanceId']; // passed performanceId from ticket selection
@@ -116,8 +117,8 @@ class DanceController extends eventController
 
             header('Location: /festival/shoppingCart');
         }
-        else if(isset($_POST['addPerformanceToCart']) && !empty($_COOKIE['orderId']) && empty($_SESSION['userId'])){
-            $orderId = $this->shoppingCartService->getOrderByOrderId($_COOKIE['orderId']);
+        else if(isset($_POST['addPerformanceToCart']) && !empty($_SESSION['orderId']) && empty($_SESSION['userId'])){
+            $orderId = $this->shoppingCartService->getOrderByOrderId($_SESSION['orderId']);
             $performanceId = $_POST['performanceId']; // passed performanceId from ticket selection
             $performanceTicketId = $this->shoppingCartService->getPerformanceTicketIdByPerformanceId($performanceId); // get performanceTicketId having performance Id
             $orderItem = $this->shoppingCartService->getPerformanceOrderItemIdByTicketId($performanceTicketId, $orderId); // check if user already has same ticket in the shopping cart

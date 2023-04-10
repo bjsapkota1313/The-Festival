@@ -153,34 +153,13 @@ class ShoppingCartService
             $checkoutUrl = $payment->getCheckoutUrl();
             $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl);
         }
-        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
+//        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
         $checkoutUrl = $this->shoppingCartRepository->getCheckoutUrl($orderId);
 ////        var_dump($checkoutUrl);
-        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
+//        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
 
 
         echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
-//
-//
-//        if ($payment->isPaid() || $payment->isAuthorized()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'paid');
-//        } elseif ($payment->isCanceled()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'canceled');
-//        } elseif ($payment->isExpired()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'expired');
-//            /*
-//             * The order is expired.
-//             */
-//        } elseif ($payment->isPending()) {
-//            $this->shoppingCartRepository->updatePaymentStatus($paymentId, 'pending');
-//            /*
-//             * The order is pending.
-//             */
-//        }
-//        $checkoutUrl = $payment->getCheckoutUrl();
-//        $_SESSION['checkoutUrl'] = $checkoutUrl;
-
-
 
     }
     public function updatePaymentStatus($paymentCode, $newPaymentStatus){

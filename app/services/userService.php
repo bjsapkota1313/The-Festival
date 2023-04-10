@@ -81,7 +81,7 @@ class UserService
         return $this->repository->getUserPictureById($id);
     }
 
-    public function registerUser($newUser): bool
+    public function registerUser($newUser,$orderId)
     {
         $plainPassword = $newUser['password'];
         $newUser['password'] = $this->hashPassword($plainPassword);
@@ -91,7 +91,7 @@ class UserService
         } else {
             $newUser['picture'] = DEFAULT_AVATAR; // default image
         }
-        return $this->repository->registerUser($newUser);
+        $this->repository->registerUser($newUser,$orderId);
     }
 
     public function checkUserExistenceByEmail($email)

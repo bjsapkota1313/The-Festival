@@ -47,12 +47,11 @@ class HistoryController extends EventController
 
     public function ticketSelection()
     {
-
-
-        if (isset($_POST["addTourToCart"]) && empty($_SESSION['userId']) && empty($_COOKIE['orderId'])) {
+        if (isset($_POST["addTourToCart"]) && empty($_SESSION['userId']) && empty($_SESSION['orderId'])) {
 
             $orderId = $this->shoppingCartService->createOrder(null);
-            setcookie('orderId', $orderId, time() + (86400 * 30), "/");
+            $_SESSION['orderId'] = $orderId;
+//            setcookie('orderId', $orderId, time() + (86400 * 30), "/");
 
 //            $order = $this->shoppingCartService->getOrderByOrderId($orderId);
             // Add the tour to the order
@@ -74,10 +73,10 @@ class HistoryController extends EventController
                 $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
             }
 //            $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
-        } else if (isset($_POST["addTourToCart"]) && !empty($_COOKIE['orderId']) && empty($_SESSION['userId'])) {
+        } else if (isset($_POST["addTourToCart"]) && !empty($_SESSION['orderId']) && empty($_SESSION['userId'])) {
 //            var_dump($_SESSION['orderId']);
 
-            $orderId = $this->shoppingCartService->getOrderByOrderId($_COOKIE['orderId']);
+            $orderId = $this->shoppingCartService->getOrderByOrderId($_SESSION['orderId']);
             // Add the tour to the order
             $newOrderItem = array(
                 "orderId" => $orderId,
@@ -91,11 +90,11 @@ class HistoryController extends EventController
             $ticketId = $this->shoppingCartService->getTicketId($newOrderItem);
 //                var_dump($ticketId);
             $orderItem = $this->shoppingCartService->getOrderItemIdByTicketId($ticketId, $orderId);
-            $this->shoppingCartService->updateTotalPrice($_COOKIE['orderId']);
+            $this->shoppingCartService->updateTotalPrice($_SESSION['orderId']);
 
 
             if (!$orderItem) {
-                $this->shoppingCartService->createOrderItem($_COOKIE['orderId'], $ticketId, $quantity);
+                $this->shoppingCartService->createOrderItem($_SESSION['orderId'], $ticketId, $quantity);
             } else {
                 $this->shoppingCartService->updateOrderItemByTicketId($ticketId, $quantity);
             }
@@ -158,7 +157,7 @@ class HistoryController extends EventController
 //            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
 //            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
 //        } else {
-//            $orderId = $_COOKIE['orderId'];
+//            $orderId = $_SESSION['orderId'];
 //            var_dump($orderId);
 //            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
 //            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
@@ -237,7 +236,7 @@ class HistoryController extends EventController
 //            $userId = $_SESSION['userId'];
 //            $this->shoppingCartService->getTotalPriceByUserId($userId);
 //        } else if (!empty($_SESSION['userId'])) {
-//            $orderId = $_COOKIE['orderId'];
+//            $orderId = $_SESSION['orderId'];
 //            $this->shoppingCartService->getTotalPriceByOrderId($orderId);
 //        }
 //    }

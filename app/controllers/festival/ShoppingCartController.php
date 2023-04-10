@@ -26,7 +26,7 @@ class ShoppingCartController extends EventController
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
             $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
         } else {
-            $orderId = $_COOKIE['orderId'] ?? '';
+            $orderId = $_SESSION['orderId'] ?? '';
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
@@ -71,11 +71,9 @@ class ShoppingCartController extends EventController
             $paymentStatus = $this->shoppingCartService->getPaymentStatusFromMollie($paymentCode);
             if ($paymentStatus == "paid") {
                 $this->shoppingCartService->changePaymentToPaid($paymentCode, $orderId);
-                header("Location: /festival/Dance");
-                exit;
+                include __DIR__ . '/../../views/ShoppingCart/paymentSuccess.php';
             } else {
-                header("Location: /festival/ShoppingCart");
-                exit;
+                include __DIR__ . '/../../views/ShoppingCart/paymentError.php.php';
             }
         }
     }
@@ -105,8 +103,8 @@ class ShoppingCartController extends EventController
         if (!empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
             $this->shoppingCartService->getTotalPriceByUserId($userId);
-        } else if (!empty($_SESSION['userId'])) {
-            $orderId = $_COOKIE['orderId'];
+        } else if (!empty($_SESSION['orderId'])) {
+            $orderId = $_SESSION['orderId'];
             $this->shoppingCartService->getTotalPriceByOrderId($orderId);
         }
     }

@@ -1,26 +1,16 @@
 <div id="registerModal" class="modal">
     <div class="modal-content">
-        <h4>Register Now?</h4>
-        <p>You need to register an account to continue</p>
-        <button id="RegisterBtn">Register</button>
-        <button id="loginBtn">Login</button>
-        <button id="noBtn">No</button>
+        <h4>Payment Error!</h4>
+        <p>Sorry We were not able to complete your payment. If you press yes, you will redirect to shopping cart</p>
+        <button id="yesBtn">Yes</button>
     </div>
 </div>
 
 <script>
     var modal = document.getElementById("registerModal");
-    var registerBtn = document.getElementById("RegisterBtn");
-    var loginBtn = document.getElementById("loginBtn");
-    var noBtn = document.getElementById("noBtn");
-    registerBtn.onclick = function() {
-        window.location.href = "/login/registerUser";
-    }
-    loginBtn.onclick = function() {
-        window.location.href = "/login";
-    }
-    noBtn.onclick = function() {
-        modal.style.display = "none";
+    var yesBtn = document.getElementById("yesBtn");
+    yesBtn.onclick = function() {
+        window.location.href = "/festival/shoppingCart";
     }
     modal.style.display = "block";
 </script>

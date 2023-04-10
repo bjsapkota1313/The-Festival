@@ -555,9 +555,9 @@ class ShoppingCartRepository extends EventRepository
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
-                return $row['totalPrice'];
+                echo $row['totalPrice'];
             } else {
-                return null;
+                echo "hh";
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -573,9 +573,9 @@ class ShoppingCartRepository extends EventRepository
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($row) {
-                return $row['totalPrice'];
+                echo $row['totalPrice'];
             } else {
-                return null;
+                echo "ee";
             }
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();

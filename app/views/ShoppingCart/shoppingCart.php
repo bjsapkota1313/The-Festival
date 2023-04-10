@@ -182,7 +182,7 @@
                                         <input type="hidden" name="description" value="Test">
                                         <input type="hidden" name="redirectUrl" value="http://localhost/festival/ShoppingCart/paymentRedirect">
                                         <input type="hidden" name="webhookUrl" value="https://example.com/webhook">
-                                        <button type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice() ?></button>
+                                        <button id="payButton" type="submit" name="payNow" class="btn btn-dark btn-block btn-lg">Pay <?php echo $this->getTotalPrice() ?></button>
                                     </form>
                                 </div>
                             </div>
@@ -238,6 +238,7 @@
             if (xhr.status === 200) {
                 var totalPrice = xhr.responseText;
                 document.getElementById('totalPrice').innerHTML = totalPrice;
+                document.getElementById('payButton').innerHTML = 'Pay ' + totalPrice;
             }
             else {
                 console.log('Error fetching total price!');
