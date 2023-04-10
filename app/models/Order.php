@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/OrderItem.php';
 require_once __DIR__ . '/User.php';
-class Order
+class Order implements JsonSerializable
 {
     private int $orderId;
     private User $customer;
@@ -112,4 +112,24 @@ class Order
         $this->paymentMethod = $paymentMethod;
     }
 
+    public function jsonSerialize() :mixed
+    {
+        return array(
+            'orderId' => $this->orderId,
+            'customer' => $this->customer->getFullName(),
+            'totalPrice' => $this->totalPrice,
+            'totalVatAmount' => $this->getTotalVatAmount(),
+            'paymentMethod' => $this->paymentMethod,
+            'orderDate' => $this->orderDate->format('Y-m-d'),
+            'orderItems' => $this->orderItems
+        );
+    }
+    private function getTotalVatAmount(): float
+    {
+        $totalVatAmount = 0;
+        foreach ($this->orderItems as $orderItem) {
+            $totalVatAmount += $orderItem->getVatAmount();
+        }
+        return $totalVatAmount;
+    }
 }

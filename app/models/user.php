@@ -164,5 +164,9 @@ class User implements \JsonSerializable{
     {
         $this->picture = $picture;
     }
+    public function getFullName(): string
+    {
+        return $this->firstName . " " . $this->lastName;
+    }
 
 }
