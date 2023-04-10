@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__.'/../Location.php';
-require_once __DIR__.'/PerformanceSession.php';
+require_once __DIR__ . '/../Location.php';
+require_once __DIR__ . '/PerformanceSession.php';
+
 class Performance implements JsonSerializable
 {
     private int $performanceId;
@@ -61,23 +62,23 @@ class Performance implements JsonSerializable
         $this->availableTickets = $availableTickets;
     }
 
-    public function jsonSerialize() : mixed
+    public function jsonSerialize(): mixed
     {
         return [
-            'id'=> $this->performanceId,
+            'id' => $this->performanceId,
             'artists' => $this->artists,
             'date' => $this->date->format('Y-m-d'),
             'venue' => $this->venue->getLocationName(),
             'session' => $this->session->getSessionName(),
-            'price'=> $this->totalPrice,
-            'startTime'=> $this->getDate()->format('H:i'),
-            'endTime'=> $this->getEndDateTime()->format('H:i'),
+            'price' => $this->totalPrice,
+            'startTime' => $this->getDate()->format('H:i'),
+            'endTime' => $this->getEndDateTime()->format('H:i'),
         ];
     }
 
     public function __construct()
     {
-        $this->artists= array();
+        $this->artists = array();
     }
 
     /**
@@ -182,6 +183,22 @@ class Performance implements JsonSerializable
         $endTime = clone $this->date;
         $endTime->add(new DateInterval('PT' . $this->duration . 'M'));
         return $endTime;
+    }
+
+    function getFormattedArtistName()
+    {
+        $artists = $this->getArtists();
+        $name = '';
+        if (is_array($artists)) {
+            foreach ($artists as $artist) {
+                $name = $name . $artist->getArtistName() . ' | ';
+            }
+            // Remove the last '|' character
+            $name = substr($name, 0, -2);
+        } else {
+            $name = $artists->getArtistName();
+        }
+        return $name;
     }
 
 }
