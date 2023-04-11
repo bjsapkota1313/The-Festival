@@ -19,13 +19,14 @@ class AdminManageUsersController extends AdminPanelController
         $this->displaySideBar("User Management");
         require __DIR__ . '/../../views/AdminPanel/ManageUsers/OverviewManageUsers.php';
     }
+
     public function editUser()
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnEditUser']) && isset($_POST['hiddenUserId'])) {
             $userId = $this->sanitizeInput($_POST['hiddenUserId']);
             $editingUser = $this->userService->getUserById($userId);
             if (!is_null($editingUser)) {
-                $this->displaySideBar("Edit User",'/css/registerStyle.css');
+                $this->displaySideBar("Edit User", '/css/registerStyle.css');
                 require __DIR__ . '/../../views/AdminPanel/ManageUsers/EditUser.php';
             } else {
                 $this->display404PageNotFound();
@@ -39,7 +40,7 @@ class AdminManageUsersController extends AdminPanelController
     public function registerNewUser()
     {
         $message = $this->registerNewUserSubmit();
-        $this->displaySideBar("RegisterNewUser",'/css/registerStyle.css');
+        $this->displaySideBar("RegisterNewUser", '/css/registerStyle.css');
         require __DIR__ . '/../../views/AdminPanel/ManageUsers/RegisterNewUser.php';
     }
 
@@ -47,40 +48,29 @@ class AdminManageUsersController extends AdminPanelController
     private function registerNewUserSubmit()
     {
         if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['btnRegister'])) {// initialize message variable
-            if (!empty($_POST['firstName']) && !empty($_POST['lastName']) && !empty($_POST['email']) && !empty($_POST['dateOfBirth']) && !empty($_POST['role']) && !empty($_POST['password']) && !empty($_POST['passwordConfirm'])) {
-                $dateParseResult=$this->parseDateOfBirth($this->sanitizeInput($_POST['dateOfBirth'])); //TODO: check if the date is valid
-                if(is_string($dateParseResult)){ // checking if the controller sends some error message or not
-                    return $dateParseResult;
-                }
-                $password = $this->sanitizeInput($_POST['password']);
-                $passwordConfirm = $this->sanitizeInput($_POST['passwordConfirm']);
-                if ($this->userService->checkUserExistenceByEmail($this->sanitizeInput($_POST['email']))) {
-                    return "User with this email already exists";
+            $userDetails = $this->checkFieldsFilledAndSantizeInput($_POST, ['btnRegister']);
+            if (is_string($userDetails)) {
+                return $userDetails;
+            }
+            $dateParseResult = $this->parseDateOfBirth($this->sanitizeInput($userDetails['dateOfBirth'])); //TODO: check if the date is valid
+            if (is_string($dateParseResult)) { // checking if the controller sends some error message or not
+                return $dateParseResult;
+            }
+            if ($this->userService->checkUserExistenceByEmail($userDetails['email'])) {
+                return "User with this email already exists";
+            }
+            if ($userDetails['password'] == $userDetails['passwordConfirm']) {
+                $userDetails['role']=Roles::fromString($userDetails['role']);
+                $userDetails['picture']=$_FILES['profilePicUpload'];
+                if ($this->userService->registerUser($userDetails)) {
+                    header("Location: /admin/manageusers");
+                    exit();
                 } else {
-                    if ($password == $passwordConfirm) {
-                        $user = array(
-                            "firstName" => $this->sanitizeInput($_POST["firstName"]),
-                            "lastName" => $this->sanitizeInput($_POST["lastName"]),
-                            "dateOfBirth" => $this->sanitizeInput($_POST["dateOfBirth"]),
-                            "email" => $this->sanitizeInput($_POST["email"]),
-                            "password" => $this->sanitizeInput($_POST["password"]),
-                            "role" => Roles::fromString($_POST["role"]),
-                            "picture" => $_FILES['profilePicUpload']
-                        );
-                        if ($this->userService->registerUser($user)) {
-                            header("Location: /admin/manageusers");
-                            exit();
-                        } else {
-                            return "Something went wrong while creating an account please try again later";
-                        }
-
-                    } else {
-                       return "Password and Confirm Password does not match";
-                    }
+                    return "Something went wrong while creating an account please try again later";
                 }
 
             } else {
-                return "Please, fill every field in order create an account";
+                return "Password and Confirm Password does not match";
             }
         }
     }

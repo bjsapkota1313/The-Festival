@@ -40,11 +40,6 @@ class ShoppingCartService
 
     public function createTourOrderItem($orderId, $ticketId, $quantity)
     {
-//        $availableQuantity = $this->shoppingCartRepository->checkTourAvailableTicket($ticketId);
-//        var_dump($ticketId);
-//        if($availableQuantity < $quantity){
-//            return false;
-//        }
         return $this->shoppingCartRepository->createTourOrderItem($orderId, $ticketId, $quantity);
     }
 
@@ -169,10 +164,7 @@ class ShoppingCartService
             $checkoutUrl = $payment->getCheckoutUrl();
             $paymentId = $this->shoppingCartRepository->insertPaymentDetail($userId, $orderId, $payment->status, $payment->id, $checkoutUrl);
         }
-//        $paymentStatus = $this->shoppingCartRepository->getOrderStatus($orderId);
         $checkoutUrl = $this->shoppingCartRepository->getCheckoutUrl($orderId);
-////        var_dump($checkoutUrl);
-//        $test = $this->shoppingCartRepository->getPaymentCode($orderId);
 
 
         echo "<script>window.location.replace('" . $checkoutUrl . "');</script>";
@@ -198,35 +190,6 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getPaymentCode($orderId);
     }
-
-    public function damn($historyOrder)
-    {
-        $historyOrderItem = array();
-        foreach ($historyOrder as $order) {
-            $historyOrderItem[] = $this->createShoppingCartSession($historyOrder, $order);
-        }
-        return $historyOrderItem;
-    }
-
-    public function deleteSessionShoppingCartItem($historyOrder, $selectedId)
-    {
-        foreach ($historyOrder as $item) {
-            if ($selectedId == $item->getOrderItemId()) {
-                unset($historyOrder[$item]);
-            }
-        }
-    }
-
-    public function updateSessionShoppingCartItem($historyOrder, $selectedId, $quantity)
-    {
-        foreach ($historyOrder as $item) {
-            if ($selectedId == $item->getOrderItemId()) {
-                $item->setQuantity($quantity);
-                break;
-            }
-        }
-    }
-
 
     public function createShoppingCartSession($test, $historyOrders)
     {
@@ -263,45 +226,24 @@ class ShoppingCartService
     {
         return $this->shoppingCartRepository->getPerformanceOrdersByUserId($userId);
     }
-//    public function createShoppingCartSession($historyOrder){
-//        var_dump($historyOrder);
-//        $historyOrderItem = new HistoryTourOrderItem();
-//        $historyOrderItem->setOrderItemId(1);
-//        $historyOrderItem->setQuantity(1);
-//        $historyOrderItem->setTicketType('single');
-//        $historyOrderItem->setPrice(10);
-//        $historyOrderItem->setLanguage('english');
-//
-//        return $historyOrderItem;
-//    }
-//    public function createShoppingCartSession($historyOrder)
-//    {
-//        $historyOrderItem = new HistoryTourOrderItem();
-//        var_dump($historyOrder);
-//
-//        $historyOrderItem->setOrderItemId(1);
-//        $historyOrderItem->setPrice(10);
-//        $historyOrderItem->setTicketType(strval($historyOrder[2]));
-//        $historyOrderItem->setLanguage(strval($historyOrder[3]));
-//        $historyOrderItem->setQuantity(intval($historyOrder[4]));
-//
-//
-//        return $historyOrderItem;
-//    }
-//    public function createShoppingCartSession($historyOrders)
-//    {
-//
-//        $historyOrderItem = new HistoryTourOrderItem();
-//        $historyOrderItem->setOrderItemId(1);
-//        $historyOrderItem->setPrice(10);
-//        $historyOrderItem->setTicketType($historyOrders['tourTicketType']);
-//        $historyOrderItem->setLanguage($historyOrders['TourLanguage']);
-//        $historyOrderItem->setQuantity((int)$historyOrders['tourSingleTicket']);
-//        var_dump($historyOrderItem);
-//
-//        return $historyOrderItem;
-//    }
+    public function getarrayAccordingToDate($historyTours)
+    {
+        // Group the tours by date and time
+        $groupedHistoryTours = array();
+        foreach ($historyTours as $historyTour) {
+            $date = $historyTour->getTourDate()->format('Y-m-d');
+            $time = $historyTour->getTourDate()->format('H:i');
+            if (!isset($groupedHistoryTours[$date])) {
+                $groupedHistoryTours[$date] = array();
+            }
+            if (!isset($groupedHistoryTours[$date][$time])) {
+                $groupedHistoryTours[$date][$time] = array();
+            }
+            $groupedHistoryTours[$date][$time][] = $historyTour;
+        }
+        return $groupedHistoryTours;
+    }
+
 
 
 }
-//        $historyOrderItem->setPrice($this->shoppingCartRepository->getTicketId($historyOrder));

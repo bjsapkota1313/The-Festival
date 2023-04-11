@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?></title>
+    <title>Shopping Cart</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
@@ -39,7 +39,6 @@
                                 <div class="p-5">
                                     <div class="d-flex justify-content-between align-items-center mb-5">
                                         <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
-                                        <h6 class="mb-0 text-muted">3 items</h6>
                                     </div>
                                     <hr class="my-4">
                                     <?php foreach ($allItemsInShoppingCarts as $allItemsInShoppingCart) {
@@ -64,11 +63,13 @@
                                                 <h6 class="mb-0"><?= $itemTotalPrice = $allItemsInShoppingCart->getPrice() * $allItemsInShoppingCart->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <button class="text-muted" onclick="deleteItem('<?= $allItemsInShoppingCart->getOrderItemId() ?>')"<i class="fas fa-times"></i>
+                                                <button class="text-muted" onclick="deleteItem('<?= $allItemsInShoppingCart->getOrderItemId() ?>')" style="font-size: 1.5em;">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         </div>
 
-                                        <hr class="my-4">
+                                        <hr id class="my-4">
 
                                     <?php } ?>
                                     <?php foreach ($allRestaurantItems as $allRestaurantItem) {
@@ -131,7 +132,9 @@
                                                 <h6 class="mb-0"><?= $itemTotalPrice = $allPerformanceItem->getPrice() * $allPerformanceItem->getQuantity(); ?></h6>
                                             </div>
                                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                                <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                                                <button class="text-muted" onclick="deleteItem('<?= $allPerformanceItem->getOrderItemId() ?>')" style="font-size: 1.5em;">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
                                             </div>
                                         </div>
                                         <hr class="my-4">
@@ -150,16 +153,6 @@
                                 <div class="p-5">
                                     <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
                                     <hr class="my-4">
-                                    <h5 class="text-uppercase mb-3">Shipping</h5>
-
-                                    <div class="mb-4 pb-2">
-                                        <select class="select">
-                                            <option value="1">Standard-Delivery- €5.00</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                            <option value="4">Four</option>
-                                        </select>
-                                    </div>
 
                                     <h5 class="text-uppercase mb-3">Give code</h5>
 
@@ -177,6 +170,9 @@
                                         <h5 class="text-uppercase">Total price</h5>
                                         <h5 id="totalPrice"><?php echo $this->getTotalPrice(); ?></h5>
                                     </div>
+                                    <?php if(!empty($sharingUrl)){?>
+                                        <a href="<?php echo $sharingUrl; ?>" target="_blank" class="btn btn-dark btn-block btn-lg">Share</a>
+                                  <?php  }?>
                                     <form method="post">
                                         <input type="hidden" name="amount" value="<?php echo $this->getTotalPrice(); ?>">
                                         <input type="hidden" name="description" value="Test">
@@ -277,6 +273,7 @@
                     // Check if there are any remaining items in the ticket container
                     if (ticketContainer.querySelectorAll('.row').length === 0) {
                         ticketContainer.parentNode.removeChild(ticketContainer);
+                        updateTotalPrice();
                     }
                 }
                 else {
@@ -305,26 +302,6 @@
             xhr.send('orderItemId=' + itemId + '&quantity=' + quantity);
         }
     }
-    // function deleteItem(itemId){
-    //     // Send a request to delete the item from the shopping cart
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'http://localhost/festival/shoppingCart/deleteOrderItem');
-    //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    //     xhr.onload = function() {
-    //         if (xhr.status === 200) {
-    //             console.log('Item deleted successfully!');
-    //             // Remove the item from the DOM
-    //             var itemContainer = document.getElementById('orderItemContainer' + itemId);
-    //             console.log(itemId);
-    //             console.log(itemContainer);
-    //             itemContainer.parentNode.removeChild(itemContainer);
-    //         }
-    //         else {
-    //             console.log('Error deleting item!');
-    //         }
-    //     };
-    //     xhr.send('orderItemId=' + itemId);
-    // }
     function deleteItem(itemId) {
         // Send a request to delete the item from the shopping cart
         var xhr = new XMLHttpRequest();
@@ -340,6 +317,7 @@
                 // Check if there are any remaining items in the ticket container
                 if (ticketContainer.querySelectorAll('.row').length === 0) {
                     ticketContainer.parentNode.removeChild(ticketContainer);
+                    updateTotalPrice();
                 }
             }
             else {

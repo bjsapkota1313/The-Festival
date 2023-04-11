@@ -43,10 +43,11 @@ abstract class Controller
     protected function parseDateOfBirth($date): bool|string
     {
         $current_date = new DateTime();
-        $birthDate = DateTime::createFromFormat('YYYY-mm-dd', $date);
+        $birthDate = DateTime::createFromFormat('Y-m-d', $date);
         if ($birthDate === false || array_sum($birthDate->getLastErrors()) > 0) {
             return "please input a valid date format (YYYY-MM-DD) for birthdate";
-        }  if ($date > $current_date) {
+        }
+        if ($date > $current_date->format('Y-m-d')) {
             return "Please select a date that is not in the future";
         }
         return true;
@@ -56,8 +57,19 @@ abstract class Controller
     {
         $this->navBarService = new NavBarService();
         $navBarItems = $this->navBarService->getAllNavBarItems();
-//        $allTheEvents = $this->navBarService->AllFestivalEvents();
+        $festivalNavBarItems = $this->festivalNavBarItems($navBarItems);
         require_once __DIR__ . '/../views/HomeNavBar.php';
+    }
+
+    private function festivalNavBarItems($navaBarItems)
+    {
+        $festivalNavBarItems = [];
+        foreach ($navaBarItems as $navBarItem) {
+            if (strcasecmp((explode('/',$navBarItem->getNavBarUrl())[1]), "Festival") == 0) {
+                $festivalNavBarItems[] = $navBarItem;
+            }
+        }
+        return $festivalNavBarItems;
     }
 
     function displayViewUsingPermissions($model, $user)
@@ -73,7 +85,8 @@ abstract class Controller
     {
         return htmlspecialchars($input);
     }
-    protected  function logoutUser(): void
+
+    protected function logoutUser(): void
     {
         unset($_SESSION["loggedUser"]);
         header("location: /login");

@@ -139,8 +139,11 @@ class ShoppingCartRepository extends EventRepository
 
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $result['id'];
+        if ($result !== false) {
+            return $result['id'];
+        } else {
+            return null;
+        }
     }
 
     public function createTourOrderItem($orderId, $ticketId, $quantity)
@@ -165,10 +168,6 @@ class ShoppingCartRepository extends EventRepository
 
     public function createPerformanceOrderItem($orderId, $ticketId, $quantity)
     {
-        $availableTickets = $this->checkPerformanceAvailableTicket($ticketId);
-        if ($availableTickets === null || $availableTickets < $quantity) {
-            throw new Exception('Not enough available tickets. Only ' . $availableTickets . ' tickets available.');
-        }
         $stmt = $this->connection->prepare("INSERT INTO orderitem (order_id, performanceTicketId, quantity) VALUES (:order_id, :performanceTicketId, :quantity)");
         $stmt->bindParam(':order_id', $orderId);
         $stmt->bindParam(':performanceTicketId', $ticketId, PDO::PARAM_INT);
@@ -586,14 +585,11 @@ class ShoppingCartRepository extends EventRepository
                           )
                           WHERE `Order`.orderId = :orderId');
 
-            // Bind the parameter to a variable
-//            $orderId = 13;
             $stmt->bindParam(':orderId', $orderId);
 
             // Execute the statement
             $stmt->execute();
 
-            // Check if any rows were affecte
         } catch (PDOException $e) {
             echo 'Database error: ' . $e->getMessage();
         }
