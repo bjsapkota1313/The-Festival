@@ -13,7 +13,8 @@ class LoginController extends Controller
         $this->userService = new UserService();
     }
 
-    public function logout($query){
+    public function logout($query)
+    {
         // session_start();
         session_unset();
         session_destroy();
@@ -34,7 +35,7 @@ class LoginController extends Controller
         // if the user has submitted a login request,
         // the form calls login again, but this time, the $_POST parameters
         // are set. So, we enter the else if.
-        else if(isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
+        else if (isset($_POST["signInSubmit"]) && isset($_POST["username"]) && isset($_POST["pwd"])) {
             $inputUserName = $_POST["username"];
             $inputPassword = $_POST["pwd"];
             // using html special chars function to clean up the input
@@ -43,26 +44,25 @@ class LoginController extends Controller
             // checkLogin method in UserService class checks if the user with the given username and password exists in the database. If it exits, it returns the user object, if it does not exists or the password is wrong, it returns null.
             $user = $this->userService->checkLogin($inputUserName, $inputPassword);
 
-            if (isset($user) && $user != null ) {
+            if (isset($user) && $user != null) {
                 // if the user exists in the database, log it in.
                 // to show the user is logged in, we set the loggeUser value in $_SESSION dictionary. Then, we redirect to home.
-                $_SESSION['loggedUser']=$user;
+                $_SESSION['loggedUser'] = $user;
                 $_SESSION['userId'] = $user->getId();
 
                 header("location: /home");
-            }
-            // if the username or password is wrong, we are here
+            } // if the username or password is wrong, we are here
             else {
                 // displayView shows the contents of views/login/index.php
                 $this->displayView("Wrong Credentials. Try again.");
             }
-        }
-        // if the user is visiting the login page normally, show her the login page!
+        } // if the user is visiting the login page normally, show her the login page!
         else {
             // displayView shows the contents of views/login/index.php
             $this->displayView(null);
         }
     }
+
     public function registerUser()
     {
         $errorMessage = "";
@@ -75,9 +75,8 @@ class LoginController extends Controller
                 $errorMessage = "Please fill out your email";
             } else if (empty($_POST["password"])) {
                 $errorMessage = "Please fill out your password";
-            }
-            else{
-                if($this->userService->captchaVerification($errorMessage)){
+            } else {
+                if ($this->userService->captchaVerification($errorMessage)) {
                     $this->registerValidUser($errorMessage);
                 }
             }
@@ -85,20 +84,6 @@ class LoginController extends Controller
         require __DIR__ . '/../views/login/register.php';
     }
 
-//    private function captchaVerification(&$systemMessage)
-//    {
-//        $secret = "6LelT5MkAAAAAP3xY6DkyRryMLG9Wxe2Xt48gz7t";
-//        $response = $_POST['g-recaptcha-response'];
-//        $remoteip = $_SERVER['REMOTE_ADDR'];
-//        $url = "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$response&remoteip=$remoteip";
-//        $data = file_get_contents($url);
-//        $row = json_decode($data);
-//        if ($row->success== "true") {
-//            $this->registerValidUser($systemMessage);
-//        } else {
-//            $systemMessage = "you are a robot";
-//        }
-//    }
 
     private function registerValidUser(&$systemMessage)
     {
@@ -113,13 +98,11 @@ class LoginController extends Controller
 
     private function createNewUser(&$systemMessage)
     {
-//        $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
-//        $parsedDate = $this->parseDateOfBirth($birthDate);
-//        print_r($birthDate);
-//       if(is_string($parsedDate)) {
-//           $systemMessage = $parsedDate;
-//       }
-//        else {
+        $birthDate = htmlspecialchars($_POST["dateOfBirth"]);
+        $parsedDate = $this->parseDateOfBirth($birthDate);
+        if (is_string($parsedDate)) {
+            $systemMessage = $parsedDate;
+        } else {
             $newUser = array(
                 "firstName" => htmlspecialchars($_POST["firstName"]),
                 "lastName" => htmlspecialchars($_POST["lastName"]),
@@ -129,21 +112,21 @@ class LoginController extends Controller
                 "picture" => $_FILES['createUserImage'],
                 "role" => Roles::customer()
             );
-            if(empty($_SESSION['orderId'])){
+            if (empty($_SESSION['orderId'])) {
                 $orderId = null;
-            }
-            else{
+            } else {
                 $orderId = $_SESSION['orderId'];
             }
-            var_dump($orderId);
             $this->userService->registerUser($newUser, $orderId);
-            $systemMessage = "registration was successful! You can log in with your credential.";
+            echo "<script>window.location.replace('/home');</script>";
         }
-//    }
+    }
+
     /**
      * @throws Exception
      */
-    public function resetPasswordViaEmail()
+    public
+    function resetPasswordViaEmail()
     {
         if (isset($_POST["send-link"])) {
             $email = htmlspecialchars($_POST["forgotPasswordEmail"]);
@@ -155,7 +138,9 @@ class LoginController extends Controller
         }
         require __DIR__ . '/../views/login/sendEmailForgotPassword.php';
     }
-    public function updatePassword()
+
+    public
+    function updatePassword()
     {
         if (isset($_POST["updatePassword"])) {
             $token = $_GET["token"];
