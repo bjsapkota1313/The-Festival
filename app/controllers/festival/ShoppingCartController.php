@@ -17,23 +17,32 @@ class ShoppingCartController extends EventController
         $allItemsInShoppingCarts = "";
         $allRestaurantItems = "";
         $allPerformanceItems = "";
-//        $totalPrice = "";
-        if (!empty($_SESSION['userId'])) {
-            $userId = $_SESSION['userId'];
+        $totalPrice = 0;
 
-            $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
-            $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
-            $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
-//            $totalPrice = $this->getTotalPrice();
-//            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
-        } else {
-            $orderId = $_SESSION['orderId'] ?? '';
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['orderId'])) {
+            $orderId = htmlspecialchars($_GET['orderId']);
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
-//            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
-//            $totalPrice = $this->getTotalPrice();
+        } else {
+            if (!empty($_SESSION['userId'])) {
+                $userId = $_SESSION['userId'];
+
+                $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByUserId($userId);
+                $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($userId);
+                $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByUserId($userId);
+
+            } else {
+                $orderId = $_SESSION['orderId'] ?? '';
+                $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
+                $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
+                $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
+
+            }
+            $sharingUrl=$this->getSharingUrl($orderId);
         }
+
+
         if (isset($_POST['payNow']) && !empty($_SESSION['userId'])) {
             $userId = $_SESSION['userId'];
             $orderId = $this->shoppingCartService->getOrderByUserId($userId);
@@ -49,21 +58,12 @@ class ShoppingCartController extends EventController
 
             // Create Mollie payment
             $payment = $this->shoppingCartService->createPayment($userId, $orderId, $amount, $description, $redirectUrl, $webhookUrl);
-        }
-        else if(isset($_POST['payNow']) && empty($_SESSION['userId'])){
+        } else if (isset($_POST['payNow']) && empty($_SESSION['userId'])) {
             include __DIR__ . '/../../views/ShoppingCart/shoppingCartModal.php';
         }
-
         require_once __DIR__ . '/../../views/ShoppingCart/shoppingCart.php';
     }
 
-//    public function getTotalPrice()
-//    {
-//        if (!empty($_SESSION['userId'])) {
-//            $userId = $_SESSION['userId'];
-//            $this->shoppingCartService->getTotalPriceByUserId($userId);
-//        }
-//    }
 
     public function paymentRedirect()
     {
@@ -79,13 +79,12 @@ class ShoppingCartController extends EventController
             }
         }
     }
+
     public function updateQuantity()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderItemId = $_POST['orderItemId'];
-            var_dump($orderItemId);
             $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
-            var_dump($orderId);
             $quantity = $_POST['quantity'];
             $this->shoppingCartService->updateQuantity($orderItemId, $quantity);
             $this->shoppingCartService->updateTotalPrice($orderId);
@@ -96,31 +95,13 @@ class ShoppingCartController extends EventController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $orderItemId = $_POST['orderItemId'];
+            $orderId = $this->shoppingCartService->getOrderIdByOrderItemId($orderItemId);
             $this->shoppingCartService->deleteOrderItem($orderItemId);
+            $this->shoppingCartService->updateTotalPrice($orderId);
+
         }
     }
 
-//    public function getTotalPrice()
-//    {
-//        $totalPrice="";
-//        if (!empty($_SESSION['userId'])) {
-//            $userId = $_SESSION['userId'];
-//            $totalPrice = $this->shoppingCartService->getTotalPriceByUserId($userId);
-//        } else if (!empty($_SESSION['orderId'])) {
-//            $orderId = $_SESSION['orderId'];
-//            $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
-//        }
-//    }
-//    public function getTotalPrice()
-//    {
-//        if (!empty($_SESSION['userId'])) {
-//            $userId = $_SESSION['userId'];
-//            return $this->shoppingCartService->getTotalPriceByUserId($userId);
-//        } else if (!empty($_SESSION['orderId'])) {
-//            $orderId = $_SESSION['orderId'];
-//            return $this->shoppingCartService->getTotalPriceByOrderId($orderId);
-//        }
-//    }
     public function getTotalPrice()
     {
         if (!empty($_SESSION['userId'])) {
@@ -129,14 +110,14 @@ class ShoppingCartController extends EventController
         } else if (!empty($_SESSION['orderId'])) {
             $orderId = $_SESSION['orderId'];
             $totalPrice = $this->shoppingCartService->getTotalPriceByOrderId($orderId);
+        } else if (empty($totalPrice)) {
+            $totalPrice = 0;
         }
-        else if(empty($totalPrice)){
-            $totalPrice="";
-        }
-//        header('Content-Type: application/json');
         echo $totalPrice;
-//        var_dump($totalPrice);
+    }
 
-//        return $totalPrice;
+    private function getSharingUrl($orderId)
+    {
+        return "http://localhost/festival/shoppingCart?orderId=$orderId";
     }
 }
