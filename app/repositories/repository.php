@@ -1,9 +1,11 @@
 <?php
-
 class Repository
 {
     protected $connection;
 
+    /**
+     * @throws InternalErrorException
+     */
     function __construct()
     {
         require __DIR__ . '/../config/dbconfig.php';
@@ -11,7 +13,7 @@ class Repository
             $this->connection = new PDO("$type:host=$servername;port=$portNumber;dbname=$database", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
+            throw  new InternalErrorException("Connection failed: " . $e->getMessage());
         }
     }
 
@@ -29,7 +31,7 @@ class Repository
                 return $this->handlePositiveRowCount($query, $stmt, $fetchAll,$returnId);
             }
         } catch (PDOException $e) {
-            echo $e;
+            throw new DatabaseQueryException("Something went wrong with the query: " . $e->getMessage());
         }
     }
     private function bindValuesToQuery($stmt, $params): void
