@@ -9,7 +9,6 @@ class historyTimeTable
 
     private language $name;
     private timetable $time;
-//    private eventDate $date;
     private DateTime $date;
 
     /**
