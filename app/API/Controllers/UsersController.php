@@ -14,7 +14,7 @@ class UsersController extends ApiController
     {
         try {
             $this->sendHeaders();
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if ($_SERVER['REQUEST_METlHOD'] === 'GET') {
                 $users = null;
                 if (empty($_GET['SearchTerm'])) {
                     if (empty($_GET['sortSelectedOption'])) {

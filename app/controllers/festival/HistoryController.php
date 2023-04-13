@@ -33,11 +33,7 @@ class HistoryController extends EventController
         $locationId = $_GET["locationId"];
         $location = $_GET["location"];
         $locationPostCode = $_GET["locationPostCode"];
-//        $getLocationParagraphsById = $this->historyService->getHistoryTourLocationsByLocationName(3);
         $historyTourLocationObject = $this->historyService->getHistoryTourLocationByLocationId($locationId);
-
-//        $tourImage = $getLocationParagraphsById->getTourImage();
-
 
         $this->displayNavBar("A stroll Through History", '/css/festival/history.css');
 

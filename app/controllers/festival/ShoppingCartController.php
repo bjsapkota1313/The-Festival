@@ -18,9 +18,13 @@ class ShoppingCartController extends EventController
         $allRestaurantItems = "";
         $allPerformanceItems = "";
         $totalPrice = 0;
+        if(empty($orderId) && !empty($_SESSION['userId'])){
+            $orderId = $this->shoppingCartService->getOrderByUserId($_SESSION['userId']);
+        }
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['orderId'])) {
             $orderId = htmlspecialchars($_GET['orderId']);
+
             $allItemsInShoppingCarts = $this->shoppingCartService->getHistoryTourOrdersByOrderId($orderId);
             $allRestaurantItems = $this->shoppingCartService->getRestaurantOrdersByUserId($orderId);
             $allPerformanceItems = $this->shoppingCartService->getPerformanceOrdersByOrderId($orderId);
