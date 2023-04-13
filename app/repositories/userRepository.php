@@ -225,9 +225,7 @@ class UserRepository extends Repository
             }
             return false;
         } catch (PDOException $e) {
-            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-            http_response_code(500);
+            echo $e;
             exit();
         }
     }
@@ -243,30 +241,13 @@ class UserRepository extends Repository
                 return $result[0];
             }
         } catch (PDOException $e) {
-//            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-//            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-//            http_response_code(500);
-//            exit();
             echo $e;
         }
     }
-//    public function getUserIdByEmail($email)
-//    {
-//        try {
-//            $stmt = $this->connection->prepare("SELECT id From User WHERE email= :email");
-//            $stmt->bindValue(':email', $email);
-//            $stmt->execute();
-//        } catch (PDOException $e) {
-//            $message = '[' . date("F j, Y, g:i a e O") . ']' . $e->getMessage() . $e->getCode() . $e->getFile() . ' Line ' . $e->getLine() . PHP_EOL;
-//            error_log("Database connection failed: " . $message, 3, __DIR__ . "/../Errors/error.log");
-//            http_response_code(500);
-//            exit();
-//        }
-//    }
+
     public function isTokenValid($token)
     {
         try {
-//            $stmt = $this->connection->prepare("SELECT email From forgotPassword WHERE randomToken= :randomToken");
             $stmt = $this->connection->prepare("SELECT User.id
                                                         FROM User
                                                         Inner JOIN forgotPassword
@@ -290,8 +271,6 @@ class UserRepository extends Repository
     {
         try {
             $stmt = $this->connection->prepare("INSERT into forgotPassword (tokenExpiration, randomToken, userId) VALUES (:tokenExpiration, :randomToken, :userId)");
-
-//            $stmt = $this->connection->prepare("UPDATE User SET randomToken = :randomToken, tokenExpiration = :tokenExpiration WHERE email = :email");
 
             $stmt->bindValue(':randomToken', $token);
             $stmt->bindValue(':tokenExpiration', $expiration_time);
@@ -327,7 +306,6 @@ class UserRepository extends Repository
         try {
             $stmt = $this->connection->prepare("DELETE FROM forgotPassword WHERE tokenExpiration < :tokenExpiration OR id = :id");
 
-//            $stmt = $this->connection->prepare("UPDATE User SET password = :password WHERE email = :email");
             $stmt->bindValue(':tokenExpiration', $tokenExpiration);
             $stmt->bindValue(':id', $userId);
 
