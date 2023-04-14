@@ -1,6 +1,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD5yDEZxPchpFrGUOTavwzG92Nh6CrvZx0"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?Hidden></script>
 <div class="historyMainImage" style="background: url('<?= $this->getImageFullPath($historyTourLocationObject->getTourImage()['banner'][0]) ?>')">
     <span class="position-absolute bottom-0 start-0 mb-3 ps-3 d-flex align-items-center"
           style="z-index: 99; padding-left: 20px;">
