@@ -37,13 +37,7 @@ class PatternRouter
             || str_ends_with($uri, ".css")
             || str_ends_with($uri, ".ts")
         ) {
-            // echo $uri;
-            // app\public\Javascripts\tinymce\js\tinymce\tinymce.min.js
-            // echo __DIR__ . "/../public/" . $uri;
-            // readfile($uri);
-            // readfile("/" . $uri);
             readfile(__DIR__ . "/../public/" . $uri);
-            // return();
             die();
         }
         // Path algorithm
@@ -81,8 +75,8 @@ class PatternRouter
         if (!isset($explodedUri[0]) || empty($explodedUri[0])) {
             $explodedUri[0] = $defaultcontroller;
         }
-        // . (dot) in php for strings is concatination. Similar to + in C#.
-        // $controllerName becomes "homecontroller";
+        // . (dot) in php for strings is concatenation. Similar to + in C#.
+        // $controllerName for home becomes "homecontroller";
         $controllerName = $explodedUri[0] . "controller";
 
         if (!isset($explodedUri[1]) || empty($explodedUri[1])) {
@@ -91,18 +85,21 @@ class PatternRouter
         // $methodName becomes "about"
         $methodName = $explodedUri[1];
 
-        // $filename becomes ./../controllers/homecontroller.php
+        // $filename for homecontroller becomes ./../controllers/homecontroller.php
         $filename = __DIR__ . '/../controllers/' . $controllerName . '.php';
 
         if ($api) {
+            // filename is set for api.
             $filename = __DIR__ . '/../api/controllers/' . $controllerName . '.php';
         }
         else if ($festival) {
+            // filename is set for festival.
             $filename = __DIR__ . '/../controllers/festival/' . $controllerName . '.php';
         }
         else if ($adminPanel) {
-             $controllerName='Admin'.$controllerName;
-            $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php'; // makking all admin panel controllers start with Admin
+            // filename is set for admin.
+            $controllerName='Admin'.$controllerName;
+            $filename=__DIR__.'/../controllers/adminPanel/'.$controllerName.'.php'; // making all admin panel controllers start with Admin
         }
 
         // check if the $filename exists. Here, the homecontroller.php in the controllers folder.
