@@ -1,5 +1,4 @@
 <?php
-// session_start()
 if(isset($model) && $model != null) {
   $page = $model;
 }

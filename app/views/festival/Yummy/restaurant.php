@@ -8,7 +8,6 @@ else {
 }
 if(isset($model) && $model != null && isset($model->foodTypes) && $model->foodTypes != null) {
   $foodTypes = $model->foodTypes;
-  // print_r($foodTypes);
 } else {
   $foodTypes = null;
 }

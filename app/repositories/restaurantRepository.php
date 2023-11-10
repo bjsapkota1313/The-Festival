@@ -84,7 +84,6 @@ class RestaurantRepository extends Repository
             $foodTypeNames = array();
             $results = $stmt->fetchAll();
             foreach ($results as $row) {
-                // print_r($row);
                 $foodTypeName = $row['name'];
                 array_push($foodTypeNames, $foodTypeName);
             }

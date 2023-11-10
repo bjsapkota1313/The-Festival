@@ -10,7 +10,6 @@ class AdminYummyController extends AdminPanelController
 {
     private $restaurantService;
     public function __construct() {
-        // parent::__construct();
         $this->restaurantService = new RestaurantService();
     }
     private function filterRestaurants($restaurants, $foodTypesArr) {
@@ -44,7 +43,6 @@ class AdminYummyController extends AdminPanelController
         if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSearch"]) && $_POST["restaurantFoodTypesSearch"]!="") {
             $sFT = $_POST["restaurantFoodTypesSearch"];
             $foodTypesArr = explode( ',', $sFT);
-            // print_r($foodTypesArr);
             $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
             // filter restaurants
             // for each food type, remove the restaurants not having that type
@@ -78,17 +76,13 @@ class AdminYummyController extends AdminPanelController
         // first, we check for title in the query.
         parse_str($query, $parsedQuery);
 
-        // print_r($parsedQuery);
 
         $restaurant = null;
         if(isset($parsedQuery["id"])) {
             $restaurant = $this->restaurantService->getRestaurantById($parsedQuery["id"]);
-            // print_r($restaurant);
         }
         else if(isset($parsedQuery["name"])) {
-            // echo $parsedQuery["name"];
             $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
-            // print_r($restaurant);
         }
         require_once __DIR__ . '/../../views/AdminPanel/Yummy/editRestaurant.php';
     }
@@ -120,7 +114,6 @@ class AdminYummyController extends AdminPanelController
                 $newImageName = "RestaurantCardImage-" . $restaurantId . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
                 $this->storeImage($image, $newImageName);
                 return $newImageName;
-                
             } else {
                 // If no new image was provided or the image is "Default", return the filename of the old image
                 return $oldImageName;

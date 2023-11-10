@@ -25,7 +25,6 @@ class LoginController extends Controller
     }
 
     public function logout($query){
-        // session_start();
         session_unset();
         session_destroy();
         header("location: /login");
@@ -38,7 +37,6 @@ class LoginController extends Controller
         // if $_SESSION["loggedUser"] is set, it means the user has already logged in.
         // if the user is already logged in, redirect her to /home.
         if (isset($_SESSION["loggedUser"])) {
-            // echo "you are already logged in";
             header("location: /home");
             exit();
         }

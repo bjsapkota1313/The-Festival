@@ -20,16 +20,8 @@ class YummyController extends eventController {
         foreach($foodTypesArr as $fValue) {
             $fValue = trim($fValue);
             foreach($restaurants as $rKey => $restaurant) {
-                // print_r($rKey);
-                // print_r($restaurant);
                 // if it does not contain it, remove it
                 if (strpos(" ".$restaurant->getFoodTypes()." ", $fValue) == false) {
-                    // echo "removing ". $fValue . "from ". $restaurant->getFoodTypes();
-                    // print_r($restaurant);
-                    // echo $restaurant->getName() . " - ";
-                    // echo $restaurant->getFoodTypes(). " - ";
-                    // echo $fValue;
-                    // echo "---";
                     unset($restaurants[$rKey]);
                 }
             }
@@ -56,20 +48,14 @@ class YummyController extends eventController {
         }
         if(isset($_POST["searchSubmit"]) && isset($_POST["restaurantFoodTypesSelect"]) && $_POST["restaurantFoodTypesSelect"]!="") {
             $sFT = $_POST["restaurantFoodTypesSelect"];
-            // print_r($sFT);
             $foodTypesArr = explode( ',', $sFT);
-            // print_r($foodTypesArr);
             $restaurants = $this->filterRestaurants($restaurants, $foodTypesArr);
             $model->restaurants = $restaurants;
             // filter restaurants
             // for each food type, remove the restaurants not having that type
         }
-        
-        // print_r($restaurants);
-        // $c = count($restaurants);
-        // echo "Number of restaurants is {$c}";       
+
         $this->displayNavBar("Yummy",'/css/festival/yummy.css');
-        // require __DIR__ . '/../../views/festival/History/index.php';
         $this->displayViewFestival($model);
     }
 
@@ -100,7 +86,6 @@ class YummyController extends eventController {
                 $newImageName = "RestaurantCardImage-" . $restaurantId . "." . pathinfo($image['name'], PATHINFO_EXTENSION);
                 $this->storeImage($image, $newImageName);
                 return $newImageName;
-                
             } else {
                 // If no new image was provided or the image is "Default", return the filename of the old image
                 return $oldImageName;
@@ -160,10 +145,6 @@ class YummyController extends eventController {
 
                 echo "new restaurant added!";
             }
-
-            // show the user result.
-            
-            // $this->displayView($_POST["tinyMCEform"]);
         }
         // if the user has clicked the delete button
         else if(isset($_POST["formDelete"])) {
@@ -187,9 +168,7 @@ class YummyController extends eventController {
         // first, we check for title in the query.
         parse_str($query, $parsedQuery);
         if(isset($parsedQuery["name"])) {
-            // echo $parsedQuery["name"];
             $restaurant = $this->restaurantService->getRestaurantByName($parsedQuery["name"]);
-            // print_r($restaurant);
             if($restaurant != null) {
                 $this->displayNavBar("Yummy",'/css/festival/yummy.css');
                 $this->displayViewFestival($restaurant);
@@ -213,7 +192,6 @@ class YummyController extends eventController {
             exit();
         }
         if(isset($_POST["formBookReservationSubmit"]) && isset($_POST["restaurantID"])) {
-            // echo $_POST["restaurantID"];
             $this->displayNavBar("Yummy",'/css/festival/yummy.css');
             $restaurant = $this->restaurantService->getRestaurantById($_POST["restaurantID"]);
             $this->displayViewFestival($restaurant);
